@@ -10,9 +10,12 @@
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap.rtl.min.css') }}">
     <!-- Font Awesome -->
     <script src="{{ asset('site/js/all.min.js') }}"></script>
-    <link href="{{ asset('site/css/bootstrap-icons.css') }}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('site/css/swiper-bundle.min.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('site/style.css') . '?v=' . time() }}">
     <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
@@ -24,256 +27,95 @@
 
 <body>
 
-    @php
-        $categories = \App\Models\Category::where('type', 'product')->get();
-    @endphp
-    <header class="vannel-header">
-        <div class="header-container container">
-            <!-- لوگو -->
-            <a href="{{ route('page.home') }}" class="header-logo">
-                <img src="{{ asset('site/logos/black-logo-min.png') }}" alt="ونل">
-                <span class="header-logo-text">ونل</span>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{{ asset('site/logos/ll.png') }}" alt="Touka Pet Logo">
+                توکا پت
             </a>
-
-            <!-- منوی اصلی -->
-            <nav class="header-nav">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="{{ route('page.home') }}" class="nav-link">
-                            <i class="fas fa-home"></i>
-                            <span>صفحه اصلی</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-shoe-prints"></i>
-                            <span>محصولات</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </a>
-                        <ul class="submenu">
-                            <li>
-                                <a href="{{ route('products.index') }}" class="submenu-link">
-                                    همه محصولات
-                                </a>
-                            </li>
-                            @foreach ($categories as $item)
-                                <li>
-                                    <a href="{{ route('products.categories', $item->slug) }}" class="submenu-link">
-                                        {{ $item->name }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{{ route('products.index') . '?category=2' }}" class="nav-link">
-                            <i class="fas fa-fire"></i>
-                            <span>پرفروش‌ها</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{{ route('page.size-selection-guide') }}" class="nav-link">
-                            <i class="fas fa-user-astronaut"></i>
-                            <span>راهنمای انتخاب سایز</span>
-                        </a>
-                    </li>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">خانه</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">محصولات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">خدمات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">وبلاگ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">درباره ما</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">تماس با ما</a></li>
                 </ul>
-            </nav>
-
-            <!-- جستجو -->
-            <div class="search-container">
-                <form action="{{ route('products.index') }}" method="GET" class="search-form">
-                    <input type="text" name="query" class="search-input" placeholder="جستجوی محصولات..."
-                        autocomplete="off">
-                    <button type="submit" class="search-btn">
-                        <i class="fas fa-search search-icon"></i>
-                    </button>
-                </form>
-                <div class="search-results"></div>
-            </div>
-
-            <!-- اقدامات -->
-            <div class="header-actions">
-                <div class="action-btn" id="search-toggle">
-                    <i class="fas fa-search"></i>
-                </div>
-
-                <div>
-                    <a href="{{ route('auth.login-view') }}" target="_blank" class="btn btn-dark">ورود/عضویت</a>
-                </div>
-
-                <a href="{{ route('cart.mycart') }}" class="action-btn">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span class="action-count cart-count">{{ $cartItemCount }}</span>
-                </a>
-
-                <div class="mobile-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
+                <div class="d-flex align-items-center me-3">
+                    <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
+                    <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-heart"></i></a>
+                    <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-cart3"></i></a>
                 </div>
             </div>
         </div>
-
-        <!-- منوی موبایل -->
-        <div class="mobile-menu" id="mobile-menu">
-            <div class="mobile-search">
-                <form action="{{ route('products.index') }}" method="GET" class="search-form">
-                    <input type="text" name="query" class="search-input" placeholder="جستجو در ونل..."
-                        autocomplete="off">
-                    <button type="submit" class="search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-                <div class="search-results"></div>
-            </div>
-
-            <ul class="mobile-nav-list">
-                <li class="mobile-nav-item">
-                    <a href="{{ route('page.home') }}" class="mobile-nav-link">
-                        <span><i class="fas fa-home"></i> صفحه اصلی</span>
-                    </a>
-                </li>
-
-                <li class="mobile-nav-item">
-                    <div class="mobile-nav-link" id="mobile-products-toggle">
-                        <span><i class="fas fa-shoe-prints"></i> محصولات</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <ul class="mobile-submenu" id="mobile-products-submenu">
-                        <li>
-                            <a href="{{ route('products.index') }}" class="mobile-submenu-link">
-                                همه محصولات
-                            </a>
-                        </li>
-                        @foreach ($categories as $item)
-                            <li>
-                                <a href="{{ route('products.index') . '?category=' . $item->id }}"
-                                    class="mobile-submenu-link">
-                                    {{ $item->name }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </li>
-
-                <li class="mobile-nav-item">
-                    <a href="{{ route('products.index') . '?category=2' }}" class="mobile-nav-link">
-                        <span><i class="fas fa-fire"></i> پرفروش‌ها</span>
-                    </a>
-                </li>
-
-                <li class="mobile-nav-item">
-                    <a href="{{ route('page.size-selection-guide') }}" class="mobile-nav-link">
-                        <span><i class="fas fa-user-astronaut"></i> راهنمای انتخاب سایز</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="mobile-actions">
-
-                <div>
-                    <a href="#" target="_blank" class="btn btn-dark">ورود/عضویت</a>
-                </div>
-
-                <a href="{{ route('cart.mycart') }}" class="action-btn">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span class="action-count cart-count">{{ $cartItemCount }}</span>
-                </a>
-
-                <a href="#" class="action-btn">
-                    <i class="fas fa-user"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- overlay -->
-        <div class="overlay" id="overlay"></div>
-    </header>
-    <div id="header-spacer" style="height: 80px;"></div>
-
-    <div class="balance"></div>
+    </nav>
 
     @yield('content')
 
-    <!-- فوتر -->
-    <footer id="contact">
+
+    <footer>
         <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-4 fade-in">
-                    <a class="footer-logo" href="#">
-                        <a referrerpolicy='origin' target='_blank'
-                            href='https://trustseal.enamad.ir/?id=623230&Code=kGjmCgQWIn3GZg5KV59HZSQ0BHIvCG0U'><img
-                                referrerpolicy='origin'
-                                src='https://trustseal.enamad.ir/logo.aspx?id=623230&Code=kGjmCgQWIn3GZg5KV59HZSQ0BHIvCG0U'
-                                alt='' style='cursor:pointer' code='kGjmCgQWIn3GZg5KV59HZSQ0BHIvCG0U'></a>
-                    </a>
-                    <a onclick="window.open('https://panel.aqayepardakht.ir/trustGateway/58244',null,'width=400, height=600, scrollbars=no, resizable=no')"
-                        href="javascript:void(0)" referrerpolicy="strict-origin-when-cross-origin"
-                        title="پرداخت امن آقای پرداخت">
-                        <img style="border-radius: 0px;margin-right: 10px;"
-                            src="https://panel.aqayepardakht.ir/trustlogo/1.svg" alt="پرداخت امن آقای پرداخت"></a>
-
-
-                    <p>
-                        ونل یک فروشگاه کفش ایرانی است که با هدف ارائه محصولات باکیفیت و
-                        طراحی‌های مدرن برای نسل جوان تأسیس شده است. ما به جزئیات اهمیت
-                        می‌دهیم و هر جفت کفش را با دقت و عشق برای شما به ارمغان میاوریم.
-                    </p>
-                    <div class="social-icons mt-4">
-                        <a href="instagram://user?username=vanell.ir"><i class="bi bi-instagram"></i></a>
-                        {{--                    <a href="#"><i class="bi bi-telegram"></i></a> --}}
-                        {{--                    <a href="#"><i class="bi bi-twitter-x"></i></a> --}}
-                        {{--                    <a href="#"><i class="bi bi-spotify"></i></a> --}}
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <a href="#" class="footer-logo">توکا پت</a>
+                    <p class="mb-4">ما در توکا پت با عشق به حیوانات و تعهد به کیفیت، بهترین محصولات را برای حیوانات
+                        خانگی شما ارائه می‌دهیم.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-telegram"></i></a>
+                        <a href="#"><i class="bi bi-whatsapp"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 fade-in delay-1">
+                <div class="col-lg-2 col-md-4 mb-5 mb-md-0">
                     <div class="footer-links">
-                        <h4>لینک‌ها</h4>
+                        <h5>لینک‌های سریع</h5>
                         <ul>
-                            <li><a href="{{ route('page.home') }}">صفحه اصلی</a></li>
-                            <li><a href="{{ route('products.index') }}">محصولات</a></li>
-                            <li><a href="{{ route('cart.mycart') }}">سبد خرید</a></li>
+                            <li><a href="#">خانه</a></li>
+                            <li><a href="#">محصولات</a></li>
+                            <li><a href="#">خدمات</a></li>
+                            <li><a href="#">وبلاگ</a></li>
+                            <li><a href="#">درباره ما</a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 fade-in delay-2">
+                <div class="col-lg-2 col-md-4 mb-5 mb-md-0">
                     <div class="footer-links">
-                        <h4>خدمات</h4>
+                        <h5>دسته‌بندی‌ها</h5>
                         <ul>
-                            <li><a href="{{ route('page.orderTracking') }}">پیگیری سفارش</a></li>
-                            <li><a href="{{ route('page.size-selection-guide') }}">راهنمای اندازه</a></li>
-                            <li><a href="{{ route('page.privacy') }}">حریم خصوصی</a></li>
-                            <li><a href="#">سوالات متداول</a></li>
+                            <li><a href="#">سگ‌ها</a></li>
+                            <li><a href="#">گربه‌ها</a></li>
+                            <li><a href="#">پرندگان</a></li>
+                            <li><a href="#">آبزیان</a></li>
+                            <li><a href="#">جوندگان</a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 fade-in delay-3">
+                <div class="col-lg-4 col-md-4">
                     <div class="footer-links">
-                        <h4>تماس با ما</h4>
+                        <h5>تماس با ما</h5>
                         <ul>
-                            <li>
-                                <i class="bi bi-geo-alt me-2"></i> تهران، خیابان ولیعصر
-                            </li>
-                            <li>
-                                <i class="bi bi-telephone me-2"></i>
-                                0905-362-1387
-                            </li>
-                            <li>
-                                <i class="bi bi-telephone me-2"></i>
-                                0992-080-5054
-                            </li>
-                            <li>
-                                <i class="bi bi-clock me-2"></i> شنبه تا پنجشنبه: ۹ صبح تا ۹
-                                شب
-                            </li>
+                            <li><i class="bi bi-geo-alt-fill me-2"></i> تهران، خیابان ولیعصر، پلاک ۱۲۳۴</li>
+                            <li><i class="bi bi-telephone-fill me-2"></i> ۰۲۱-۱۲۳۴۵۶۷۸</li>
+                            <li><i class="bi bi-envelope-fill me-2"></i> info@toka-pet.ir</li>
+                            <li><i class="bi bi-clock-fill me-2"></i> هر روز از ۹ صبح تا ۹ شب</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="copyright text-center fade-in delay-4">
-                <p class="mb-0">© 1404 تمام حقوق برای ونل محفوظ است.</p>
+            <hr class="mt-5 mb-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="small mb-0">© ۲۰۲۳ توکا پت. تمام حقوق محفوظ است.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="small mb-0">طراحی شده با <i class="bi bi-heart-fill text-danger"></i> برای حیوانات
+                        دوست‌داشتنی</p>
+                </div>
             </div>
         </div>
     </footer>
@@ -312,129 +154,36 @@
             });
         </script>
     @endif
-    <script>
-        function updateHeaderSpacer() {
-            const header = document.querySelector('.vannel-header');
-            const spacer = document.getElementById('header-spacer');
-
-            if (header && spacer) {
-                const trueHeight = header.offsetHeight;
-                spacer.style.height = `${trueHeight}px`;
-            }
-        }
-
-        window.addEventListener('load', updateHeaderSpacer);
-        window.addEventListener('resize', updateHeaderSpacer);
-    </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const mobileToggle = document.getElementById('mobile-toggle');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const overlay = document.getElementById('overlay');
-            const mobileProductsToggle = document.getElementById('mobile-products-toggle');
-            const mobileProductsSubmenu = document.getElementById('mobile-products-submenu');
-            const searchToggle = document.getElementById('search-toggle');
-            const searchContainer = document.querySelector('.search-container');
-            const searchInputs = document.querySelectorAll('.search-input');
-            const searchForms = document.querySelectorAll('.search-form');
-
-            mobileToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const isOpen = mobileMenu.classList.contains('active');
-                if (isOpen) {
-                    mobileMenu.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                } else {
-                    mobileMenu.classList.add('active');
-                    overlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                }
-            });
-
-
-            overlay.addEventListener('click', function() {
-                mobileMenu.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-                searchContainer.classList.remove('active');
-            });
-
-
-            mobileProductsToggle.addEventListener('click', function(e) {
-                e.stopPropagation(); // جلوگیری از بسته شدن منو
-                mobileProductsSubmenu.classList.toggle('active');
-                const icon = this.querySelector('i');
-                icon.classList.toggle('fa-chevron-down');
-                icon.classList.toggle('fa-chevron-up');
-            });
-
-            if (searchToggle && searchContainer) {
-                searchToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    searchContainer.classList.toggle('active');
-                    if (searchContainer.classList.contains('active')) {
-                        searchContainer.querySelector('input').focus();
-                    }
-                });
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
+        });
 
+        // Animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate__animated');
 
-            window.addEventListener('scroll', function() {
-                const header = document.querySelector('.vannel-header');
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
-
-            document.querySelectorAll('.mobile-nav-item > a.mobile-nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    mobileMenu.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-            });
-
-
-            searchInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    const query = this.value.trim();
-                    const resultsContainer = this.closest('.search-form').nextElementSibling;
-
-                    if (query.length > 2) {
-                        fetchResults(query, resultsContainer);
-                    } else {
-                        resultsContainer.style.display = 'none';
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const animation = entry.target.getAttribute('data-animation');
+                        entry.target.classList.add('animate__fadeInUp');
+                        observer.unobserve(entry.target);
                     }
                 });
-
-                input.addEventListener('focus', function() {
-                    const resultsContainer = this.closest('.search-form').nextElementSibling;
-                    if (this.value.trim().length > 2) {
-                        resultsContainer.style.display = 'block';
-                    }
-                });
-
-                input.addEventListener('blur', function() {
-                    setTimeout(() => {
-                        const resultsContainer = this.closest('.search-form')
-                            .nextElementSibling;
-                        resultsContainer.style.display = 'none';
-                    }, 200);
-                });
+            }, {
+                threshold: 0.1
             });
 
-            searchForms.forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    const input = this.querySelector('input[name="query"]');
-                    if (input.value.trim() === '') {
-                        e.preventDefault();
-                        input.focus();
-                    }
-                });
+            animateElements.forEach(el => {
+                observer.observe(el);
             });
         });
     </script>
