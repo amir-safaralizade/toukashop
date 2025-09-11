@@ -3,38 +3,56 @@
 @section('styles')
     <style>
         .transaction-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            background: var(--light-color);
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding: 20px;
         }
 
         .transaction-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 25px 30px;
+            color: var(--light-color);
+            padding: 30px;
             text-align: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .transaction-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-success,
+        .status-pending,
+        .status-failed {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin: 10px 0;
+            color: var(--light-color);
         }
 
         .status-success {
-            background-color: #28a745;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            display: inline-block;
-            margin: 15px 0;
+            background: var(--success);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .status-pending {
+            background: var(--accent-color);
+            color: var(--dark-color);
+            box-shadow: 0 4px 10px rgba(255, 230, 109, 0.3);
         }
 
         .status-failed {
-            background-color: #dc3545;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            display: inline-block;
-            margin: 15px 0;
+            background: var(--danger);
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
         }
 
         .transaction-details {
@@ -42,50 +60,70 @@
         }
 
         .detail-card {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: var(--cream);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .detail-title {
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--dark-color);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+            color: var(--purple);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--pink);
         }
 
         .detail-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
+            align-items: center;
+            padding: 12px 0;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .detail-item span:first-child {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .detail-item span:last-child {
+            font-weight: 500;
         }
 
         .detail-item:not(:last-child) {
-            border-bottom: 1px dashed #eee;
+            border-bottom: 1px dashed var(--pink);
         }
 
         .order-items {
-            margin: 30px 0;
+            margin: 40px 0;
         }
 
         .order-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            border-radius: 10px;
-            background-color: #f8f9fa;
-            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 15px;
+            background: var(--light-color);
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .order-item:hover {
+            transform: translateY(-5px);
         }
 
         .order-item-img {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
-            border-radius: 10px;
-            margin-left: 15px;
+            border-radius: 12px;
+            margin-left: 20px;
+            border: 1px solid var(--cream);
         }
 
         .order-item-info {
@@ -93,103 +131,187 @@
         }
 
         .order-item-title {
+            font-size: 1.2rem;
             font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .order-item-info p {
+            font-size: 0.9rem;
+            color: var(--text-dark);
             margin-bottom: 5px;
         }
 
         .order-item-price {
-            color: var(--primary-color);
+            font-size: 1.1rem;
             font-weight: 700;
+            color: var(--primary-color);
         }
 
         .timeline {
             position: relative;
-            padding: 20px 0;
-            margin: 30px 0;
+            padding: 30px 0;
+            margin: 40px 0;
         }
 
         .timeline:before {
             content: '';
             position: absolute;
             top: 0;
-            right: 15px;
-            width: 3px;
+            right: 20px;
+            width: 4px;
             height: 100%;
-            background-color: var(--secondary-color);
+            background: linear-gradient(to bottom, var(--secondary-color), var(--primary-color));
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 20px;
-            padding-right: 35px;
+            margin-bottom: 25px;
+            padding-right: 50px;
         }
 
-        .timeline-item:last-child {
-            margin-bottom: 0;
+        .timeline-item.active .timeline-dot {
+            background: var(--success);
+            border-color: var(--light-color);
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+        .timeline-item.pending .timeline-dot {
+            background: var(--accent-color);
+            border-color: var(--light-color);
+            box-shadow: 0 0 10px rgba(255, 230, 109, 0.5);
         }
 
         .timeline-dot {
             position: absolute;
-            top: 0;
-            right: 6px;
-            width: 20px;
-            height: 20px;
+            top: 5px;
+            right: 11px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background-color: var(--secondary-color);
-            border: 4px solid white;
+            background: var(--secondary-color);
+            border: 4px solid var(--light-color);
+            transition: all 0.3s ease;
         }
 
         .timeline-content {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--cream);
         }
 
         .timeline-date {
-            font-size: 0.85rem;
-            color: #777;
-            margin-bottom: 5px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 500;
         }
 
         .action-buttons {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-success,
+        .btn-warning,
+        .btn-outline-primary,
+        .btn-outline-danger {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
+            background: var(--primary-color);
             border-color: var(--primary-color);
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: 700;
+        }
+
+        .btn-primary:hover {
+            background: var(--pink);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background: darken(var(--success), 10%);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+
+        .btn-warning:hover {
+            background: darken(var(--accent-color), 10%);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 230, 109, 0.3);
         }
 
         .btn-outline-primary {
             border-color: var(--primary-color);
             color: var(--primary-color);
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: 700;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: var(--light-color);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline-danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-outline-danger:hover {
+            background: var(--danger);
+            color: var(--light-color);
+            transform: translateY(-3px);
+        }
+
+        .contact-buttons a {
+            font-size: 0.95rem;
+            padding: 10px 20px;
         }
 
         .pet-icon {
             position: absolute;
-            font-size: 1.5rem;
+            font-size: 2rem;
             opacity: 0.1;
             z-index: -1;
         }
 
-        /* Animation */
+        /* Animations */
         @keyframes float {
             0% {
                 transform: translateY(0px);
             }
 
             50% {
-                transform: translateY(-15px);
+                transform: translateY(-20px);
             }
 
             100% {
@@ -198,11 +320,7 @@
         }
 
         .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .success-animation {
-            animation: successPulse 2s ease-in-out;
+            animation: float 4s ease-in-out infinite;
         }
 
         @keyframes successPulse {
@@ -211,7 +329,29 @@
             }
 
             50% {
-                transform: scale(1.05);
+                transform: scale(1.03);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-animation {
+            animation: successPulse 2s ease-in-out;
+        }
+
+        .pending-animation .timeline-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
             }
 
             100% {
@@ -221,12 +361,27 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .transaction-container {
+                padding: 15px;
+            }
+
+            .transaction-header {
+                padding: 20px;
+            }
+
+            .transaction-header h2 {
+                font-size: 1.5rem;
+            }
+
             .action-buttons {
                 flex-direction: column;
+                gap: 10px;
             }
 
             .detail-item {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
             }
 
             .order-item {
@@ -237,21 +392,39 @@
             .order-item-img {
                 margin-left: 0;
                 margin-bottom: 15px;
+                width: 120px;
+                height: 120px;
             }
 
-            body {
-                padding-top: 70px;
+            .timeline:before {
+                right: 15px;
+            }
+
+            .timeline-dot {
+                right: 6px;
+            }
+
+            .timeline-item {
+                padding-right: 40px;
             }
         }
     </style>
 @endsection
 
 @section('content')
+
+    <div class="mt-128"></div>
+    <!-- Floating pet icons -->
+    <i class="bi bi-egg-fried pet-icon floating" style="top: 10%; left: 5%; animation-delay: 0.2s"></i>
+    <i class="bi bi-bone pet-icon floating" style="top: 80%; right: 10%; animation-delay: 0.5s"></i>
+    <i class="bi bi-balloon-heart pet-icon floating" style="top: 40%; right: 5%; animation-delay: 0.7s"></i>
+    <i class="bi bi-gem pet-icon floating" style="bottom: 15%; left: 15%; animation-delay: 0.3s"></i>
+
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div
-                    class="transaction-container {{ $transaction->status === 'success' ? 'success-animation' : ($transaction->status === 'pending' ? 'pending-animation' : 'failed-animation') }}">
+                    class="transaction-container {{ $transaction->status === 'success' ? 'success-animation' : ($transaction->gateway === 'manual' && $transaction->status === 'pending' ? 'pending-animation' : 'failed-animation') }}">
                     <div class="transaction-header">
                         @if ($transaction->gateway === 'manual' && $transaction->status === 'pending')
                             <h2 class="mb-3"><i class="bi bi-clock-history me-2"></i>در انتظار تایید پرداخت</h2>
@@ -261,7 +434,8 @@
                             <p class="mb-0">درخواست شما برای پرداخت از طریق کارت‌به‌کارت با موفقیت ثبت شد</p>
                             <p class="mt-2">
                                 لطفاً پس از انجام واریز، رسید پرداخت را به همراه شماره سفارش خود
-                                <span class="text-success">{{ '(' . $transaction->payable->tracking_code . ')' }}</span>
+                                <span
+                                    class="text-success fw-bold">{{ '(' . $transaction->payable->tracking_code . ')' }}</span>
                                 برای تیم پشتیبانی ارسال نمایید.
                             </p>
                             <div class="contact-buttons mt-3">
@@ -274,8 +448,7 @@
                             </div>
                             <p class="mt-3">
                                 در صورتی که هنوز مبلغ را واریز نکرده‌اید، لطفاً در اسرع وقت پرداخت را انجام دهید و سپس رسید
-                                را
-                                از طریق تلگرام یا سایر پیام رسان ها برای ما ارسال کنید تا سفارش شما تایید و پردازش شود.
+                                را از طریق تلگرام یا سایر پیام‌رسان‌ها برای ما ارسال کنید تا سفارش شما تأیید و پردازش شود.
                             </p>
                         @elseif($transaction->status === 'success')
                             <h2 class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>تراکنش موفق</h2>
@@ -288,7 +461,7 @@
                             <div class="status-failed">
                                 <i class="bi bi-x-lg me-2"></i>پرداخت انجام نشد
                             </div>
-                            <p class="mb-0">متاسفانه پرداخت شما با مشکل مواجه شد</p>
+                            <p class="mb-0">متأسفانه پرداخت شما با مشکل مواجه شد</p>
                         @endif
                     </div>
 
@@ -324,7 +497,7 @@
                                 <span>وضعیت تراکنش:</span>
                                 <span
                                     class="badge {{ $transaction->status === 'success' ? 'bg-success' : ($transaction->status === 'pending' ? 'bg-warning' : 'bg-danger') }}">
-                                    {{ $transaction->status === 'pending' ? 'در انتظار تایید' : ($transaction->status === 'success' ? 'موفق' : 'ناموفق') }}
+                                    {{ $transaction->status === 'pending' ? 'در انتظار تأیید' : ($transaction->status === 'success' ? 'موفق' : 'ناموفق') }}
                                 </span>
                             </div>
                         </div>
@@ -362,19 +535,18 @@
                         @endif
 
                         @if ($transaction->status === 'success' || ($transaction->gateway === 'manual' && $transaction->status === 'pending'))
-                            <!-- آیتم های سفارش -->
+                            <!-- آیتم‌های سفارش -->
                             <div class="order-items">
-                                <h4 class="detail-title">آیتم های سفارش</h4>
-
+                                <h4 class="detail-title">آیتم‌های سفارش</h4>
                                 @foreach ($order->items as $item)
                                     <div class="order-item">
                                         <img src="{{ $item->product->firstMedia('main_image')->full_url }}"
                                             class="order-item-img" alt="{{ $item->product->name }}">
                                         <div class="order-item-info">
                                             <h5 class="order-item-title">{{ $item->product->name }}</h5>
-                                            <p class="mb-1 text-muted">تعداد: {{ $item->quantity }} عدد</p>
+                                            <p class="mb-1">تعداد: {{ $item->quantity }} عدد</p>
                                             @if ($item->attributeValues->count() > 0)
-                                                <p class="mb-1 text-muted small">
+                                                <p class="mb-1 small">
                                                     مشخصات:
                                                     @foreach ($item->attributeValues as $attrValue)
                                                         {{ $attrValue->attribute->title }}: {{ $attrValue->value }}
@@ -388,7 +560,6 @@
                                         <div class="order-item-price">{{ number_format($item->total_price) }} تومان</div>
                                     </div>
                                 @endforeach
-
                                 <div class="detail-item mt-4">
                                     <span>هزینه ارسال:</span>
                                     <span>{{ number_format($order->shipment->shipping_cost ?? 0) }} تومان</span>
@@ -413,16 +584,14 @@
                             <!-- زمانبندی سفارش -->
                             <div class="timeline">
                                 <h4 class="detail-title">وضعیت سفارش</h4>
-
                                 <div class="timeline-item active">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
                                         <div class="timeline-date">{{ $transaction->created_at->format('Y/m/d - H:i') }}
                                         </div>
-                                        <p class="mb-0">پرداخت موفقیت آمیز بود</p>
+                                        <p class="mb-0">پرداخت موفقیت‌آمیز بود</p>
                                     </div>
                                 </div>
-
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
@@ -431,16 +600,14 @@
                                         <p class="mb-0">در حال انتقال به درگاه پرداخت</p>
                                     </div>
                                 </div>
-
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
                                         <div class="timeline-date">
                                             {{ $transaction->created_at->subMinutes(5)->format('Y/m/d - H:i') }}</div>
-                                        <p class="mb-0">تایید نهایی سبد خرید</p>
+                                        <p class="mb-0">تأیید نهایی سبد خرید</p>
                                     </div>
                                 </div>
-
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
@@ -450,20 +617,18 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($transaction->status === 'pending')
+                        @elseif($transaction->gateway === 'manual' && $transaction->status === 'pending')
                             <!-- زمانبندی سفارش - در انتظار -->
                             <div class="timeline">
                                 <h4 class="detail-title">وضعیت سفارش</h4>
-
-                                <div class="timeline-item active">
-                                    <div class="timeline-dot pending"></div>
+                                <div class="timeline-item active pending">
+                                    <div class="timeline-dot"></div>
                                     <div class="timeline-content">
                                         <div class="timeline-date">{{ $transaction->created_at->format('Y/m/d - H:i') }}
                                         </div>
-                                        <p class="mb-0">در انتظار تایید پرداخت</p>
+                                        <p class="mb-0">در انتظار تأیید پرداخت</p>
                                     </div>
                                 </div>
-
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
@@ -472,16 +637,14 @@
                                         <p class="mb-0">درخواست پرداخت کارت به کارت</p>
                                     </div>
                                 </div>
-
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
                                         <div class="timeline-date">
                                             {{ $transaction->created_at->subMinutes(5)->format('Y/m/d - H:i') }}</div>
-                                        <p class="mb-0">تایید نهایی سبد خرید</p>
+                                        <p class="mb-0">تأیید نهایی سبد خرید</p>
                                     </div>
                                 </div>
-
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
@@ -493,7 +656,7 @@
                             </div>
                         @endif
 
-                        <!-- دکمه های اقدام -->
+                        <!-- دکمه‌های اقدام -->
                         <div class="action-buttons mt-4">
                             @if ($transaction->status === 'success')
                                 <button class="btn btn-primary me-2" onclick="window.print()">
@@ -513,17 +676,17 @@
                                 <button class="btn btn-warning me-2" onclick="uploadReceipt()">
                                     <i class="bi bi-upload me-2"></i>آپلود رسید
                                 </button>
-                                <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
+                                <a href="{{ route('page.home') }}" class="btn btn-outline-primary me-2">
                                     <i class="bi bi-cart me-2"></i>ویرایش سفارش
                                 </a>
                                 <a href="{{ route('products.index') }}" class="btn btn-outline-primary">
                                     <i class="bi bi-house me-2"></i>بازگشت به فروشگاه
                                 </a>
                             @else
-                                <a href="{{ route('cart.index') }}" class="btn btn-primary me-2">
+                                <a href="{{ route('page.home') }}" class="btn btn-primary me-2">
                                     <i class="bi bi-arrow-repeat me-2"></i>تلاش مجدد
                                 </a>
-                                <a href="{{ route('cart.index') }}" class="btn btn-outline-primary me-2">
+                                <a href="{{ route('page.home') }}" class="btn btn-outline-primary me-2">
                                     <i class="bi bi-cart me-2"></i>بازگشت به سبد خرید
                                 </a>
                                 <a href="{{ route('contact') }}" class="btn btn-outline-danger">
@@ -541,21 +704,15 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // مدیریت وضعیت تراکنش بر اساس URL parameter (اختیاری)
-            const urlParams = new URLSearchParams(window.location.search);
-            const status = urlParams.get('status');
-
             // تابع دانلود فاکتور (PDF)
             function downloadInvoice() {
-                // می‌توانید از کتابخانه jsPDF یا لینک دانلود استفاده کنید
                 Swal.fire({
                     icon: 'info',
                     title: 'دانلود فاکتور',
                     text: 'فاکتور در حال آماده‌سازی است...',
                     confirmButtonText: 'باشه',
-                    confirmButtonColor: '#8e44ad'
+                    confirmButtonColor: var (--purple)
                 });
-                // window.open('/invoices/download/{{ $transaction->id }}', '_blank');
             }
 
             // تابع آپلود رسید
@@ -574,8 +731,9 @@
                     `,
                     showCancelButton: true,
                     confirmButtonText: 'آپلود',
-                    confirmButtonColor: '#28a745',
+                    confirmButtonColor: var (--success),
                     cancelButtonText: 'لغو',
+                    cancelButtonColor: var (--danger),
                     preConfirm: () => {
                         const file = document.getElementById('receiptFile').files[0];
                         const trackingNumber = document.getElementById('trackingNumber').value;
@@ -585,44 +743,39 @@
                             return false;
                         }
 
-                        // آپلود با Ajax
                         const formData = new FormData();
                         formData.append('receipt', file);
                         formData.append('tracking_number', trackingNumber);
                         formData.append('_token', '{{ csrf_token() }}');
 
-                        fetch('{{ route('transactions.uploadReceipt', $transaction->id) }}', {
+                        return fetch('{{ route('page.home', $transaction->id) }}', {
                                 method: 'POST',
                                 body: formData
                             })
                             .then(response => response.json())
                             .then(data => {
-                                if (data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'موفقیت آمیز',
-                                        text: 'رسید با موفقیت آپلود شد و در حال بررسی است',
-                                        confirmButtonColor: '#8e44ad'
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'خطا',
-                                        text: data.message || 'خطا در آپلود رسید',
-                                        confirmButtonColor: '#8e44ad'
-                                    });
+                                if (!data.success) {
+                                    throw new Error(data.message || 'خطا در آپلود رسید');
                                 }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'خطا',
-                                    text: 'خطا در ارتباط با سرور',
-                                    confirmButtonColor: '#8e44ad'
-                                });
+                                return data;
                             });
                     }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'موفقیت‌آمیز',
+                            text: 'رسید با موفقیت آپلود شد و در حال بررسی است',
+                            confirmButtonColor: var (--purple)
+                        });
+                    }
+                }).catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'خطا',
+                        text: error.message || 'خطا در ارتباط با سرور',
+                        confirmButtonColor: var (--purple)
+                    });
                 });
             }
 
@@ -633,11 +786,6 @@
                     item.classList.add('animate');
                 }, index * 200);
             });
-
-            // چاپ صفحه
-            function printTransaction() {
-                window.print();
-            }
         });
     </script>
 @endsection

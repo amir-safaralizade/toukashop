@@ -14,7 +14,14 @@
     --accent-color: #ffe66d;
     --dark-color: #292f36;
     --light-color: #f7fff7;
+    --text-dark: #333;
+    --cream: #f8f1e9;
+    --pink: #ff9eb7;
+    --purple: #8e44ad;
+    --success: #28a745;
+    --danger: #dc3545;
 }
+
 
 body {
     font-family: "m_b", sans-serif;

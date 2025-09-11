@@ -29,7 +29,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="route('page.home')">
+            <a class="navbar-brand" href="{{route('page.home')}}">
                 <img src="{{ asset('site/logos/ll.png') }}" alt="Touka Pet Logo">
                 توکا پت
             </a>
