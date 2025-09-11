@@ -129,7 +129,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::slug('vanellIr', '_').'_session'
+        Str::slug('ToukaShopIr', '_') . '_session'
     ),
 
     /*
