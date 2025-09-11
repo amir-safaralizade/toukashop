@@ -110,115 +110,35 @@
             <p class="lead">محصولاتی که مشتریان ما عاشقشان هستند</p>
         </div>
         <div class="row g-4">
-            <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp">
-                <div class="product-card">
-                    <div class="product-badge">پرفروش</div>
-                    <img src="{{asset('site/images/p1.jpeg')}}"
-                        class="product-img w-100" alt="غذای گربه">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge bg-light text-dark">غذای گربه</span>
-                            <div class="text-warning">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
+            @foreach ($data->products as $product)
+                <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp">
+                    <div class="product-card">
+                        <div class="product-badge">پرفروش</div>
+                        <img src="{{ asset('site/images/p1.jpeg') }}" class="product-img w-100" alt="غذای گربه">
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge bg-light text-dark">{{ $product->name }}</span>
+                                <div class="text-warning">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                </div>
                             </div>
-                        </div>
-                        <h5>غذای گربه اورجینال تونا</h5>
-                        <p class="text-muted small">غذای کامل و مقوی برای گربه‌های بالغ</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                                <span class="price">۲۹۰,۰۰۰ تومان</span>
-                                <span class="old-price ms-2">۳۲۰,۰۰۰ تومان</span>
+                            <h5>{{ $product->name }}</h5>
+                            <p class="text-muted small">{{ $product->name }}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    <span class="price">{{ $product->price * 1.2 }}</span>
+                                    <span class="old-price ms-2">{{ $product->price }}</span>
+                                </div>
+                                <a href="{{route('products.show' , $product->slug)}}" class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></a>
                             </div>
-                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp" data-wow-delay="0.1s">
-                <div class="product-card">
-                    <div class="product-badge">جدید</div>
-                    <img src="{{asset('site/images/p2.png')}}"
-                        class="product-img w-100" alt="اسباب بازی سگ">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge bg-light text-dark">اسباب بازی</span>
-                            <div class="text-warning">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                        </div>
-                        <h5>توپ جویدنی ضد استرس</h5>
-                        <p class="text-muted small">مناسب برای سگ‌های بازیگوش</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                                <span class="price">۱۵۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp" data-wow-delay="0.2s">
-                <div class="product-card">
-                    <img src="{{asset('site/images/p3.jpeg')}}"
-                        class="product-img w-100" alt="قلاده چرمی">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge bg-light text-dark">اکسسوری</span>
-                            <div class="text-warning">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star"></i>
-                            </div>
-                        </div>
-                        <h5>قلاده چرمی لاکچری</h5>
-                        <p class="text-muted small">چرم طبیعی با دوخت دستی</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                                <span class="price">۴۵۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp" data-wow-delay="0.3s">
-                <div class="product-card">
-                    <div class="product-badge">تخفیف</div>
-                    <img src="{{asset('site/images/p4.jpeg')}}"
-                        class="product-img w-100" alt="خانه گربه">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge bg-light text-dark">وسایل خواب</span>
-                            <div class="text-warning">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
-                            </div>
-                        </div>
-                        <h5>خانه چوبی گربه</h5>
-                        <p class="text-muted small">چوب طبیعی با طراحی ارگونومیک</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                                <span class="price">۱,۲۹۰,۰۰۰ تومان</span>
-                                <span class="old-price ms-2">۱,۵۰۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
         <div class="text-center mt-5">
             <a href="#" class="btn btn-primary btn-lg">مشاهده همه محصولات</a>

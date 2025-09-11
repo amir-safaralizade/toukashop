@@ -2,702 +2,437 @@
 
 @section('styles')
     <style>
-        /* محصولات - استایل‌های پایه */
-        .product-main {
-            padding: 4rem 0;
-            background-color: var(--cream);
+        .breadcrumb {
+            background-color: transparent;
+            padding: 15px 0;
         }
 
-        /* گالری محصول */
+        .breadcrumb-item a {
+            color: var(--dark-color);
+            text-decoration: none;
+        }
+
         .product-gallery {
-            position: relative;
-            background-color: var(--white);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(179, 153, 212, 0.1);
-            margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .main-image-container {
-            width: 100%;
-            max-height: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
             border-radius: 15px;
-            margin-bottom: 1.5rem;
-            background-color: var(--cream);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .main-image {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-            cursor: zoom-in;
-        }
-
-        .main-image:hover {
-            transform: scale(1.03);
+            height: 500px;
+            object-fit: cover;
+            width: 100%;
         }
 
         .thumbnail-container {
             display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            max-width: 100%;
-            overflow-x: auto;
-            padding: 10px 0;
+            margin-top: 15px;
         }
 
         .thumbnail {
             width: 80px;
             height: 80px;
             object-fit: cover;
+            margin-left: 10px;
             border-radius: 10px;
             cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.3s ease;
-            background-color: var(--cream);
-            padding: 5px;
         }
 
-        .thumbnail:hover {
-            border-color: var(--pink);
-            transform: translateY(-5px);
-        }
-
+        .thumbnail:hover,
         .thumbnail.active {
-            border-color: var(--purple);
-            box-shadow: 0 5px 15px rgba(179, 153, 212, 0.3);
+            border-color: var(--primary-color);
         }
 
-        /* افکت زوم روی تصویر اصلی */
-        .zoomed {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: zoom-out;
-        }
-
-        .zoomed img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-        }
-
-        /* استایل بخش اطلاعات محصول */
         .product-info {
-            background-color: var(--white);
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(179, 153, 212, 0.1);
-            animation: fadeInUp 0.6s ease-out;
-            animation-delay: 0.2s;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .product-title {
-            font-family: "Dancing Script", cursive;
-            font-size: 2.5rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            font-weight: 900;
+            font-size: 2rem;
+            margin-bottom: 15px;
         }
 
-        .product-subtitle {
-            font-size: 1.1rem;
-            color: var(--purple);
-            margin-bottom: 1.5rem;
-        }
-
-        .product-price {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--purple);
-            margin-bottom: 2rem;
-        }
-
-        .product-oldprice {
-            text-decoration: line-through;
-            color: var(--pink);
-            font-size: 1.2rem;
-            margin-left: 0.8rem;
-        }
-
-        /* استایل انتخاب رنگ */
-        .product-color-options {
-            margin-bottom: 2rem;
-        }
-
-        .product-color-options h5 {
-            font-size: 1.1rem;
-            color: var(--text-dark);
-            margin-bottom: 1rem;
-        }
-
-        .color-options-container {
+        .product-meta {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-
-        .color-option {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-
-        input[name="product-color"]:checked+.color-option {
-            border-color: var(--text-dark);
-            box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--text-dark);
-        }
-
-        .color-option::after {
-            content: attr(title);
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7rem;
-            background-color: var(--text-dark);
-            color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .color-option:hover::after {
-            opacity: 1;
-        }
-
-        /* استایل انتخاب سایز */
-        .size-options {
-            margin-bottom: 2rem;
-        }
-
-        .size-options h5 {
-            font-size: 1.1rem;
-            color: var(--text-dark);
-            margin-bottom: 1rem;
-        }
-
-        .size-options-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-
-        .size-option {
-            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            cursor: pointer;
-            background-color: var(--light-pink);
-            color: var(--text-dark);
-            font-weight: 600;
-            transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
 
-        .size-option:hover {
-            background-color: var(--pink);
-            color: white;
+        .rating {
+            color: var(--accent-color);
+            margin-left: 15px;
         }
 
-        input[name="product-size"]:checked+.size-option {
-            background: linear-gradient(45deg, var(--pink), var(--purple));
-            color: white;
-            box-shadow: 0 5px 15px rgba(179, 153, 212, 0.3);
+        .review-count {
+            color: #777;
+            font-size: 0.9rem;
         }
 
-        .size-option.unavailable {
-            background-color: #f5f5f5;
-            color: #999;
+        .price-container {
+            margin: 25px 0;
+        }
+
+        .current-price {
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .old-price {
             text-decoration: line-through;
-            cursor: not-allowed;
+            color: #999;
+            font-size: 1.2rem;
+            margin-right: 15px;
         }
 
-        input[name="product-size"]:disabled+.size-option {
-            pointer-events: none;
+        .discount-badge {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
         }
 
-        /* استایل انتخاب تعداد */
+        .product-description {
+            margin: 30px 0;
+            line-height: 1.8;
+        }
+
         .quantity-selector {
             display: flex;
             align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .quantity-selector h5 {
-            font-size: 1.1rem;
-            color: var(--text-dark);
-            margin-bottom: 0;
-            margin-left: 1rem;
+            margin: 25px 0;
         }
 
         .quantity-btn {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
-            border: none;
-            background-color: var(--light-pink);
-            color: var(--text-dark);
+            border: 1px solid #ddd;
+            background: none;
             font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .quantity-btn:hover {
-            background-color: var(--pink);
-            color: white;
+            cursor: pointer;
         }
 
         .quantity-input {
             width: 60px;
             height: 40px;
             text-align: center;
-            border: 1px solid var(--light-pink);
-            border-radius: 10px;
-            margin: 0 0.5rem;
-            font-weight: 600;
+            border: 1px solid #ddd;
+            border-left: none;
+            border-right: none;
         }
 
-        .quantity-input:focus {
-            outline: none;
-            border-color: var(--purple);
+        .action-btns {
+            display: flex;
+            margin-top: 30px;
         }
 
-        /* استایل دکمه‌های اصلی */
         .add-to-cart {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(45deg, var(--pink), var(--purple));
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 12px 30px;
             border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
+            font-weight: 700;
+            margin-left: 15px;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(179, 153, 212, 0.3);
-            margin-bottom: 1rem;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
         }
 
         .add-to-cart:hover {
+            background-color: #e05a5a;
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(179, 153, 212, 0.4);
-        }
-
-        .add-to-cart::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(30deg);
-            transition: all 0.3s ease;
-        }
-
-        .add-to-cart:hover::after {
-            left: 100%;
-        }
-
-        .add-to-cart i {
-            margin-left: 0.8rem;
-            font-size: 1.2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .wishlist-btn {
-            display: inline-flex;
+            background: none;
+            border: 2px solid #ddd;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            background-color: transparent;
-            color: var(--text-dark);
-            border: 2px solid var(--light-pink);
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
+            color: #777;
             transition: all 0.3s ease;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
         }
 
         .wishlist-btn:hover {
-            background-color: var(--light-pink);
-            border-color: var(--pink);
-            color: var(--pink);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
-        .wishlist-btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 158, 183, 0.1);
-            transform: rotate(30deg);
-            transition: all 0.3s ease;
+        .product-meta-info {
+            margin: 30px 0;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
         }
 
-        .wishlist-btn:hover::after {
-            left: 100%;
-        }
-
-        .wishlist-btn i {
-            margin-left: 0.8rem;
-            font-size: 1.2rem;
-        }
-
-        /* استایل نشان‌های اعتماد */
-        .trust-badges {
-            border-top: 1px solid rgba(179, 153, 212, 0.2);
-            padding-top: 1.5rem;
-            margin-top: 1.5rem;
+        .meta-item {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
+            margin-bottom: 15px;
         }
 
-        .badge-item {
-            background-color: var(--light-pink);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .badge-item:hover {
-            background-color: var(--pink);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 158, 183, 0.3);
-        }
-
-        .badge-item i {
-            margin-left: 0.5rem;
-        }
-
-        /* استایل بخش "چرا از ما خرید کنید" */
-        .why-us {
-            margin-top: 3rem;
-            padding: 2rem 0;
-            background-color: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(179, 153, 212, 0.1);
-        }
-
-        .why-us h4 {
-            font-family: 'Dancing Script', cursive;
-            color: var(--purple);
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-        }
-
-        .feature-card {
-            background-color: var(--cream);
-            border-radius: 15px;
-            height: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(179, 153, 212, 0.1);
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(179, 153, 212, 0.2);
-        }
-
-        .feature-card i {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--pink), var(--purple));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .feature-card h6 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .feature-card p {
-            font-size: 0.9rem;
-            color: var(--purple);
+        .meta-item:last-child {
             margin-bottom: 0;
         }
 
-        /* استایل تب‌های محصول */
-        .product-details {
-            margin-top: 4rem;
-        }
-
-        .details-tabs {
+        .meta-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(78, 205, 196, 0.1);
+            color: var(--secondary-color);
+            border-radius: 50%;
             display: flex;
-            border-bottom: 1px solid rgba(179, 153, 212, 0.2);
-            margin-bottom: 2rem;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            flex-shrink: 0;
         }
 
-        .tab-btn {
-            background: none;
+        .product-tabs {
+            margin: 60px 0;
+        }
+
+        .nav-tabs {
+            border-bottom: none;
+            justify-content: center;
+        }
+
+        .nav-tabs .nav-link {
             border: none;
-            padding: 1rem 2rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            cursor: pointer;
+            color: #777;
+            font-weight: 700;
+            padding: 15px 25px;
             position: relative;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            font-size: inherit;
+            margin: 0 5px;
         }
 
-        .tab-btn:hover {
-            color: var(--purple);
+        .nav-tabs .nav-link:after {
+            display: none;
         }
 
-        .tab-btn.active {
-            color: var(--pink);
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background: none;
         }
 
-        .tab-btn.active::after {
-            content: "";
+        .nav-tabs .nav-link.active:before {
+            content: '';
             position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
+            width: 50%;
             height: 3px;
-            background: linear-gradient(90deg, var(--pink), var(--purple));
+            bottom: 0;
+            right: 25%;
+            background-color: var(--primary-color);
+            border-radius: 3px;
         }
 
         .tab-content {
-            display: none;
-            padding: 1.5rem;
-            background-color: var(--white);
+            padding: 40px;
+            background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(179, 153, 212, 0.1);
-            animation: fadeIn 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
         }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* استایل محصولات مرتبط */
         .related-products {
-            padding: 4rem 0;
-            background-color: var(--white);
+            margin: 60px 0;
         }
 
-        .related-title {
-            font-family: "Dancing Script", cursive;
-            font-size: 2.5rem;
-            color: var(--text-dark);
-            margin-bottom: 2rem;
-            text-align: center;
+        .section-title {
+            font-weight: 900;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 50px;
         }
 
-        .related-card {
-            background-color: var(--cream);
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            bottom: -15px;
+            right: 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .product-card {
+            border: none;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(179, 153, 212, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
-            margin-bottom: 1.5rem;
+            margin-bottom: 30px;
+            background: white;
         }
 
-        .related-card:hover {
+        .product-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(179, 153, 212, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .related-img {
-            width: 100%;
+        .product-img {
             height: 200px;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: all 0.5s ease;
         }
 
-        .related-card:hover .related-img {
+        .product-card:hover .product-img {
             transform: scale(1.05);
         }
 
-        .related-info {
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .related-name {
-            font-size: 1.2rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .related-price {
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            padding: 5px 15px;
+            border-radius: 50px;
             font-weight: 700;
-            color: var(--purple);
-            font-size: 1.1rem;
+            font-size: 0.8rem;
         }
 
-        /* استایل رسپانسیو */
-        @media (max-width: 992px) {
-            .product-title {
-                font-size: 2rem;
-            }
-
-            .main-image-container {
-                max-height: 400px;
-            }
+        .price {
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: 1.3rem;
         }
 
-        @media (max-width: 768px) {
-
-            .product-gallery,
-            .product-info {
-                padding: 1.5rem;
-            }
-
-            .product-title {
-                font-size: 1.8rem;
-            }
-
-            .thumbnail {
-                width: 60px;
-                height: 60px;
-            }
-
-            .trust-badges {
-                justify-content: center;
-            }
-
-            .feature-card {
-                padding: 1rem;
-            }
-
-            .details-tabs {
-                flex-wrap: wrap;
-            }
-
-            .tab-btn {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-            }
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
         }
 
-        @media (max-width: 576px) {
-            .product-main {
-                padding: 2rem 0;
-            }
-
-            .main-image-container {
-                max-height: 350px;
-            }
-
-            .thumbnail {
-                width: 50px;
-                height: 50px;
-            }
-
-            .size-option {
-                width: 40px;
-                height: 40px;
-            }
-
-            .why-us .col-6 {
-                padding: 0 5px;
-            }
-
-            .related-title {
-                font-size: 2rem;
-            }
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 80px 0 30px;
         }
 
+        .footer-logo {
+            font-weight: 900;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
 
-        .size-guide-link {
+        .footer-links h5 {
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-links h5:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            bottom: -8px;
+            right: 0;
+            background: var(--primary-color);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            padding-right: 5px;
+        }
+
+        .social-icons a {
             display: inline-flex;
             align-items: center;
-            color: var(--purple);
-            text-decoration: none;
-            font-size: 0.9rem;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            margin-left: 10px;
             transition: all 0.3s ease;
-            padding: 0.3rem 0.6rem;
-            border-radius: 20px;
-            background-color: rgba(179, 153, 212, 0.1);
         }
 
-        .size-guide-link:hover {
-            background-color: rgba(179, 153, 212, 0.2);
-            text-decoration: underline;
+        .social-icons a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
         }
 
-        .size-guide-link i {
-            margin-left: 0.3rem;
-            font-size: 0.9rem;
+        /* Animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-image {
+                height: 350px;
+            }
+
+            .action-btns {
+                flex-direction: column;
+            }
+
+            .add-to-cart {
+                margin-left: 0;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+
+            .wishlist-btn {
+                width: 100%;
+                border-radius: 50px;
+                height: auto;
+                padding: 12px;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
         }
     </style>
 @endsection
@@ -707,28 +442,36 @@
 @endsection
 
 @section('content')
-    <main class="product-main">
+    <!-- Breadcrumb -->
+    <div class="container mt-128">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('page.home') }}">خانه</a></li>
+                <li class="breadcrumb-item"><a href="">محصولات گربه</a></li>
+                <li class="breadcrumb-item"><a href="">غذای گربه</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Product Section -->
+    <section class="product-section">
         <div class="container">
             <div class="row">
-                <!-- تصاویر محصول -->
+                <!-- Product Gallery -->
                 <div class="col-lg-6">
                     <div class="product-gallery">
                         @php
                             $mainImage = $product->firstMedia('main_image');
                             $galleryImages = $product->mediaGroup('gallery')->get();
                         @endphp
-
-                        <div class="main-image-container">
-                            <img src="{{ $mainImage?->full_url }}" alt="{{ $mainImage?->alt ?? $product->name }}"
-                                class="main-image" id="mainImage" onclick="zoomImage(this)" />
-                        </div>
-
+                        <img src="{{ $mainImage?->full_url }}" alt="{{ $mainImage?->alt ?? $product->name }}"
+                            class="main-image" id="mainImage" onclick="zoomImage(this)" />
                         <div class="thumbnail-container mt-3">
                             @if ($mainImage)
                                 <img src="{{ $mainImage->full_url }}" alt="{{ $mainImage->alt ?? $product->name }}"
                                     class="thumbnail active" onclick="changeImage(this, '{{ $mainImage->full_url }}')" />
                             @endif
-
                             @foreach ($galleryImages as $image)
                                 <img src="{{ $image->full_url }}" alt="{{ $image->alt ?? $product->name }}"
                                     class="thumbnail" onclick="changeImage(this, '{{ $image->full_url }}')" />
@@ -737,27 +480,32 @@
                     </div>
                 </div>
 
-                <!-- اطلاعات محصول -->
+                <!-- Product Info -->
                 <div class="col-lg-6">
                     <div class="product-info">
                         <h1 class="product-title">{{ $product->name }}</h1>
-                        <p class="product-subtitle">
-                            {{ $product->short_description ?? 'محصول با کیفیت از برند ونل' }}
-                        </p>
-
-                        <div class="product-price">
-                            <span class="product-oldprice">{{ number_format(ceil($product->price * 1.12)) }} تومان</span>
-                            {{ number_format($product->price) }} تومان
+                        <div class="product-meta">
+                            <div class="rating">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </div>
+                            <span class="review-count">(12 نظر)</span>
+                            <span class="badge bg-success ms-3">موجود در انبار</span>
                         </div>
 
-                        <div class="quantity-selector mt-4">
-                            <h5 class="mb-0">تعداد:</h5>
-                            <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input" id="quantity" />
-                            <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        <div class="price-container">
+                            <span class="old-price">{{ number_format(ceil($product->price * 1.12)) }} تومان</span>
+                            <span class="current-price">{{ number_format($product->price) }} تومان</span>
+                            <span class="discount-badge">۱۲٪ تخفیف</span>
                         </div>
 
-                        {{-- انتخاب سایز --}}
+                        <div class="product-description">
+                            <p>{{ $product->short_description ?? 'محصول با کیفیت از برند ونل' }}</p>
+                        </div>
+
                         @if ($product->attributeValues->where('attribute.name', 'size')->count())
                             <div class="size-options">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -778,7 +526,6 @@
                             </div>
                         @endif
 
-                        {{-- انتخاب رنگ --}}
                         @if ($product->attributeValues->where('attribute.name', 'color')->count())
                             <div class="product-color-options">
                                 <h5>رنگ:</h5>
@@ -794,35 +541,54 @@
                             </div>
                         @endif
 
+                        <div class="quantity-selector mt-4">
+                            <label for="quantity" class="me-3">تعداد:</label>
+                            <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input" id="quantity" />
+                            <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        </div>
 
-                        <button class="add-to-cart mt-3">
-                            <i class="bi bi-cart-fill"></i> افزودن به سبد خرید
-                        </button>
+                        <div class="action-btns">
+                            <button class="add-to-cart pulse-animation">
+                                <i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید
+                            </button>
+                            <button class="wishlist-btn">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </div>
 
-                        <button class="wishlist-btn mt-2">
-                            <i class="bi bi-heart"></i> افزودن به لیست علاقه‌مندی‌ها
-                        </button>
+                        <div class="product-meta-info">
+                            <div class="meta-item">
+                                <div class="meta-icon"><i class="bi bi-upc-scan"></i></div>
+                                <div><strong>کد محصول:</strong> {{ $product->sku ?? 'CAT-' . $product->id }}</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon"><i class="bi bi-box-seam"></i></div>
+                                <div><strong>دسته‌بندی:</strong> {{ $product->category->name ?? 'غذای گربه' }}</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon"><i class="bi bi-tags"></i></div>
+                                <div><strong>برچسب‌ها:</strong> </div>
+                            </div>
+                        </div>
 
-                        <div class="trust-badges">
-                            <div class="badge-item">
-                                <i class="bi bi-shield-check"></i>
-                                <span>گارانتی اصالت کالا</span>
-                            </div>
-                            <div class="badge-item">
-                                <i class="bi bi-arrow-repeat"></i>
-                                <span>بازگشت ۷ روزه</span>
-                            </div>
-                            <div class="badge-item">
-                                <i class="bi bi-truck"></i>
-                                <span>ارسال سریع</span>
-                            </div>
+                        <div class="share-btns">
+                            <span class="me-3">اشتراک گذاری:</span>
+                            <a href="#" class="btn btn-outline-secondary btn-sm me-2"><i
+                                    class="bi bi-whatsapp"></i></a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm me-2"><i
+                                    class="bi bi-telegram"></i></a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm me-2"><i
+                                    class="bi bi-instagram"></i></a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i
+                                    class="bi bi-link-45deg"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- بخش "چرا از ما خرید کنید" -->
-            <div class="why-us">
+            <!-- Why Us Section -->
+            <div class="why-us mt-5">
                 <h4>چرا از ونل خرید کنید؟</h4>
                 <div class="row">
                     <div class="col-md-3 col-6 mb-3">
@@ -856,74 +622,172 @@
                 </div>
             </div>
 
-            <!-- تب‌های محصول -->
-            <div class="product-details">
-                <div class="details-tabs">
-                    <button type="button" class="tab-btn active" data-tab="description">
-                        توضیحات محصول
-                    </button>
-                    <button type="button" class="tab-btn" data-tab="specs">
-                        مشخصات فنی
-                    </button>
-                    <button type="button" class="tab-btn" data-tab="reviews">
-                        نظرات کاربران
-                    </button>
-                </div>
-
-                <div id="description" class="tab-content active">
-                    <h4>{{ $product->name }}</h4>
-                    <p>{{ $product->description }}</p>
-                </div>
-
-                <div id="specs" class="tab-content">
-                    <!-- محتوای مشخصات فنی -->
-                </div>
-
-                <div id="reviews" class="tab-content">
-                    <!-- محتوای نظرات کاربران -->
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- محصولات مرتبط -->
-    @if (sizeof($relatedProducts) > 0)
-        <section class="related-products">
-            <div class="container">
-                <h3 class="related-title">محصولات مشابه</h3>
-                <div class="row">
-                    @foreach ($relatedProducts as $r_product)
-                        <div class="col-md-3 col-6">
-                            <div class="related-card">
-                                <img src="{{ $r_product->firstMedia('main_image')->full_url }}" class="related-img"
-                                    alt="{{ $r_product->name }}" />
-                                <div class="related-info">
-                                    <h4 class="related-name">{{ $r_product->name }}</h4>
-                                    <p class="related-price">{{ number_format($r_product->price) . ' تومان' }}</p>
-                                </div>
-                                <a href="{{ route('products.show', $r_product->slug) }}"
-                                    class="btn-vanell d-block text-center">
-                                    <i class="bi bi-cart-fill me-1"></i> افزودن
-                                </a>
-                            </div>
+            <!-- Product Tabs -->
+            <div class="product-tabs mt-5">
+                <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                            data-bs-target="#description" type="button" role="tab">توضیحات محصول</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs"
+                            type="button" role="tab">مشخصات فنی</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
+                            type="button" role="tab">نظرات (12)</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="productTabsContent">
+                    <div class="tab-pane fade show active" id="description" role="tabpanel">
+                        <h4>{{ $product->name }}</h4>
+                        <p>{{ $product->description }}</p>
+                        <p>مزایای محصول:</p>
+                        <ul>
+                            <li>حاوی اسیدهای چرب امگا ۳ و ۶ برای سلامت پوست و مو</li>
+                            <li>تقویت سیستم ایمنی بدن با ویتامین‌های E و C</li>
+                            <li>پیشگیری از تشکیل گلوله مو در دستگاه گوارش</li>
+                            <li>حفظ سلامت دندان‌ها و لثه‌ها</li>
+                            <li>مناسب برای گربه‌های بالغ از تمام نژادها</li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="specs" role="tabpanel">
+                        <h4>مشخصات فنی</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th>نوع محصول</th>
+                                        <td>{{ $product->type ?? 'غذای خشک گربه' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>گروه سنی</th>
+                                        <td>{{ $product->age_group ?? 'گربه‌های بالغ (۱ سال به بالا)' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>وزن بسته‌بندی</th>
+                                        <td>{{ $product->weight ?? '۲ کیلوگرم' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ترکیبات اصلی</th>
+                                        <td>{{ $product->ingredients ?? 'ماهی تونا (۴۵٪)، برنج، مخمر، روغن ماهی، ویتامین‌ها و مواد معدنی' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>کشور سازنده</th>
+                                        <td>{{ $product->country ?? 'آلمان' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    @endforeach
+                    </div>
+                    <div class="tab-pane fade" id="reviews" role="tabpanel">
+                        <h4>نظرات مشتریان</h4>
+                        {{-- @foreach ($product->reviews as $review)
+                            <div class="review-item mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>{{ $review->user->name }}</strong>
+                                        <div class="rating small">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i
+                                                    class="bi {{ $i <= $review->rating ? 'bi-star-fill' : ($i - 0.5 == $review->rating ? 'bi-star-half' : 'bi-star') }}"></i>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
+                                </div>
+                                <p>{{ $review->comment }}</p>
+                            </div>
+                        @endforeach --}}
+                        <form class="mt-5" id="reviewForm">
+                            <h5>نظر خود را ثبت کنید</h5>
+                            <div class="mb-3">
+                                <label for="reviewRating" class="form-label">امتیاز شما</label>
+                                <div class="rating">
+                                    <i class="bi bi-star" onmouseover="fillStars(1)" onclick="setRating(1)"></i>
+                                    <i class="bi bi-star" onmouseover="fillStars(2)" onclick="setRating(2)"></i>
+                                    <i class="bi bi-star" onmouseover="fillStars(3)" onclick="setRating(3)"></i>
+                                    <i class="bi bi-star" onmouseover="fillStars(4)" onclick="setRating(4)"></i>
+                                    <i class="bi bi-star" onmouseover="fillStars(5)" onclick="setRating(5)"></i>
+                                </div>
+                                <input type="hidden" name="rating" id="reviewRating">
+                            </div>
+                            <div class="mb-3">
+                                <label for="reviewText" class="form-label">نظر شما</label>
+                                <textarea class="form-control" id="reviewText" rows="3" name="comment"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">ثبت نظر</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </section>
-    @endif
+
+            <!-- Related Products -->
+            @if (sizeof($relatedProducts) > 0)
+                <div class="related-products mt-5">
+                    <div class="text-center mb-5">
+                        <h2 class="section-title">محصولات مرتبط</h2>
+                        <p class="lead">شاید این محصولات هم مورد پسند شما باشد</p>
+                    </div>
+                    <div class="row">
+                        @foreach ($relatedProducts as $r_product)
+                            <div class="col-lg-3 col-md-6">
+                                <div class="product-card">
+                                    @if ($r_product->is_best_seller)
+                                        <div class="product-badge">پرفروش</div>
+                                    @elseif ($r_product->is_new)
+                                        <div class="product-badge">جدید</div>
+                                    @endif
+                                    <img src="{{ $r_product->firstMedia('main_image')->full_url }}"
+                                        class="product-img w-100" alt="{{ $r_product->name }}" />
+                                    <div class="p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span
+                                                class="badge bg-light text-dark">{{ $r_product->category->name ?? 'محصول' }}</span>
+                                            <div class="text-warning">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <i
+                                                        class="bi {{ $i <= $r_product->average_rating ? 'bi-star-fill' : ($i - 0.5 == $r_product->average_rating ? 'bi-star-half' : 'bi-star') }}"></i>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                        <h5>{{ $r_product->name }}</h5>
+                                        <p class="text-muted small">
+                                            {{ $r_product->short_description ?? 'محصول با کیفیت' }}</p>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div>
+                                                <span class="price">{{ number_format($r_product->price) }} تومان</span>
+                                                @if ($r_product->has_discount)
+                                                    <span
+                                                        class="old-price ms-2">{{ number_format(ceil($r_product->price * 1.12)) }}
+                                                        تومان</span>
+                                                @endif
+                                            </div>
+                                            <a href="{{ route('products.show', $r_product->slug) }}"
+                                                class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-cart-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </div>
+    </section>
 @endsection
 
 @section('scripts')
     <script>
-        // اسکریپت‌های گالری تصاویر
+        // Image gallery functions
         function changeImage(thumb, newSrc) {
             const mainImage = document.getElementById('mainImage');
             mainImage.src = newSrc;
-
             document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
             thumb.classList.add('active');
-
             mainImage.style.transform = 'scale(1)';
         }
 
@@ -937,7 +801,6 @@
             }
         }
 
-        // بستن زوم با کلیک خارج از تصویر
         document.addEventListener('click', function(e) {
             const zoomedImg = document.querySelector('.main-image.zoomed');
             if (zoomedImg && !zoomedImg.contains(e.target)) {
@@ -945,7 +808,7 @@
             }
         });
 
-        // مدیریت تعداد محصول
+        // Quantity selector
         function increaseQuantity() {
             const qtyInput = document.getElementById('quantity');
             qtyInput.value = parseInt(qtyInput.value) + 1;
@@ -958,7 +821,33 @@
             }
         }
 
-        // مدیریت انتخاب رنگ و سایز
+        // Rating system
+        let currentRating = 0;
+
+        function fillStars(count) {
+            const stars = document.querySelectorAll('#reviews .rating i');
+            stars.forEach((star, index) => {
+                if (index < count) {
+                    star.classList.add('bi-star-fill');
+                    star.classList.remove('bi-star');
+                } else {
+                    star.classList.add('bi-star');
+                    star.classList.remove('bi-star-fill');
+                }
+            });
+        }
+
+        function setRating(count) {
+            currentRating = count;
+            fillStars(count);
+            document.getElementById('reviewRating').value = count;
+        }
+
+        document.querySelector('#reviews .rating').addEventListener('mouseleave', function() {
+            fillStars(currentRating);
+        });
+
+        // Size and color selection
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('input[name="product-color"]').forEach(input => {
                 input.addEventListener('change', function() {
@@ -978,33 +867,8 @@
                 });
             });
 
-            // مدیریت تب‌ها
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-
-                    // غیرفعال کردن تمام تب‌ها
-                    tabContents.forEach(content => {
-                        content.classList.remove('active');
-                    });
-
-                    // غیرفعال کردن تمام دکمه‌ها
-                    tabButtons.forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-
-                    // فعال کردن تب و دکمه مربوطه
-                    document.getElementById(tabId).classList.add('active');
-                    this.classList.add('active');
-                });
-            });
-
-            // افزودن به سبد خرید با Ajax
+            // Add to cart with Ajax
             const addToCartBtn = document.querySelector('.add-to-cart');
-
             addToCartBtn.addEventListener('click', function() {
                 const productId = {{ $product->id }};
                 const quantity = document.getElementById('quantity').value;
@@ -1013,11 +877,9 @@
                 const color = colorInput ? colorInput.value : null;
                 const size = sizeInput ? sizeInput.value : null;
 
-                // نمایش لودر
                 addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> در حال پردازش...';
                 addToCartBtn.disabled = true;
 
-                // ارسال درخواست Ajax
                 fetch('{{ route('cart.addToCartAjax') }}', {
                         method: 'POST',
                         headers: {
@@ -1042,8 +904,6 @@
                                 confirmButtonText: 'باشه',
                                 confirmButtonColor: '#8e44ad'
                             });
-
-                            // به‌روزرسانی تعداد آیتم‌های سبد خرید در هدر
                             if (data.cart_count) {
                                 const cartCount = document.querySelector('.cart-count');
                                 if (cartCount) {
@@ -1071,10 +931,13 @@
                         });
                     })
                     .finally(() => {
-                        addToCartBtn.innerHTML = '<i class="bi bi-cart-fill"></i> افزودن به سبد خرید';
+                        addToCartBtn.innerHTML =
+                            '<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید';
                         addToCartBtn.disabled = false;
                     });
             });
+
+            
         });
     </script>
 @endsection

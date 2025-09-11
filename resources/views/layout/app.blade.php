@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @yield('seo')
-    <title>@yield('title', 'فروشگاه کفش ونل')</title>
+    <title>@yield('title', 'توکا پت | فروشگاه آنلاین لوازم حیوانات شما')</title>
     <!-- Bootstrap 5 RTL -->
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap.rtl.min.css') }}">
     <!-- Font Awesome -->
@@ -29,7 +29,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="route('page.home')">
                 <img src="{{ asset('site/logos/ll.png') }}" alt="Touka Pet Logo">
                 توکا پت
             </a>
@@ -48,7 +48,7 @@
                 <div class="d-flex align-items-center me-3">
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-heart"></i></a>
-                    <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-cart3"></i></a>
+                    <a href="{{route('cart.mycart')}}" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-cart3"></i></a>
                 </div>
             </div>
         </div>

@@ -23,6 +23,10 @@ body {
     overflow-x: hidden;
 }
 
+.mt-128{
+    margin-top: 128px !important;
+}
+
 .navbar {
     background-color: white;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
