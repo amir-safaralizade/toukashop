@@ -149,7 +149,7 @@
     <!-- Creative Section 2 - Testimonials -->
     <section class="creative-section bg-light">
         <div class="creative-bg"
-            style="background-image: url('https://images.unsplash.com/photo-1561037404-61cd46aa615b');"></div>
+            style="background-image: url('{{asset('site/images/photo20788510751.jpg')}}');"></div>
         <div class="container">
             <div class="creative-content animate__animated animate__fadeIn">
                 <div class="text-center mb-5">
@@ -210,37 +210,37 @@
         <div class="row g-3">
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1143&q=80"
+                    <img src="{{asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg')}}"
                         class="img-fluid rounded" alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80"
+                    <img src="{{asset('site/images/photo-1533738363-b7f9aef128ce.jpeg')}}"
                         class="img-fluid rounded" alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
+                    <img src="{{asset('site/images/photo-1526336024174-e58f5cdd8e13.jpeg')}}"
                         class="img-fluid rounded" alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="https://images.unsplash.com/photo-1594149929911-78975a43d4f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                    <img src="{{asset('site/images/photo-1594149929911-78975a43d4f5.jpeg')}}"
                         class="img-fluid rounded" alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=662&q=80"
+                    <img src="{{asset('site/images/photo-1552053831-71594a27632d.jpeg')}}"
                         class="img-fluid rounded" alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80"
+                    <img src="{{asset('site/images/photo-1583511655826-05700d52f4d9.jpeg')}}"
                         class="img-fluid rounded" alt="Instagram Post">
                 </a>
             </div>
