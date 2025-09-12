@@ -114,7 +114,7 @@
                 <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp">
                     <div class="product-card">
                         <div class="product-badge">پرفروش</div>
-                        <img src="{{ asset('site/images/p1.jpeg') }}" class="product-img w-100" alt="غذای گربه">
+                        <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img w-100" alt="غذای گربه">
                         <div class="p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge bg-light text-dark">{{ $product->name }}</span>

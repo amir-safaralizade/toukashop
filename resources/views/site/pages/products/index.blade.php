@@ -2,366 +2,424 @@
 
 @section('styles')
     <style>
-        :root {
-            --pink: #ff9eb7;
-            --light-pink: #ffd6de;
-            --dark-pink: #ff7ba3;
-            --purple: #b399d4;
-            --light-purple: #d9c5f4;
-            --cream: #fff4f6;
-            --white: #ffffff;
-            --text-dark: #5a3d5c;
-            --text-light: #ffffff;
-            --black: #1a1a1a;
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            overflow-x: hidden;
+            padding-top: 80px;
         }
 
-        .products-archive {
-            padding: 2rem 0;
-            background-color: var(--cream);
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            margin-left: 10px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color);
+            margin: 0 10px;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-link:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover:after,
+        .nav-link.active:after {
+            width: 100%;
+            left: 0;
         }
 
         .archive-header {
+            background: linear-gradient(135deg,
+                    rgba(78, 205, 196, 0.8) 0%,
+                    rgba(255, 107, 107, 0.8) 100%),
+                url("site/images/photo-1594149929911-78975a43d4f5.jpeg") no-repeat center center;
+            background-size: cover;
+            padding: 80px 0;
+            color: white;
             text-align: center;
-            margin-bottom: 2rem;
-            padding: 0 1rem;
+            margin-bottom: 50px;
+            border-radius: 0 0 20px 20px;
         }
 
-        .archive-title {
-            font-family: "Dancing Script", cursive;
-            font-size: 2.2rem;
-            color: var(--text-dark);
-            margin-bottom: 0.8rem;
-        }
-
-        .archive-description {
-            color: var(--text-dark);
-            opacity: 0.8;
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.6;
-            font-size: 0.9rem;
-        }
-
-        /* استایل‌های جدید برای دسته‌بندی‌ها */
-        .categories-filter-container {
-            width: 100%;
-            margin-bottom: 2rem;
-            padding: 0 1rem;
-        }
-
-        .categories-filter {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 0 15px;
         }
 
         .category-btn {
-            background-color: var(--white);
-            color: var(--text-dark);
-            border-radius: 8px;
-            font-weight: 600;
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            border: 2px solid var(--light-purple);
-            text-decoration: none;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            padding: 0.8rem 0.5rem;
-            font-size: 0.85rem;
-            text-align: center;
-            width: 100%;
-            display: block;
+            display: flex;
+            align-items: center;
         }
 
-        .category-btn:hover,
+        .category-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
         .category-btn.active {
-            background: linear-gradient(to right, var(--pink), var(--purple));
-            color: var(--white);
-            border-color: transparent;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(179, 153, 212, 0.3);
+            background: var(--primary-color);
+            color: white;
         }
 
-        .category-btn:active {
-            transform: scale(0.98);
+        .category-icon {
+            margin-left: 8px;
+            font-size: 1.2rem;
         }
 
-        /* استایل‌های محصولات */
-        .products-grid {
+        .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1.5rem;
-            padding: 0 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
         }
 
         .product-card {
-            background-color: var(--white);
+            background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(179, 153, 212, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             position: relative;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(179, 153, 212, 0.2);
-        }
-
-        .product-link {
-            display: block;
-            text-decoration: none;
-            color: inherit;
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
 
         .product-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: var(--purple);
-            color: var(--white);
-            padding: 0.3rem 0.8rem;
+            top: 15px;
+            left: 15px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            padding: 5px 15px;
             border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            z-index: 2;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 10;
         }
 
-        .product-image-container {
-            height: 180px;
+        .product-img-container {
+            height: 250px;
             overflow: hidden;
-            position: relative;
         }
 
-        .product-image {
+        .product-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: all 0.5s ease;
         }
 
-        .product-card:hover .product-image {
+        .product-card:hover .product-img {
             transform: scale(1.05);
         }
 
-        .product-content {
-            padding: 1.2rem;
+        .product-info {
+            padding: 20px;
         }
 
-        .product-name {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-            height: 3.6em;
+        .product-category {
+            color: var(--secondary-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .product-title {
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            height: 60px;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
         }
 
-        .product-price {
+        .product-description {
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            height: 70px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-meta {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.8rem;
-            margin-top: 0.8rem;
+            margin-top: 15px;
         }
 
-        .current-price {
-            font-weight: 700;
-            color: var(--purple);
-            font-size: 1.1rem;
+        .product-price {
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: 1.2rem;
         }
 
-        .old-price {
-            text-decoration: line-through;
-            color: var(--text-dark);
-            opacity: 0.6;
-            font-size: 0.8rem;
+        .product-rating {
+            color: var(--accent-color);
+            font-size: 0.9rem;
         }
 
         .product-actions {
             display: flex;
             justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .add-to-cart-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            flex: 1;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #e05a5a;
+        }
+
+        .wishlist-btn {
+            background: #f8f9fa;
+            color: #777;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
             align-items: center;
-            margin-top: 1.2rem;
-            padding-top: 1.2rem;
-            border-top: 1px solid rgba(179, 153, 212, 0.2);
-        }
-
-        .add-to-wishlist {
-            background-color: transparent;
-            border: none;
-            color: var(--light-pink);
-            font-size: 1.2rem;
-            cursor: pointer;
+            justify-content: center;
             transition: all 0.3s ease;
-            padding: 0.3rem;
         }
 
-        .add-to-wishlist:hover,
-        .add-to-wishlist.active {
-            color: var(--dark-pink);
-            transform: scale(1.1);
+        .wishlist-btn:hover {
+            color: var(--primary-color);
+            background: #fff0f0;
         }
 
-        .add-to-cart {
-            background: linear-gradient(to right, var(--pink), var(--purple));
-            color: var(--white);
+        .pagination {
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .page-link {
             border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
+            color: var(--dark-color);
+            padding: 10px 18px;
+            border-radius: 10px;
+            margin: 0 5px;
+            font-weight: 700;
         }
 
-        .add-to-cart:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(179, 153, 212, 0.3);
+        .page-item.active .page-link {
+            background-color: var(--primary-color);
+            color: white;
         }
 
-        /* استایل‌های دسکتاپ */
-        @media (min-width: 768px) {
-            .products-archive {
-                padding: 3rem 0;
+        .page-link:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        .pet-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        /* Animation */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
             }
 
-            .archive-header {
-                margin-bottom: 3rem;
-                padding: 0;
+            50% {
+                transform: translateY(-15px);
             }
 
-            .archive-title {
-                font-size: 2.8rem;
-                margin-bottom: 1rem;
+            100% {
+                transform: translateY(0px);
             }
+        }
 
-            .archive-description {
-                font-size: 1rem;
-            }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
 
-            .categories-filter-container {
-                margin-bottom: 2.5rem;
-                padding: 0;
-            }
-
-            .categories-filter {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                grid-template-columns: none;
-                gap: 1rem;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .category-tabs {
+                gap: 10px;
             }
 
             .category-btn {
-                padding: 0.7rem 1.5rem;
+                padding: 10px 15px;
                 font-size: 0.9rem;
-                border-radius: 50px;
-                width: auto;
             }
 
-            .products-grid {
+            .product-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 2rem;
-                padding: 0;
+                gap: 20px;
             }
 
-            .product-image-container {
-                height: 220px;
+            .archive-header {
+                padding: 60px 0;
             }
 
-            .product-badge {
-                top: 15px;
-                right: 15px;
-                padding: 0.3rem 1rem;
-                font-size: 0.8rem;
-            }
-
-            .product-content {
-                padding: 1.5rem;
-            }
-
-            .product-name {
-                font-size: 1.1rem;
-            }
-
-            .add-to-cart {
-                padding: 0.6rem 1.5rem;
-                font-size: 0.9rem;
+            body {
+                padding-top: 70px;
             }
         }
 
-        @media (min-width: 992px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        @media (max-width: 576px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
             }
         }
     </style>
 @endsection
 
 @section('content')
-    <section class="products-archive">
+    <!-- Floating pet icons -->
+    <i class="bi bi-egg-fried pet-icon floating" style="top: 15%; left: 5%; animation-delay: 0.2s"></i>
+    <i class="bi bi-bone pet-icon floating" style="top: 80%; right: 10%; animation-delay: 0.5s"></i>
+    <i class="bi bi-balloon-heart pet-icon floating" style="top: 40%; right: 5%; animation-delay: 0.7s"></i>
+    <i class="bi bi-gem pet-icon floating" style="bottom: 10%; left: 15%; animation-delay: 0.3s"></i>
+
+    <!-- Archive Header -->
+    <div class="archive-header">
         <div class="container">
-            <div class="archive-header">
-                <h1 class="archive-title">
-                    @if (empty(request('category')))
-                        محصولات ما
-                    @else
-                        @php
-                            $category = $categories->first(fn($item) => $item->id == request('category'));
-                        @endphp
-                        {{ $category->name ?? 'دسته‌بندی پیدا نشد' }}
-                    @endif
-                </h1>
-                <h2 class="archive-description">کفش هایی با کیفیت , مقرون به صرفه و جذاب برای شما در فروشگاه ونل</h2>
-            </div>
+            <h1 class="display-4 fw-bold mb-4">آرشیو محصولات</h1>
+            <p class="lead mb-0">
+                بهترین و شیک‌ترین محصولات برای حیوانات خانگی دوست‌داشتنی شما
+            </p>
+        </div>
+    </div>
 
-            <div class="categories-filter-container">
-                <div class="categories-filter">
-                    <a href="{{ route('products.index') }}"
-                        class="category-btn @if (empty(Request::get('category'))) active @endif">همه محصولات</a>
-                    @foreach ($categories as $item)
-                        <a href="{{ route('products.categories', $item->slug) }}"
-                            class="category-btn">{{ $item->name }}</a>
-                    @endforeach
-                </div>
-            </div>
+    <!-- Category Tabs -->
+    <div class="container">
+        <div class="category-tabs">
+            <button class="category-btn active" data-category="all">
+                <i class="bi bi-grid category-icon"></i>همه محصولات
+            </button>
+            @foreach ($categories as $category)
+                <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn"
+                    data-category="dogs">
+                    <i class="bi bi-bag category-icon"></i>
+                    {{ $category->name }}
+                </a>
+            @endforeach
+        </div>
+    </div>
 
-            <div class="products-grid">
-                @foreach ($products as $product)
-                    <div class="product-card">
-                        <a href="{{ route('products.show', $product->slug) }}" class="product-link">
-                            @if ($product->discount > 0)
-                                <span class="product-badge">{{ $product->discount }}٪ تخفیف</span>
-                            @endif
-                            <div class="product-image-container">
-                                <img src="{{ $product->firstMedia('main_image')?->full_url }}" alt="{{ $product->name }}"
-                                    class="product-image" loading="lazy">
+    <!-- Products Grid -->
+    <div class="container">
+        <div class="product-grid">
+            <!-- Product -->
+            @foreach ($products as $product)
+                <div class="product-card" data-category="cats,food">
+                    <div class="product-badge">پرفروش</div>
+                    <div class="product-img-container">
+                        <img src="{{ $product->firstMedia('main_image')->full_url }}" class="product-img" alt="غذای گربه" />
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">{{ $product->category->name }}</div>
+                        <h3 class="product-title">{{ $product->name }}</h3>
+                        <p class="product-description">
+                            {{ $product->name }}
+                        </p>
+                        <div class="product-meta">
+                            <div class="product-price">{{ number_format($product->price) }} تومان</div>
+                            <div class="product-rating">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
                             </div>
-                            <div class="product-content">
-                                <h3 class="product-name">{{ $product->name }}</h3>
-                                <div class="product-price">
-                                    <span class="current-price">
-                                        {{ number_format($product->price) . ' تومان' }}
-                                    </span>
-                                    @if ($product->old_price > $product->price)
-                                        <span class="old-price">
-                                            {{ number_format($product->old_price) . ' تومان' }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </a>
+                        </div>
                         <div class="product-actions">
-                            <button class="add-to-wishlist">
+                            <a href="{{ route('products.show', $product->slug) }}" class="add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-1"></i>افزودن
+                            </a>
+                            <button class="wishlist-btn">
                                 <i class="bi bi-heart"></i>
                             </button>
-                            <button class="add-to-cart">افزودن به سبد</button>
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
-    </section>
+
+        <!-- Pagination -->
+        {{-- <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav> --}}
+    </div>
 @endsection

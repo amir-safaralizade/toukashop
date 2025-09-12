@@ -29,18 +29,16 @@
 
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{{route('page.home')}}">
-                <img src="{{ asset('site/logos/ll.png') }}" alt="Touka Pet Logo">
-                توکا پت
+            <a class="navbar-brand" href="{{ route('page.home') }}">
+                <img src="{{ asset('images/touka-logo.jpg') }}" alt="toukashop Logo" width="80px">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">خانه</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">محصولات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">خدمات</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ route('page.home') }}">خانه</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">محصولات</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">وبلاگ</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">درباره ما</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">تماس با ما</a></li>
@@ -48,7 +46,8 @@
                 <div class="d-flex align-items-center me-3">
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-heart"></i></a>
-                    <a href="{{route('cart.mycart')}}" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-cart3"></i></a>
+                    <a href="{{ route('cart.mycart') }}" class="btn btn-sm btn-outline-dark ms-3"><i
+                            class="bi bi-cart3"></i></a>
                 </div>
             </div>
         </div>
@@ -61,14 +60,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-5 mb-lg-0">
-                    <a href="#" class="footer-logo">توکا پت</a>
+                    <a href="#" class="footer-logo">
+                        <img src="{{ asset('images/touka-logo.jpg') }}" alt="toukashop Logo" width="80px">
+
+                    </a>
                     <p class="mb-4">ما در توکا پت با عشق به حیوانات و تعهد به کیفیت، بهترین محصولات را برای حیوانات
                         خانگی شما ارائه می‌دهیم.</p>
                     <div class="social-icons">
                         <a href="#"><i class="bi bi-instagram"></i></a>
                         <a href="#"><i class="bi bi-telegram"></i></a>
                         <a href="#"><i class="bi bi-whatsapp"></i></a>
-                        <a href="#"><i class="bi bi-linkedin"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-5 mb-md-0">
@@ -99,9 +100,9 @@
                     <div class="footer-links">
                         <h5>تماس با ما</h5>
                         <ul>
-                            <li><i class="bi bi-geo-alt-fill me-2"></i> تهران، خیابان ولیعصر، پلاک ۱۲۳۴</li>
-                            <li><i class="bi bi-telephone-fill me-2"></i> ۰۲۱-۱۲۳۴۵۶۷۸</li>
-                            <li><i class="bi bi-envelope-fill me-2"></i> info@toka-pet.ir</li>
+                            <li><i class="bi bi-geo-alt-fill me-2"></i>استان فارس , شهر شیراز</li>
+                            <li><i class="bi bi-telephone-fill me-2"></i> ۰۹۳۸۵۳۶۰۷۵۰</li>
+                            <li><i class="bi bi-instagram me-2"></i>touca_petshop</li>
                             <li><i class="bi bi-clock-fill me-2"></i> هر روز از ۹ صبح تا ۹ شب</li>
                         </ul>
                     </div>
@@ -110,7 +111,7 @@
             <hr class="mt-5 mb-4" style="border-color: rgba(255,255,255,0.1);">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="small mb-0">© ۲۰۲۳ توکا پت. تمام حقوق محفوظ است.</p>
+                    <p class="small mb-0">© 1404 توکا پت شاپ. تمام حقوق محفوظ است.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <p class="small mb-0">طراحی شده با <i class="bi bi-heart-fill text-danger"></i> برای حیوانات

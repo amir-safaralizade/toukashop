@@ -37,7 +37,7 @@ body {
 .navbar {
     background-color: white;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
+    padding: 3px 0;
     transition: all 0.3s ease;
 }
 
@@ -55,7 +55,7 @@ body {
 }
 
 .navbar-brand img {
-    height: 40px;
+    height: auto;
     margin-left: 10px;
 }
 

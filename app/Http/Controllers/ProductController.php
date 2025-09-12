@@ -63,6 +63,6 @@ class ProductController extends Controller
         $category = Category::where('type', 'product')->where('slug', $slug)->firstOrFail();
         $products = Product::where('category_id', $category->id)->orderBy('stock', 'desc')->orderBy('id', 'desc')->get();
         $categories = Category::where('type', 'product')->get();
-        return view('site.pages.products.category', compact('products', 'categories', 'category'));
+        return view('site.pages.products.category', compact('products', 'categories', 'category' , 'slug'));
     }
 }

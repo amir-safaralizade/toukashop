@@ -457,7 +457,7 @@
     <!-- Product Section -->
     <section class="product-section">
         <div class="container">
-            <div class="row">
+            <div class="row"> 
                 <!-- Product Gallery -->
                 <div class="col-lg-6">
                     <div class="product-gallery">

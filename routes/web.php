@@ -26,7 +26,6 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('page.home');
     Route::get('privacy', [HomeController::class, 'privacy'])->name('page.privacy');
     Route::get('order-tracking', [HomeController::class, 'orderTracking'])->name('page.orderTracking');
-    Route::get('size-selection-guide', [HomeController::class, 'sizeSelectionGuide'])->name('page.size-selection-guide');
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
         Route::get('/', 'index')->name('index');
