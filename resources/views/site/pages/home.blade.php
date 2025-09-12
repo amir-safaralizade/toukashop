@@ -4,9 +4,11 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content animate__animated animate__fadeIn">
-            <h1>لوازم لاکچری برای حیوانات با نمک شما</h1>
-            <p>در توکا پت، بهترین و شیک‌ترین محصولات را برای حیوانات خانگی دوست‌داشتنی شما آماده کرده‌ایم. کیفیت را با ما
-                تجربه کنید.</p>
+            <h1>توکا پت شاپ , انتخابی مطمئن برای سلامت و شادی حیوانات</h1>
+            <p>
+                با خیال راحت خرید کنید! تمام لوازم حیوانات خانگی در پت‌شاپ ما توسط تیم تخصصی و دامپزشکان بررسی و انتخاب
+                شده‌اند
+            </p>
             <div class="mt-4">
                 <a href="#" class="btn btn-primary btn-lg">محصولات ویژه</a>
                 <a href="#" class="btn btn-outline-light btn-lg">درباره ما</a>
@@ -69,7 +71,7 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <i class="bi bi-valentine2 text-primary"></i>
+                                <img src="{{asset('site/images/animals/dog-solid-full.svg')}}" width="40px" alt=""> 
                             </div>
                             <h5>سگ‌ها</h5>
                         </div>
@@ -77,7 +79,7 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <i class="bi bi-valentine2 text-primary"></i>
+                                <img src="{{asset('site/images/animals/cat-solid-full.svg')}}" width="40px" alt=""> 
                             </div>
                             <h5>گربه‌ها</h5>
                         </div>
@@ -85,7 +87,7 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <i class="bi bi-valentine2 text-primary"></i>
+                                <img src="{{asset('site/images/animals/crow-solid-full.svg')}}" width="40px" alt=""> 
                             </div>
                             <h5>پرندگان</h5>
                         </div>
@@ -93,7 +95,7 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <i class="bi bi-valentine2 text-primary"></i>
+                                <img src="{{asset('site/images/animals/fish-solid-full.svg')}}" width="40px" alt=""> 
                             </div>
                             <h5>آبزیان</h5>
                         </div>
@@ -114,7 +116,8 @@
                 <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp">
                     <div class="product-card">
                         <div class="product-badge">پرفروش</div>
-                        <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img w-100" alt="غذای گربه">
+                        <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img w-100"
+                            alt="غذای گربه">
                         <div class="p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge bg-light text-dark">{{ $product->name }}</span>
@@ -133,7 +136,8 @@
                                     <span class="price">{{ $product->price * 1.2 }}</span>
                                     <span class="old-price ms-2">{{ $product->price }}</span>
                                 </div>
-                                <a href="{{route('products.show' , $product->slug)}}" class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></a>
+                                <a href="{{ route('products.show', $product->slug) }}"
+                                    class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></a>
                             </div>
                         </div>
                     </div>
@@ -148,8 +152,7 @@
 
     <!-- Creative Section 2 - Testimonials -->
     <section class="creative-section bg-light">
-        <div class="creative-bg"
-            style="background-image: url('{{asset('site/images/photo20788510751.jpg')}}');"></div>
+        <div class="creative-bg" style="background-image: url('{{ asset('site/images/photo20788510751.jpg') }}');"></div>
         <div class="container">
             <div class="creative-content animate__animated animate__fadeIn">
                 <div class="text-center mb-5">
@@ -160,7 +163,7 @@
                     <div class="col-md-4">
                         <div class="testimonial-card">
                             <div class="d-flex align-items-center mb-4">
-                                <img src="https://randomuser.me/api/portraits/women/32.jpg" class="testimonial-img me-3">
+                                <img src="{{ asset('site/images/users/80.png') }}" class="testimonial-img me-3">
                                 <div>
                                     <h6 class="mb-1">سارا محمدی</h6>
                                     <small class="text-muted">مالک گربه</small>
@@ -173,7 +176,7 @@
                     <div class="col-md-4">
                         <div class="testimonial-card">
                             <div class="d-flex align-items-center mb-4">
-                                <img src="https://randomuser.me/api/portraits/men/75.jpg" class="testimonial-img me-3">
+                                <img src="{{ asset('site/images/users/12.png') }}" class="testimonial-img me-3">
                                 <div>
                                     <h6 class="mb-1">امیر حسینی</h6>
                                     <small class="text-muted">مالب سگ</small>
@@ -186,7 +189,7 @@
                     <div class="col-md-4">
                         <div class="testimonial-card">
                             <div class="d-flex align-items-center mb-4">
-                                <img src="https://randomuser.me/api/portraits/women/68.jpg" class="testimonial-img me-3">
+                                <img src="{{ asset('site/images/users/90.png') }}" class="testimonial-img me-3">
                                 <div>
                                     <h6 class="mb-1">نازنین رضایی</h6>
                                     <small class="text-muted">مالک پرنده</small>
@@ -210,43 +213,44 @@
         <div class="row g-3">
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg')}}"
-                        class="img-fluid rounded" alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{asset('site/images/photo-1533738363-b7f9aef128ce.jpeg')}}"
-                        class="img-fluid rounded" alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{asset('site/images/photo-1526336024174-e58f5cdd8e13.jpeg')}}"
-                        class="img-fluid rounded" alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1526336024174-e58f5cdd8e13.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{asset('site/images/photo-1594149929911-78975a43d4f5.jpeg')}}"
-                        class="img-fluid rounded" alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1594149929911-78975a43d4f5.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{asset('site/images/photo-1552053831-71594a27632d.jpeg')}}"
-                        class="img-fluid rounded" alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1552053831-71594a27632d.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{asset('site/images/photo-1583511655826-05700d52f4d9.jpeg')}}"
-                        class="img-fluid rounded" alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1583511655826-05700d52f4d9.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
         </div>
         <div class="text-center mt-4">
-            <a href="#" class="btn btn-outline-dark"><i class="bi bi-instagram me-2"></i>صفحه اینستاگرام ما</a>
+            <a href="https://www.instagram.com/touca_petshop?igsh=MWQ1c24zbnowdDFuaQ%3D%3D&utm_source=qr" target="_blank"
+                class="btn btn-outline-dark"><i class="bi bi-instagram me-2"></i>صفحه اینستاگرام ما</a>
         </div>
     </section>
 
@@ -258,7 +262,7 @@
                     <h3 class="mb-4">در خبرنامه توکا پت عضو شوید</h3>
                     <p class="mb-5">تخفیف‌های ویژه، محصولات جدید و نکات مراقبت از حیوانات را دریافت کنید</p>
                     <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="آدرس ایمیل شما">
+                        <input type="text" class="form-control" placeholder="شماره همراه شما">
                         <button class="btn btn-dark" type="button">عضویت</button>
                     </div>
                 </div>

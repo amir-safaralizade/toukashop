@@ -580,8 +580,7 @@
                                 <circle cx="18" cy="20.5" r="1" />
                                 <path d="M2.5 2.5h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6l1.6-8.4H7.1" />
                             </svg>
-                            <h2
-                                style="font-family: 'Dancing Script', cursive; color: var(--text-dark); margin: 1.5rem 0; font-size: 2rem;">
+                            <h2 style="color: var(--text-dark); margin: 1.5rem 0; font-size: 2rem;">
                                 سبد خرید شما خالی است!
                             </h2>
                             <p style="color: var(--text-dark); margin-bottom: 2rem;">می‌توانید برای مشاهده محصولات به صفحه
