@@ -71,7 +71,8 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{asset('site/images/animals/dog-solid-full.svg')}}" width="40px" alt=""> 
+                                <img src="{{ asset('site/images/animals/dog-solid-full.svg') }}" width="40px"
+                                    alt="">
                             </div>
                             <h5>سگ‌ها</h5>
                         </div>
@@ -79,7 +80,8 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{asset('site/images/animals/cat-solid-full.svg')}}" width="40px" alt=""> 
+                                <img src="{{ asset('site/images/animals/cat-solid-full.svg') }}" width="40px"
+                                    alt="">
                             </div>
                             <h5>گربه‌ها</h5>
                         </div>
@@ -87,7 +89,8 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{asset('site/images/animals/crow-solid-full.svg')}}" width="40px" alt=""> 
+                                <img src="{{ asset('site/images/animals/crow-solid-full.svg') }}" width="40px"
+                                    alt="">
                             </div>
                             <h5>پرندگان</h5>
                         </div>
@@ -95,7 +98,8 @@
                     <div class="col-md-3 col-6">
                         <div class="text-center">
                             <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{asset('site/images/animals/fish-solid-full.svg')}}" width="40px" alt=""> 
+                                <img src="{{ asset('site/images/animals/fish-solid-full.svg') }}" width="40px"
+                                    alt="">
                             </div>
                             <h5>آبزیان</h5>
                         </div>
@@ -119,9 +123,9 @@
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img w-100"
                             alt="غذای گربه">
                         <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="mb-3">
                                 <span class="badge bg-light text-dark">{{ $product->name }}</span>
-                                <div class="text-warning">
+                                <div class="text-warning mt-1">
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
