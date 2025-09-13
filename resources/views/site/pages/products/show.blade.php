@@ -587,41 +587,7 @@
                 </div>
             </div>
 
-            <!-- Why Us Section -->
-            <div class="why-us mt-5">
-                <h4>چرا از ونل خرید کنید؟</h4>
-                <div class="row">
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="feature-card">
-                            <i class="bi bi-star-fill"></i>
-                            <h6>کیفیت بالا</h6>
-                            <p>محصولات با کیفیت ممتاز</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="feature-card">
-                            <i class="bi bi-truck"></i>
-                            <h6>ارسال سریع</h6>
-                            <p>ارسال در کمترین زمان</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="feature-card">
-                            <i class="bi bi-shield-check"></i>
-                            <h6>پشتیبانی عالی</h6>
-                            <p>پشتیبانی ۲۴ ساعته</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="feature-card">
-                            <i class="bi bi-credit-card"></i>
-                            <h6>پرداخت امن</h6>
-                            <p>پرداخت آنلاین ایمن</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+          
             <!-- Product Tabs -->
             <div class="product-tabs mt-5">
                 <ul class="nav nav-tabs" id="productTabs" role="tablist">

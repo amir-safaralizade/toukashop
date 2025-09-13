@@ -23,10 +23,7 @@
             align-items: center;
         }
 
-        .navbar-brand img {
-            height: 40px;
-            margin-left: 10px;
-        }
+
 
         .nav-link {
             font-weight: 500;
