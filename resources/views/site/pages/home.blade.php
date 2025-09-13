@@ -10,7 +10,7 @@
                 شده‌اند
             </p>
             <div class="mt-4">
-                <a href="#" class="btn btn-primary btn-lg">محصولات ویژه</a>
+                <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg">محصولات ویژه</a>
                 <a href="#" class="btn btn-outline-light btn-lg">درباره ما</a>
             </div>
         </div>
@@ -137,8 +137,8 @@
                             <p class="text-muted small">{{ $product->name }}</p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div>
-                                    <span class="price">{{ $product->price * 1.2 }}</span>
-                                    <span class="old-price ms-2">{{ $product->price }}</span>
+                                    <span class="price">{{ number_format($product->price) }}</span>
+                                    <span class="old-price ms-2">{{ number_format($product->price * 1.12) }}</span>
                                 </div>
                                 <a href="{{ route('products.show', $product->slug) }}"
                                     class="btn btn-sm btn-outline-primary"><i class="bi bi-cart-plus"></i></a>
@@ -149,7 +149,7 @@
             @endforeach
         </div>
         <div class="text-center mt-5">
-            <a href="#" class="btn btn-primary btn-lg">مشاهده همه محصولات</a>
+            <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg text-dark">مشاهده همه محصولات</a>
         </div>
     </section>
 
