@@ -485,7 +485,7 @@
                     <div class="product-info">
                         <h1 class="product-title">{{ $product->name }}</h1>
                         <div class="product-meta">
-                            <div class="rating">
+                            <div class="rating ">
                                 <i class="bi bi-star-fill"></i>
                                 <i class="bi bi-star-fill"></i>
                                 <i class="bi bi-star-fill"></i>

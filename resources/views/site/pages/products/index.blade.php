@@ -348,12 +348,11 @@
     <!-- Category Tabs -->
     <div class="container">
         <div class="category-tabs">
-            <button class="category-btn active" data-category="all">
+            <a class="btn category-btn active" href="{{ route('products.index') }}">
                 <i class="bi bi-grid category-icon"></i>همه محصولات
-            </button>
+            </a>
             @foreach ($categories as $category)
-                <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn"
-                    data-category="dogs">
+                <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn" data-category="dogs">
                     <i class="bi bi-bag category-icon"></i>
                     {{ $category->name }}
                 </a>

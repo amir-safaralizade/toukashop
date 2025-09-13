@@ -348,9 +348,9 @@
     <!-- Category Tabs -->
     <div class="container">
         <div class="category-tabs">
-            <button class="category-btn">
+            <a class="btn category-btn" href="{{ route('products.index') }}">
                 <i class="bi bi-grid category-icon"></i>همه محصولات
-            </button>
+            </a>
             @foreach ($categories as $category)
                 <a href="{{ route('products.categories', $category->slug) }}"
                     class="btn category-btn 
