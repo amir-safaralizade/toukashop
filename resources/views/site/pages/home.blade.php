@@ -497,6 +497,312 @@
                 height: 80px;
             }
         }
+
+
+        .habitat-section {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.03) 0%, rgba(78, 205, 196, 0.03) 100%);
+            border-radius: 30px;
+            padding: 80px 0;
+            margin: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habitat-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(78, 205, 196, 0.08);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .habitat-section::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 107, 107, 0.08);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .habitat-header {
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 100px;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 1.4rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .habitat-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .habitat-info {
+            padding-left: 20px;
+        }
+
+        .habitat-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 40px 0;
+        }
+
+        .habitat-features li {
+            margin-bottom: 20px;
+            padding-right: 40px;
+            position: relative;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .habitat-features li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .habitat-image {
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            transition: all 0.5s ease;
+        }
+
+        .habitat-image:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .habitat-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.8s ease;
+        }
+
+        .habitat-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .habitat-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .habitat-type {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habitat-type::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .habitat-type:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .type-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .habitat-type:hover .type-icon {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .type-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .type-description {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .floating-animal {
+            position: absolute;
+            font-size: 3.5rem;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .floating-animal:nth-child(1) {
+            top: 15%;
+            left: 8%;
+            animation: float 9s ease-in-out infinite;
+        }
+
+        .floating-animal:nth-child(2) {
+            top: 65%;
+            right: 7%;
+            animation: float 8s ease-in-out infinite 1s;
+        }
+
+        .floating-animal:nth-child(3) {
+            top: 35%;
+            right: 12%;
+            animation: float 10s ease-in-out infinite 0.5s;
+        }
+
+        .floating-animal:nth-child(4) {
+            bottom: 10%;
+            left: 15%;
+            animation: float 7s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-25px) rotate(5deg);
+            }
+
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* رسپانسیو برای موبایل */
+        @media (max-width: 992px) {
+            .habitat-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .habitat-types {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 40px auto 0;
+            }
+
+            .section-title {
+                font-size: 2.3rem;
+            }
+
+            .habitat-image {
+                height: 350px;
+            }
+
+            .floating-animal {
+                display: none;
+            }
+        }
     </style>
 @section('content')
     <!-- Hero Section -->
@@ -690,25 +996,24 @@
 
                 <div class="col-lg-6">
                     <div class="product-showcase">
-                        <img src="{{asset('site/images/photo-1533738363-b7f9aef128ce.jpeg')}}"
-                            alt="ظرف غذای حیوانات" class="main-product">
+                        <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}" alt="ظرف غذای حیوانات"
+                            class="main-product">
 
                         <div class="floating-products">
                             <div class="floating-item">
-                                <img src="{{asset('site/images/photo-1533738363-b7f9aef128ce.jpeg')}}"
+                                <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}"
                                     alt="ظرف غذای سگ">
                             </div>
                             <div class="floating-item">
-                                <img src="{{asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg')}}"
+                                <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}"
                                     alt="ظرف غذای گربه">
                             </div>
                             <div class="floating-item">
-                                <img src="{{asset('site/images/photo-1552053831-71594a27632d.jpeg')}}"
+                                <img src="{{ asset('site/images/photo-1552053831-71594a27632d.jpeg') }}"
                                     alt="ظرف غذای پرنده">
                             </div>
                             <div class="floating-item">
-                                <img src="{{asset('site/images/p1.jpeg')}}"
-                                    alt="ظرف غذای همستر">
+                                <img src="{{ asset('site/images/p1.jpeg') }}" alt="ظرف غذای همستر">
                             </div>
                         </div>
                     </div>
@@ -768,6 +1073,88 @@
         </div>
         <div class="text-center mt-5">
             <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg text-dark">مشاهده همه محصولات</a>
+        </div>
+    </section>
+
+
+    <section class="habitat-section">
+        <div class="container">
+            <!-- آیکون‌های شناور -->
+            <i class="bi bi-house-door floating-animal"></i>
+            <i class="bi bi-grid-3x3-gap floating-animal"></i>
+            <i class="bi bi-box-seam floating-animal"></i>
+            <i class="bi bi-shield-check floating-animal"></i>
+
+            <div class="habitat-header">
+                <span class="section-badge animate__animated animate__pulse animate__infinite">خانه امن برای حیوانات</span>
+                <h2 class="section-title animate__animated animate__fadeInDown">لانه، قفس و باکس حیوانات</h2>
+                <p class="section-subtitle animate__animated animate__fadeInUp">
+                    مکانی امن و راحت برای اعضای کوچک خانواده شما. همه محصولات با استاندارد و کیفیت و با مشاوره دامپزشکان
+                    طراحی شده‌اند.
+                </p>
+            </div>
+
+            <div class="habitat-content">
+                <div class="habitat-info">
+                    <h3 class="mb-4">خانه‌ای که شایسته حیوان شماست</h3>
+                    <p class="mb-4" style="font-size: 1.1rem; line-height: 1.8; color: #555;">
+                        در توکا پت شاپ، ما اهمیت یک محیط زندگی امن، راحت و stimulating برای حیوانات خانگی را درک می‌کنیم.
+                        هر محصول با دقت انتخاب شده تا نیازهای خاص هر حیوان را برآورده کند.
+                    </p>
+
+                    <ul class="habitat-features">
+                        <li>ساخته شده از مواد باکیفیت و غیرسمی</li>
+                        <li>طراحی ارگونومیک برای راحتی حیوان</li>
+                        <li>قابلیت تمیزکاری آسان و نگهداری کم</li>
+                        <li>امنیت بالا با قفل‌ها و درب‌های مطمئن</li>
+                        <li>فضای کافی برای حرکت و فعالیت حیوان</li>
+                        <li>مناسب برای استفاده در فضای داخلی و خارجی</li>
+                    </ul>
+
+                    <a class="btn btn-primary"
+                        href="{{ route('products.categories', 'لانه-و-قفس-نگهداری-حیوانات') }}">مشاهده همه محصولات</a>
+                </div>
+
+                <div class="habitat-image animate__animated animate__fadeInRight">
+                    <img src="{{ asset('site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp') }}"
+                        alt="لانه و قفس حیوانات">
+                </div>
+            </div>
+
+            <div class="habitat-types">
+                <div class="habitat-type animate__animated animate__fadeInUp">
+                    <div class="type-icon">
+                        <i class="bi bi-house-door"></i>
+                    </div>
+                    <h3 class="type-title">لانه‌های چوبی</h3>
+                    <p class="type-description">
+                        لانه‌های طبیعی و دنج که محیطی گرم و welcoming برای حیوانات کوچک فراهم می‌کنند.
+                        مناسب برای همستر، خرگوش و حیوانات کوچک.
+                    </p>
+                </div>
+
+                <div class="habitat-type animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="type-icon">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                    </div>
+                    <h3 class="type-title">قفس‌های فلزی</h3>
+                    <p class="type-description">
+                        قفس‌های با دوام و ایمن با طراحی مدرن که فضای کافی برای پرواز و حرکت پرندگان و
+                        دیگر حیوانات را فراهم می‌کنند.
+                    </p>
+                </div>
+
+                <div class="habitat-type animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="type-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <h3 class="type-title">بکس‌های حمل و نقل</h3>
+                    <p class="type-description">
+                        باکس‌های ایمن و راحت برای سفر و حمل و نقل حیوانات. طراحی شده برای
+                        ایمنی و آرامش حیوان در هنگام جابجایی.
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -928,6 +1315,17 @@
                         }, 300);
                     }
                 });
+            });
+        });
+    </script>
+
+    <script>
+        // افزودن انیمیشن هنگام اسکرول
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.habitat-type');
+
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.2}s`;
             });
         });
     </script>
