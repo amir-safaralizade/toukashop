@@ -23,8 +23,6 @@
             align-items: center;
         }
 
-
-
         .nav-link {
             font-weight: 500;
             color: var(--dark-color);
@@ -104,38 +102,52 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
             margin-bottom: 50px;
+            padding: 20px;
         }
 
+        /* استایل‌های کپی‌شده از صفحه اصلی برای باکس محصولات */
         .product-card {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
             position: relative;
+            height: 530px;
+            display: flex;
+            flex-direction: column;
+            transform-origin: center;
         }
 
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        .product-card:active {
+            transform: scale(0.97);
         }
 
-        .product-badge {
+        .product-card::before {
+            content: '';
             position: absolute;
-            top: 15px;
-            left: 15px;
-            background-color: var(--accent-color);
-            color: var(--dark-color);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            z-index: 10;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(78, 205, 196, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 1;
+        }
+
+        .product-card:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .product-img-container {
-            height: 250px;
+            position: relative;
             overflow: hidden;
+            height: 450px;
+            transition: height 0.4s ease;
         }
 
         .product-img {
@@ -149,21 +161,63 @@
             transform: scale(1.05);
         }
 
-        .product-info {
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-wishlist {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            transition: all 0.3s ease;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .product-wishlist:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .product-content {
             padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-category {
-            color: var(--secondary-color);
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 8px;
+            display: block;
         }
 
         .product-title {
-            font-weight: 900;
             font-size: 1.2rem;
+            font-weight: 700;
             margin-bottom: 10px;
+            color: var(--dark-color);
+            line-height: 1.4;
             height: 60px;
             overflow: hidden;
             display: -webkit-box;
@@ -175,93 +229,159 @@
             color: #777;
             font-size: 0.9rem;
             margin-bottom: 15px;
-            height: 70px;
-            overflow: hidden;
+            line-height: 1.5;
+            flex-grow: 1;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-        }
-
-        .product-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-        }
-
-        .product-price {
-            font-weight: 900;
-            color: var(--primary-color);
-            font-size: 1.2rem;
+            overflow: hidden;
         }
 
         .product-rating {
-            color: var(--accent-color);
-            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .product-actions {
+        .rating-stars {
+            color: #FFD700;
+            margin-left: 5px;
+        }
+
+        .rating-count {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .product-price-container {
             display: flex;
             justify-content: space-between;
-            margin-top: 15px;
+            align-items: center;
+            margin-top: auto;
         }
 
-        .add-to-cart-btn {
-            background: var(--primary-color);
+        .product-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .current-price {
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 700;
-            flex: 1;
-            margin-left: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .add-to-cart-btn:hover {
-            background: #e05a5a;
-        }
-
-        .wishlist-btn {
-            background: #f8f9fa;
-            color: #777;
             border: none;
             width: 40px;
             height: 40px;
-            border-radius: 8px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 2;
+            position: relative;
         }
 
-        .wishlist-btn:hover {
-            color: var(--primary-color);
-            background: #fff0f0;
+        .add-to-cart:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .pagination {
-            justify-content: center;
-            margin: 40px 0;
+        .product-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
 
-        .page-link {
-            border: none;
-            color: var(--dark-color);
-            padding: 10px 18px;
-            border-radius: 10px;
-            margin: 0 5px;
-            font-weight: 700;
+        .click-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 107, 107, 0.3);
+            transform: scale(0);
+            animation: clickEffect 0.6s ease-out;
+            pointer-events: none;
         }
 
-        .page-item.active .page-link {
-            background-color: var(--primary-color);
-            color: white;
+        @keyframes clickEffect {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
         }
 
-        .page-link:hover {
-            background-color: #f8f9fa;
-            color: var(--primary-color);
+        /* رسپانسیو برای موبایل */
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .product-card {
+                height: 400px;
+            }
+
+            .product-img-container {
+                height: 220px;
+            }
+
+            .product-content {
+                padding: 15px;
+            }
+
+            .product-title {
+                font-size: 1.1rem;
+                height: auto;
+            }
+
+            .current-price {
+                font-size: 1.1rem;
+            }
+
+            .archive-header {
+                padding: 60px 0;
+            }
+
+            .category-tabs {
+                gap: 10px;
+            }
+
+            .category-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
         }
 
         .pet-icon {
@@ -289,42 +409,6 @@
         .floating {
             animation: float 3s ease-in-out infinite;
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .category-tabs {
-                gap: 10px;
-            }
-
-            .category-btn {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
-            }
-
-            .archive-header {
-                padding: 60px 0;
-            }
-
-            body {
-                padding-top: 70px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .category-btn {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
-        }
     </style>
 @endsection
 
@@ -338,7 +422,7 @@
     <!-- Archive Header -->
     <div class="archive-header">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-4">آرشیو محصولات</h1>
+            <h1 class="display-4 fw-bold mb-4">همه محصولات</h1>
             <p class="lead mb-0">
                 بهترین و شیک‌ترین محصولات برای حیوانات خانگی دوست‌داشتنی شما
             </p>
@@ -363,36 +447,40 @@
     <!-- Products Grid -->
     <div class="container">
         <div class="product-grid">
-            <!-- Product -->
             @foreach ($products as $product)
-                <div class="product-card" data-category="cats,food">
+                <div class="product-card animate__animated animate__fadeInUp" data-category="cats,food">
+                    <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
                     <div class="product-badge">پرفروش</div>
+                    <button class="product-wishlist">
+                        <i class="bi bi-heart"></i>
+                    </button>
                     <div class="product-img-container">
-                        <img src="{{ $product->firstMedia('main_image')->full_url }}" class="product-img" alt="غذای گربه" />
+                        <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
+                            alt="{{ $product->name }}">
                     </div>
-                    <div class="product-info">
-                        <div class="product-category">{{ $product->category->name }}</div>
+                    <div class="product-content">
+                        <span class="product-category">{{ $product->category->name }}</span>
                         <h3 class="product-title">{{ $product->name }}</h3>
-                        <p class="product-description">
-                            {{ $product->name }}
-                        </p>
-                        <div class="product-meta">
-                            <div class="product-price">{{ number_format($product->price) }} تومان</div>
-                            <div class="product-rating">
+                        <div class="product-rating">
+                            <div class="rating-stars">
                                 <i class="bi bi-star-fill"></i>
                                 <i class="bi bi-star-fill"></i>
                                 <i class="bi bi-star-fill"></i>
                                 <i class="bi bi-star-fill"></i>
                                 <i class="bi bi-star-half"></i>
                             </div>
+                            <span class="rating-count">(42)</span>
                         </div>
-                        <div class="product-actions">
-                            <a href="{{ route('products.show', $product->slug) }}" class="add-to-cart-btn">
-                                <i class="bi bi-cart-plus me-1"></i>افزودن
-                            </a>
-                            <button class="wishlist-btn">
-                                <i class="bi bi-heart"></i>
-                            </button>
+                        <div class="product-price-container">
+                            <div class="product-price">
+                                <span class="current-price">{{ number_format($product->price) }} تومان</span>
+                                <span class="old-price">{{ number_format($product->price * 1.12) }} تومان</span>
+                            </div>
+                            <div class="product-actions">
+                                <a href="{{ route('products.show', $product->slug) }}" class="add-to-cart">
+                                    <i class="bi bi-cart-plus"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

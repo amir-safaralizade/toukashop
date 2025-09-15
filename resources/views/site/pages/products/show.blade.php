@@ -7,8 +7,13 @@
             padding: 15px 0;
         }
 
-        .breadcrumb-item a {
+        .breadcrumb-item {
             color: var(--dark-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary-color);
             text-decoration: none;
         }
 
@@ -446,10 +451,11 @@
     <div class="container mt-128">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('page.home') }}">خانه</a></li>
-                <li class="breadcrumb-item"><a href="">محصولات گربه</a></li>
-                <li class="breadcrumb-item"><a href="">غذای گربه</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+                <li class="breadcrumb-item text-primary"><a href="{{ route('page.home') }}">خانه</a></li>
+                <li class="breadcrumb-item text-primary"><a
+                        href="{{ route('products.categories', $product->category->slug) }}">{{ $product->category->name }}</a>
+                </li>
+                <li class="breadcrumb-item">{{ $product->name }}</li>
             </ol>
         </nav>
     </div>
@@ -457,7 +463,7 @@
     <!-- Product Section -->
     <section class="product-section">
         <div class="container">
-            <div class="row"> 
+            <div class="row">
                 <!-- Product Gallery -->
                 <div class="col-lg-6">
                     <div class="product-gallery">
@@ -492,8 +498,12 @@
                                 <i class="bi bi-star-fill"></i>
                                 <i class="bi bi-star-half"></i>
                             </div>
-                            <span class="review-count">(12 نظر)</span>
-                            <span class="badge bg-success ms-3">موجود در انبار</span>
+                            {{-- <span class="review-count">(12 نظر)</span> --}}
+                            @if ($product->stock > 0)
+                                <span class="badge bg-success ms-3">موجود در انبار</span>
+                            @else
+                                <span class="badge bg-danger ms-3">ناموجود</span>
+                            @endif
                         </div>
 
                         <div class="price-container">
@@ -510,9 +520,6 @@
                             <div class="size-options">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h5>سایز:</h5>
-                                    <a href="{{ route('page.size-selection-guide') }}" class="size-guide-link">
-                                        <i class="bi bi-rulers"></i> راهنمای انتخاب سایز
-                                    </a>
                                 </div>
                                 <div class="size-options-container">
                                     @foreach ($product->attributeValues->where('attribute.name', 'size') as $val)
@@ -549,12 +556,17 @@
                         </div>
 
                         <div class="action-btns">
-                            <button class="add-to-cart pulse-animation">
-                                <i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید
-                            </button>
-                            <button class="wishlist-btn">
-                                <i class="bi bi-heart"></i>
-                            </button>
+                            @if ($product->stock > 0)
+                                <button class="add-to-cart pulse-animation">
+                                    <i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید
+                                </button>
+                            @else
+                                <button class="btn btn-danger pulse-animation">
+                                    <i class="bi bi-cart-plus me-2"></i> ناموجود (تماس بگیرید)
+                                </button>
+                            @endif
+
+
                         </div>
 
                         <div class="product-meta-info">
@@ -587,7 +599,7 @@
                 </div>
             </div>
 
-          
+
             <!-- Product Tabs -->
             <div class="product-tabs mt-5">
                 <ul class="nav nav-tabs" id="productTabs" role="tablist">
@@ -598,10 +610,6 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs"
                             type="button" role="tab">مشخصات فنی</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
-                            type="button" role="tab">نظرات (12)</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="productTabsContent">
@@ -646,45 +654,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="reviews" role="tabpanel">
-                        <h4>نظرات مشتریان</h4>
-                        {{-- @foreach ($product->reviews as $review)
-                            <div class="review-item mb-4">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <div>
-                                        <strong>{{ $review->user->name }}</strong>
-                                        <div class="rating small">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                <i
-                                                    class="bi {{ $i <= $review->rating ? 'bi-star-fill' : ($i - 0.5 == $review->rating ? 'bi-star-half' : 'bi-star') }}"></i>
-                                            @endfor
-                                        </div>
-                                    </div>
-                                    <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
-                                </div>
-                                <p>{{ $review->comment }}</p>
-                            </div>
-                        @endforeach --}}
-                        <form class="mt-5" id="reviewForm">
-                            <h5>نظر خود را ثبت کنید</h5>
-                            <div class="mb-3">
-                                <label for="reviewRating" class="form-label">امتیاز شما</label>
-                                <div class="rating">
-                                    <i class="bi bi-star" onmouseover="fillStars(1)" onclick="setRating(1)"></i>
-                                    <i class="bi bi-star" onmouseover="fillStars(2)" onclick="setRating(2)"></i>
-                                    <i class="bi bi-star" onmouseover="fillStars(3)" onclick="setRating(3)"></i>
-                                    <i class="bi bi-star" onmouseover="fillStars(4)" onclick="setRating(4)"></i>
-                                    <i class="bi bi-star" onmouseover="fillStars(5)" onclick="setRating(5)"></i>
-                                </div>
-                                <input type="hidden" name="rating" id="reviewRating">
-                            </div>
-                            <div class="mb-3">
-                                <label for="reviewText" class="form-label">نظر شما</label>
-                                <textarea class="form-control" id="reviewText" rows="3" name="comment"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">ثبت نظر</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -903,7 +872,7 @@
                     });
             });
 
-            
+
         });
     </script>
 @endsection
