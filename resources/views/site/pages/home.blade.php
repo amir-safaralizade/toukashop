@@ -1305,8 +1305,7 @@
                         <div class="article-content">
                             <h3 class="article-title">{{ $post->title }}</h3>
                             <p class="article-excerpt">
-                                چگونه بهترین رژیم غذایی را برای گربه خود انتخاب کنید؟ در این مقاله به بررسی نیازهای غذایی
-                                گربه‌ها در سنین مختلف می‌پردازیم.
+                                {{ $post->summary }}
                             </p>
                             <div class="article-meta">
                                 <span class="article-date"><i

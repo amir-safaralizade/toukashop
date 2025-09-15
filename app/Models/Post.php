@@ -8,6 +8,7 @@ use Modules\Visit\Traits\Visitable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -48,5 +49,11 @@ class Post extends Model
     public function category()
     {
         return $this->belongsTo(Category::class)->where('type', 'post');
+    }
+
+    public function getSummaryAttribute()
+    {
+        // Remove HTML tags and limit to 100 characters
+        return Str::limit(strip_tags($this->content), 100);
     }
 }

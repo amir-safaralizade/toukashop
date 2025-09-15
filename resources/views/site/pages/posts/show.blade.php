@@ -1,384 +1,374 @@
 @extends('layout.app')
 
 @section('styles')
-<style>
-    /* استایل کلی صفحه مقاله */
-    .article-main {
-        padding: 4rem 0;
-        background-color: #f9f5ff;
-    }
-    
-    .article-container {
-        background-color: white;
-        border-radius: 20px;
-        padding: 2.5rem;
-        box-shadow: 0 10px 30px rgba(179, 153, 212, 0.1);
-        max-width: 900px;
-        margin: 0 auto;
-    }
-    
-    .article-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    .article-title {
-        font-family: "Dancing Script", cursive;
-        font-size: 2.5rem;
-        color: #333;
-        margin-bottom: 1rem;
-    }
-    
-    .article-meta {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        color: #777;
-        margin-bottom: 1.5rem;
-    }
-    
-    .article-meta-item {
-        display: flex;
-        align-items: center;
-    }
-    
-    .article-meta-item i {
-        margin-left: 0.5rem;
-    }
-    
-    .article-image {
-        width: 100%;
-        border-radius: 15px;
-        margin-bottom: 2rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .article-content {
-        line-height: 1.8;
-        font-size: 1.1rem;
-        color: #444;
-    }
-    
-    .article-content h2,
-    .article-content h3 {
-        font-family: "Dancing Script", cursive;
-        color: #8e44ad;
-        margin: 1.5rem 0 1rem;
-    }
-    
-    .article-content h2 {
-        font-size: 1.8rem;
-    }
-    
-    .article-content h3 {
-        font-size: 1.5rem;
-    }
-    
-    .article-content p {
-        margin-bottom: 1.5rem;
-    }
-    
-    .article-content img {
-        max-width: 100%;
-        border-radius: 10px;
-        margin: 1rem 0;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .article-content blockquote {
-        border-right: 4px solid #8e44ad;
-        padding-right: 1.5rem;
-        margin: 1.5rem 0;
-        font-style: italic;
-        color: #555;
-    }
-    
-    .article-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.8rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(179, 153, 212, 0.2);
-    }
-    
-    .article-tag {
-        background-color: #f3e6ff;
-        color: #8e44ad;
-        padding: 0.5rem 1rem;
-        border-radius: 50px;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-    }
-    
-    .article-tag:hover {
-        background-color: #8e44ad;
-        color: white;
-    }
-    
-    /* بخش نظرات */
-    .comments-section {
-        margin-top: 3rem;
-    }
-    
-    .comments-title {
-        font-family: "Dancing Script", cursive;
-        font-size: 2rem;
-        color: #333;
-        margin-bottom: 1.5rem;
-        border-bottom: 2px solid rgba(179, 153, 212, 0.2);
-        padding-bottom: 0.5rem;
-    }
-    
-    .comment {
-        background-color: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 5px 15px rgba(179, 153, 212, 0.1);
-    }
-    
-    .comment-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    
-    .comment-avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-left: 1rem;
-    }
-    
-    .comment-author {
-        font-weight: 600;
-    }
-    
-    .comment-date {
-        font-size: 0.9rem;
-        color: #777;
-    }
-    
-    .comment-content {
-        line-height: 1.7;
-    }
-    
-    /* فرم ارسال نظر */
-    .comment-form {
-        background-color: white;
-        border-radius: 15px;
-        padding: 2rem;
-        margin-top: 2rem;
-        box-shadow: 0 5px 15px rgba(179, 153, 212, 0.1);
-    }
-    
-    .comment-form-title {
-        font-family: "Dancing Script", cursive;
-        font-size: 1.8rem;
-        color: #333;
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: #555;
-    }
-    
-    .form-control {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control:focus {
-        outline: none;
-        border-color: #8e44ad;
-        box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
-    }
-    
-    textarea.form-control {
-        min-height: 150px;
-        resize: vertical;
-    }
-    
-    .submit-btn {
-        background: linear-gradient(45deg, #f8c1ba, #8e44ad);
-        color: white;
-        border: none;
-        padding: 0.8rem 2rem;
-        border-radius: 50px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .submit-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(179, 153, 212, 0.3);
-    }
-    
-    /* رسپانسیو */
-    @media (max-width: 768px) {
-        .article-container {
-            padding: 1.5rem;
+    <style>
+        .article-header {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(78, 205, 196, 0.05) 100%);
+            padding: 80px 0 60px;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(78, 205, 196, 0.08);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .article-header::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 107, 107, 0.08);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .article-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
         .article-title {
-            font-size: 2rem;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            line-height: 1.4;
         }
-        
+
         .article-meta {
-            flex-direction: column;
-            gap: 0.5rem;
+            display: flex;
             align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
-    }
-</style>
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .meta-item i {
+            margin-left: 5px;
+            color: var(--primary-color);
+        }
+
+        .article-hero-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            margin: 40px 0;
+        }
+
+        .article-hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .article-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .article-body {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            margin-bottom: 50px;
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            color: #444;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-right: 4px solid var(--secondary-color);
+            background: rgba(78, 205, 196, 0.05);
+            border-radius: 10px;
+            line-height: 1.9;
+        }
+
+        .article-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        .tip-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-right: 5px solid var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .tip-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .article-image {
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: all 0.5s ease;
+        }
+
+        .article-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-caption {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(78, 205, 196, 0.05) 100%);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 50px 0;
+            border-right: 5px solid var(--primary-color);
+        }
+
+        .conclusion-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+        }
+
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .tags {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: rgba(78, 205, 196, 0.1);
+            color: var(--secondary-color);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .social-share {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+            color: #555;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .related-articles {
+            padding: 80px 0;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+        }
+
+        .related-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        .related-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        /* رسپانسیو برای موبایل */
+        @media (max-width: 992px) {
+            .article-title {
+                font-size: 2.2rem;
+            }
+
+            .article-body {
+                padding: 30px;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .article-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 @endsection
 
 @section('content')
-<main class="article-main" style="margin-top: 128px">
-    <div class="container">
-        <div class="article-container">
-            <!-- هدر مقاله -->
-            <div class="article-header">
-                <h1 class="article-title">راهنمای انتخاب کفش ورزشی مناسب</h1>
-                
-                <div class="article-meta">
-                    <span class="article-meta-item">
-                        <i class="bi bi-person"></i> نویسنده: تیم ونل
-                    </span>
-                    <span class="article-meta-item">
-                        <i class="bi bi-calendar"></i> ۲۵ خرداد ۱۴۰۲
-                    </span>
-                    <span class="article-meta-item">
-                        <i class="bi bi-eye"></i> ۱,۲۴۵ بازدید
-                    </span>
+    <div class="mt-128"></div>
+    <!-- هدر مقاله -->
+    <header class="article-header">
+        <div class="container">
+            <span class="article-badge animate__animated animate__fadeIn">{{ $post->category->name }}</span>
+            <h1 class="article-title animate__animated animate__fadeInDown">{{ $post->title }}</h1>
+
+            <div class="article-meta">
+                <div class="meta-item">
+                    <i class="bi bi-calendar"></i>
+                    <span>{{ jdate($post->created_at)->format('Y.m.d') }}</span>
                 </div>
-                
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" 
-                     alt="کفش ورزشی" 
-                     class="article-image">
-            </div>
-            
-            <!-- محتوای مقاله -->
-            <div class="article-content">
-                <p>انتخاب کفش ورزشی مناسب یکی از مهم‌ترین عوامل در بهبود عملکرد و جلوگیری از آسیب‌های ورزشی است. در این مقاله به بررسی نکات کلیدی برای انتخاب بهترین کفش ورزشی می‌پردازیم.</p>
-                
-                <h2>۱. شناخت نوع ورزش</h2>
-                <p>هر رشته ورزشی نیازمند کفش مخصوص به خود است. کفش دویدن با کفش بسکتبال یا فوتبال تفاوت‌های اساسی دارد.</p>
-                
-                <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28" 
-                     alt="انواع کفش ورزشی">
-                
-                <h3>کفش دویدن</h3>
-                <p>کفش‌های دویدن باید سبک باشند و ضربه‌گیری مناسبی داشته باشند. به دنبال کفش‌هایی با کفی نرم و انعطاف‌پذیر باشید.</p>
-                
-                <h3>کفش بدنسازی</h3>
-                <p>برای تمرینات بدنسازی به کفش‌هایی با کفی صاف و پایدار نیاز دارید که از مچ پا حمایت کنند.</p>
-                
-                <blockquote>
-                    یک کفش ورزشی خوب نه تنها عملکرد شما را بهبود می‌بخشد، بلکه از آسیب‌های طولانی مدت به مفاصل جلوگیری می‌کند.
-                </blockquote>
-                
-                <h2>۲. توجه به نوع کف پا</h2>
-                <p>سه نوع کلی کف پا وجود دارد که هر کدام نیازمند کفش مخصوص هستند:</p>
-                
-                <ul>
-                    <li>کف پای صاف</li>
-                    <li>کف پای معمولی</li>
-                    <li>کف پای گود</li>
-                </ul>
-                
-                <h2>۳. انتخاب سایز مناسب</h2>
-                <p>کفش ورزشی باید کمی فضای اضافه در جلوی انگشتان داشته باشد. بهترین زمان برای اندازه‌گیری کف پا، پایان روز است که پاها در بزرگ‌ترین اندازه خود هستند.</p>
-            </div>
-            
-            <!-- تگ‌های مقاله -->
-            <div class="article-tags">
-                <a href="#" class="article-tag">کفش ورزشی</a>
-                <a href="#" class="article-tag">ورزش</a>
-                <a href="#" class="article-tag">سلامت</a>
-                <a href="#" class="article-tag">تجهیزات ورزشی</a>
-            </div>
-            
-            <!-- بخش نظرات -->
-            <div class="comments-section">
-                <h3 class="comments-title">نظرات کاربران</h3>
-                
-                <div class="comment">
-                    <div class="comment-header">
-                        <img src="https://randomuser.me/api/portraits/women/32.jpg" 
-                             alt="نازنین محمدی" 
-                             class="comment-avatar">
-                        <div>
-                            <div class="comment-author">نازنین محمدی</div>
-                            <div class="comment-date">۱۵ خرداد ۱۴۰۲</div>
-                        </div>
-                    </div>
-                    <div class="comment-content">
-                        ممنون از مقاله عالی‌تون. من همیشه در انتخاب کفش ورزشی مشکل داشتم و این مطلب خیلی بهم کمک کرد.
-                    </div>
+                <div class="meta-item">
+                    <i class="bi bi-clock"></i>
+                    <span>زمان مطالعه: ۸ دقیقه</span>
                 </div>
-                
-                <div class="comment">
-                    <div class="comment-header">
-                        <img src="https://randomuser.me/api/portraits/men/45.jpg" 
-                             alt="امیرحسین رضایی" 
-                             class="comment-avatar">
-                        <div>
-                            <div class="comment-author">امیرحسین رضایی</div>
-                            <div class="comment-date">۱۰ خرداد ۱۴۰۲</div>
-                        </div>
-                    </div>
-                    <div class="comment-content">
-                        لطفاً در مورد کفش‌های مخصوص پیاده‌روی هم مقاله بذارید. ممنون
-                    </div>
+                <div class="meta-item">
+                    <i class="bi bi-person"></i>
+                    <span>نویسنده: دکتر مریم حسینی</span>
                 </div>
-                
-                <!-- فرم ارسال نظر -->
-                <div class="comment-form">
-                    <h3 class="comment-form-title">ثبت نظر جدید</h3>
-                    
-                    <form>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name" class="form-label">نام شما *</label>
-                                    <input type="text" id="name" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email" class="form-label">ایمیل (اختیاری)</label>
-                                    <input type="email" id="email" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="comment" class="form-label">نظر شما *</label>
-                            <textarea id="comment" class="form-control" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">
-                            <i class="bi bi-send"></i> ارسال نظر
-                        </button>
-                    </form>
+                <div class="meta-item">
+                    <i class="bi bi-eye"></i>
+                    <span>۱,۲۴۵ بازدید</span>
+                </div>
+            </div>
+
+            <div class="article-hero-image animate__animated animate__fadeInUp">
+                <img src="{{ $post->firstMedia('main_image')?->full_url }}" alt="تغذیه گربه">
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوای مقاله -->
+    <main class="article-content">
+        <div class="article-body">
+            {!! $post->content !!}
+
+            <div class="article-footer">
+                <div class="tags">
+                    <span class="tag">گربه</span>
+                    <span class="tag">تغذیه</span>
+                    <span class="tag">سلامت حیوانات</span>
+                    <span class="tag">نگهداری گربه</span>
+                </div>
+
+                <div class="social-share">
+                    <span>اشتراک گذاری:</span>
+                    <a href="#" class="social-btn"><i class="bi bi-telegram"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-whatsapp"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-link-45deg"></i></a>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
+
+    <!-- مقالات مرتبط -->
+    <section class="related-articles">
+        <div class="container">
+            <h2 class="related-title">مقالات مرتبط</h2>
+
+            <div class="articles-container">
+                <!-- مقالات مرتبط اینجا نمایش داده می‌شوند -->
+            </div>
+        </div>
+    </section>
 @endsection
