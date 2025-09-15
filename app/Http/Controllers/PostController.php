@@ -12,7 +12,7 @@ class PostController extends Controller
 
     }
 
-    public function show(Post $post)
+    public function show($slug)
     {
 
     }

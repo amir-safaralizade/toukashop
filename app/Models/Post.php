@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Visit\Traits\Visitable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Database\Eloquent\Builder;
 
 class Post extends Model
 {
@@ -29,6 +30,13 @@ class Post extends Model
                     default => "فعالیت روی پست: {$eventName}",
                 };
             });
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('status', 'published'); // یا 1
+        });
     }
 
     // ارتباط با کاربر
