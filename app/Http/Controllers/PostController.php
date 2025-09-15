@@ -7,13 +7,11 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
-    {
-
-    }
+    public function index() {}
 
     public function show($slug)
     {
-
+        $post = Post::where('slug', $slug)->firstOrfail();
+        return $post;
     }
 }

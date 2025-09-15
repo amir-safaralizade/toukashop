@@ -1303,14 +1303,15 @@
                             <span class="article-badge">{{ $post->category->name }}</span>
                         </div>
                         <div class="article-content">
-                            <h3 class="article-title">{{$post->title}}</h3>
+                            <h3 class="article-title">{{ $post->title }}</h3>
                             <p class="article-excerpt">
                                 چگونه بهترین رژیم غذایی را برای گربه خود انتخاب کنید؟ در این مقاله به بررسی نیازهای غذایی
                                 گربه‌ها در سنین مختلف می‌پردازیم.
                             </p>
                             <div class="article-meta">
-                                <span class="article-date"><i class="bi bi-calendar"></i>{{jdate($post->created_at)->format('Y-m-d')}}</span>
-                                <a href="#" class="article-read-more">
+                                <span class="article-date"><i
+                                        class="bi bi-calendar"></i>{{ jdate($post->created_at)->format('Y-m-d') }}</span>
+                                <a href="{{ route('posts.show', $post->slug) }}" class="article-read-more">
                                     مطالعه مقاله <i class="bi bi-arrow-left"></i>
                                 </a>
                             </div>

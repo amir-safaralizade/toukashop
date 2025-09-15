@@ -50,7 +50,7 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
 
     Route::prefix('posts')->controller(PostController::class)->name('posts.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show/{post}', 'show')->name('show');
+        Route::get('/show/{slug}', 'show')->name('show');
     });
 
     Route::controller(CheckoutController::class)->prefix('checkout')->group(function () {
