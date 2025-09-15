@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Models\Post;
 use App\Models\Product;
 use stdClass;
 
@@ -18,6 +19,7 @@ class HomeController extends Controller
         $data = new stdClass();
         $data->products = $products;
         $data->special_products = $special_products;
+        $data->posts = Post::orderby('id', 'desc')->take(4)->get();
         $data->cage_products = Product::where('category_id', 4)->OrderBy('id', 'desc')->where('stock', '>', 0)->take(4)->get();
         return view('site.pages.home', compact('data'));
     }

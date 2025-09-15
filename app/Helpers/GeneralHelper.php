@@ -128,3 +128,5 @@ function persian_slug($string, $separator = '-')
 
     return trim($slug, $separator);
 }
+
+
