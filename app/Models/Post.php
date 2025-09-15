@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\HasMediaFiles;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Visit\Traits\Visitable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
 class Post extends Model
 {
-    use LogsActivity;
+    use HasMediaFiles, Visitable, LogsActivity;
 
-    protected $fillable = ['title', 'content', 'user_id'];
+    protected $fillable = ['title', 'content', 'slug', 'user_id', 'category_id'];
 
     // تنظیمات لاگ‌گیری
     public function getActivitylogOptions(): LogOptions
@@ -33,5 +35,10 @@ class Post extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class)->where('type', 'post');
     }
 }
