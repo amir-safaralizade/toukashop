@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\Visit\Traits\Visitable;
+use Modules\Visit\Traits\Visitable; 
 
 class Page extends Model
 {
