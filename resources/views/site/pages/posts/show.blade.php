@@ -319,11 +319,11 @@
                 </div>
                 <div class="meta-item">
                     <i class="bi bi-clock"></i>
-                    <span>زمان مطالعه: ۸ دقیقه</span>
+                    <span>زمان مطالعه: {{ $post->estimateReadingMinutes() }} دقیقه</span>
                 </div>
                 <div class="meta-item">
                     <i class="bi bi-person"></i>
-                    <span>نویسنده: دکتر مریم حسینی</span>
+                    <span>نویسنده: دکتر سید عبدالعلی هاشمی نصب</span>
                 </div>
                 <div class="meta-item">
                     <i class="bi bi-eye"></i>
@@ -332,7 +332,7 @@
             </div>
 
             <div class="article-hero-image animate__animated animate__fadeInUp">
-                <img src="{{ $post->firstMedia('main_image')?->full_url }}" alt="تغذیه گربه">
+                <img src="{{ $post->firstMedia('main_image')?->full_url }}" alt="{{ $post->title }}">
             </div>
         </div>
     </header>
@@ -352,11 +352,32 @@
 
                 <div class="social-share">
                     <span>اشتراک گذاری:</span>
-                    <a href="#" class="social-btn"><i class="bi bi-telegram"></i></a>
-                    <a href="#" class="social-btn"><i class="bi bi-whatsapp"></i></a>
-                    <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="social-btn"><i class="bi bi-link-45deg"></i></a>
+
+                    {{-- Telegram --}}
+                    <a href="https://t.me/share/url?url={{ urlencode(request()->fullUrl()) }}&text={{ urlencode($post->title) }}"
+                        class="social-btn" target="_blank" rel="noopener">
+                        <i class="bi bi-telegram"></i>
+                    </a>
+
+                    {{-- WhatsApp --}}
+                    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' ' . request()->fullUrl()) }}"
+                        class="social-btn" target="_blank" rel="noopener">
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+
+                    {{-- Instagram (نداره لینک مستقیم برای share) --}}
+                    {{-- بهترین راه کپی لینک هست --}}
+                    <a href="https://www.instagram.com/?url={{ urlencode(request()->fullUrl()) }}" class="social-btn"
+                        target="_blank" rel="noopener">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+
+                    {{-- Copy Link (با JS لینک کپی میشه) --}}
+                    <a href="javascript:void(0)" onclick="copyPostLink()" class="social-btn">
+                        <i class="bi bi-link-45deg"></i>
+                    </a>
                 </div>
+
             </div>
         </div>
     </main>
@@ -371,4 +392,29 @@
             </div>
         </div>
     </section>
+@endsection
+
+
+@section('scripts')
+    <script>
+        function copyPostLink() {
+            navigator.clipboard.writeText("{{ request()->fullUrl() }}")
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'لینک کپی شد!',
+                        text: 'می‌تونی الان به راحتی لینک مقاله رو به اشتراک بذاری.',
+                        confirmButtonText: 'باشه',
+                    });
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'خطا!',
+                        text: 'مشکلی در کپی لینک پیش اومد.',
+                        confirmButtonText: 'باشه',
+                    });
+                });
+        }
+    </script>
 @endsection

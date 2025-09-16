@@ -62,7 +62,11 @@
                 <div class="col-lg-4 mb-5 mb-lg-0">
                     <a href="#" class="footer-logo">
                         <img src="{{ asset('images/touka-logo.jpg') }}" alt="toukashop Logo" width="80px">
-
+                        <a referrerpolicy='origin' target='_blank'
+                            href='https://trustseal.enamad.ir/?id=647409&Code=rQChuLlTGm7dyB07eVp7fZ6W6RBSsHqn'><img
+                                referrerpolicy='origin'
+                                src='https://trustseal.enamad.ir/logo.aspx?id=647409&Code=rQChuLlTGm7dyB07eVp7fZ6W6RBSsHqn'
+                                alt='' style='cursor:pointer' code='rQChuLlTGm7dyB07eVp7fZ6W6RBSsHqn'></a>
                     </a>
                     <p class="mb-4">ما در توکا پت با عشق به حیوانات و تعهد به کیفیت، بهترین محصولات را برای حیوانات
                         خانگی شما ارائه می‌دهیم.</p>
