@@ -1009,10 +1009,369 @@
                 font-size: 2.2rem;
             }
         }
+
+
+
+
+
+        .hero-slider {
+            height: 60vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(0 0 0 / 58%);
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 10;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 800px;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: block;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        .slide-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 1.1s;
+        }
+
+        .slide-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 1.4s;
+        }
+
+        .slide-btn:hover {
+            background: #e05a5a;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .slider-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        .slider-arrows {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 50px;
+            z-index: 20;
+        }
+
+        .slider-arrow {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+
+        .slider-arrow:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .slide-counter {
+            position: absolute;
+            bottom: 60px;
+            right: 60px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            z-index: 20;
+        }
+
+        .pet-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.2);
+            z-index: 5;
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .slide-title {
+                font-size: 2.8rem;
+            }
+
+            .slide-description {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 2.2rem;
+            }
+
+            .slide-description {
+                font-size: 1rem;
+            }
+
+            .slide-btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+
+            .slider-arrows {
+                padding: 0 20px;
+            }
+
+            .slider-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .slide-counter {
+                bottom: 40px;
+                right: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .slide-title {
+                font-size: 1.8rem;
+            }
+
+            .slide-subtitle {
+                font-size: 1rem;
+            }
+
+            .slide-content {
+                padding: 0 15px;
+            }
+
+            .slider-arrows {
+                padding: 0 15px;
+            }
+
+            .slide-counter {
+                bottom: 30px;
+                right: 30px;
+            }
+        }
     </style>
 @endsection
 
 @section('content')
+    <div class="hero-slider">
+        <!-- Slide 1 -->
+        <div class="slide active" style="background-image: url('{{ asset('site/sliders/s3.webp') }}');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <span class="slide-subtitle">بهترین برندهای جهانی</span>
+                <h1 class="slide-title">لوازم لاکچری برای حیوانات خانگی</h1>
+                <p class="slide-description">در توکا پت، بهترین و شیک‌ترین محصولات را برای حیوانات خانگی دوست‌داشتنی شما
+                    آماده کرده‌ایم. کیفیت را با ما تجربه کنید.</p>
+                <button class="slide-btn">مشاهده محصولات</button>
+            </div>
+
+            <!-- Floating pet icons -->
+            <i class="bi bi-egg-fried pet-icon floating" style="top: 20%; left: 10%; animation-delay: 0.2s;"></i>
+            <i class="bi bi-bone pet-icon floating" style="top: 70%; right: 15%; animation-delay: 0.5s;"></i>
+            <i class="bi bi-balloon-heart pet-icon floating" style="top: 30%; right: 20%; animation-delay: 0.7s;"></i>
+            <i class="bi bi-gem pet-icon floating" style="bottom: 10%; left: 20%; animation-delay: 0.3s;"></i>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide" style="background-image: url('{{ asset('site/sliders/s2.webp') }}');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <span class="slide-subtitle">تخفیف‌های ویژه</span>
+                <h1 class="slide-title">تا ۳۰٪ تخفیف برای غذای حیوانات</h1>
+                <p class="slide-description">با بهترین قیمت و بالاترین کیفیت، غذای مورد نیاز حیوان خانگی خود را از توکا پت
+                    تهیه کنید.</p>
+                <button class="slide-btn">مشاهده تخفیف‌ها</button>
+            </div>
+
+            <!-- Floating pet icons -->
+            <i class="bi bi-egg-fried pet-icon floating" style="top: 25%; right: 10%; animation-delay: 0.4s;"></i>
+            <i class="bi bi-bone pet-icon floating" style="bottom: 20%; left: 15%; animation-delay: 0.8s;"></i>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide" style="background-image: url('{{ asset('site/sliders/s1.webp') }}');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <span class="slide-subtitle">خدمات حرفه‌ای</span>
+                <h1 class="slide-title">مشاوره رایگان با متخصصین</h1>
+                <p class="slide-description">تیم متخصص ما آماده ارائه مشاوره رایگان برای انتخاب بهترین محصولات برای حیوان
+                    خانگی شماست.</p>
+                <button class="slide-btn">دریافت مشاوره</button>
+            </div>
+
+            <!-- Floating pet icons -->
+            <i class="bi bi-balloon-heart pet-icon floating" style="top: 15%; left: 20%; animation-delay: 0.3s;"></i>
+            <i class="bi bi-gem pet-icon floating" style="bottom: 25%; right: 15%; animation-delay: 0.6s;"></i>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide" style="background-image: url('{{ asset('site/sliders/s3.webp') }}');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <span class="slide-subtitle">ارسال سریع و رایگان</span>
+                <h1 class="slide-title">خرید آنلاین با ارسال رایگان</h1>
+                <p class="slide-description">برای خریدهای بالای ۵۰۰ هزار تومان، از ارسال رایگان بهره‌مند شوید و در کمترین
+                    زمان محصولات را دریافت کنید.</p>
+                <button class="slide-btn">سفارش آنلاین</button>
+            </div>
+
+            <!-- Floating pet icons -->
+            <i class="bi bi-egg-fried pet-icon floating" style="top: 40%; right: 12%; animation-delay: 0.5s;"></i>
+            <i class="bi bi-bone pet-icon floating" style="bottom: 30%; left: 18%; animation-delay: 0.9s;"></i>
+        </div>
+
+        <!-- Slider Controls -->
+        <div class="slider-controls">
+            <div class="slider-dots">
+                <div class="slider-dot active" data-slide="0"></div>
+                <div class="slider-dot" data-slide="1"></div>
+                <div class="slider-dot" data-slide="2"></div>
+                <div class="slider-dot" data-slide="3"></div>
+            </div>
+        </div>
+
+        <div class="slider-arrows">
+            <div class="slider-arrow prev">
+                <i class="bi bi-arrow-right"></i>
+            </div>
+            <div class="slider-arrow next">
+                <i class="bi bi-arrow-left"></i>
+            </div>
+        </div>
+
+        <div class="slide-counter">
+            <span class="current">01</span> / <span class="total">04</span>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content animate__animated animate__fadeIn">
@@ -1588,6 +1947,123 @@
             cards.forEach((card, index) => {
                 card.style.animationDelay = `${index * 0.2}s`;
             });
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Slider functionality
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            const prevBtn = document.querySelector('.slider-arrow.prev');
+            const nextBtn = document.querySelector('.slider-arrow.next');
+            const currentSlideEl = document.querySelector('.slide-counter .current');
+            const totalSlidesEl = document.querySelector('.slide-counter .total');
+
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            let slideInterval;
+
+            // Set total slides
+            totalSlidesEl.textContent = totalSlides < 10 ? `0${totalSlides}` : totalSlides;
+
+            // Initialize slider
+            function initSlider() {
+                // Start autoplay
+                startSlideInterval();
+
+                // Update slide counter
+                updateSlideCounter();
+
+                // Add event listeners
+                prevBtn.addEventListener('click', prevSlide);
+                nextBtn.addEventListener('click', nextSlide);
+
+                dots.forEach(dot => {
+                    dot.addEventListener('click', function() {
+                        const slideIndex = parseInt(this.getAttribute('data-slide'));
+                        goToSlide(slideIndex);
+                    });
+                });
+
+                // Pause autoplay when hovering over slider
+                const slider = document.querySelector('.hero-slider');
+                slider.addEventListener('mouseenter', pauseSlideInterval);
+                slider.addEventListener('mouseleave', startSlideInterval);
+
+                // Navbar scroll effect
+                window.addEventListener('scroll', function() {
+                    const navbar = document.querySelector('.navbar');
+                    if (window.scrollY > 100) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            // Go to specific slide
+            function goToSlide(index) {
+                // Remove active class from current slide and dot
+                slides[currentSlide].classList.remove('active');
+                dots[currentSlide].classList.remove('active');
+
+                // Update current slide
+                currentSlide = index;
+
+                // Add active class to new slide and dot
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+
+                // Update slide counter
+                updateSlideCounter();
+
+                // Restart autoplay
+                restartSlideInterval();
+            }
+
+            // Next slide
+            function nextSlide() {
+                let nextIndex = currentSlide + 1;
+                if (nextIndex >= totalSlides) {
+                    nextIndex = 0;
+                }
+                goToSlide(nextIndex);
+            }
+
+            // Previous slide
+            function prevSlide() {
+                let prevIndex = currentSlide - 1;
+                if (prevIndex < 0) {
+                    prevIndex = totalSlides - 1;
+                }
+                goToSlide(prevIndex);
+            }
+
+            // Update slide counter
+            function updateSlideCounter() {
+                currentSlideEl.textContent = currentSlide + 1 < 10 ? `0${currentSlide + 1}` : currentSlide + 1;
+            }
+
+            // Start autoplay
+            function startSlideInterval() {
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            // Pause autoplay
+            function pauseSlideInterval() {
+                clearInterval(slideInterval);
+            }
+
+            // Restart autoplay
+            function restartSlideInterval() {
+                pauseSlideInterval();
+                startSlideInterval();
+            }
+
+            // Initialize the slider
+            initSlider();
         });
     </script>
 @endsection

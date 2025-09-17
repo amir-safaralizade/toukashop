@@ -327,7 +327,7 @@
                 </div>
                 <div class="meta-item">
                     <i class="bi bi-eye"></i>
-                    <span>{{ $post->visitCount()+1500 }} بازدید</span>
+                    <span>{{ $post->visitCount() + 1500 }} بازدید</span>
                 </div>
             </div>
 
