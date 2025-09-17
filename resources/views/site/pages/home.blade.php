@@ -1010,10 +1010,6 @@
             }
         }
 
-
-
-
-
         .hero-slider {
             height: 60vh;
             position: relative;
@@ -1277,6 +1273,196 @@
                 right: 30px;
             }
         }
+
+
+
+
+        .creative-banner-section {
+            padding: 80px 0;
+            margin: 60px 0;
+        }
+
+        .banner-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            gap: 20px;
+            height: 500px;
+        }
+
+        .main-banner {
+            flex: 2;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url("https://toukashop.ir/site/images/photo-1594149929911-78975a43d4f5.jpeg") no-repeat center center / cover;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.4s ease;
+        }
+
+        .main-banner:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .main-banner-content {
+            text-align: center;
+            padding: 30px;
+            z-index: 2;
+        }
+
+        .main-banner h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-banner p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .side-banners {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .small-banner {
+            flex: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.4s ease;
+        }
+
+        .small-banner:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .small-banner:first-child {
+            background: linear-gradient(rgba(142, 68, 173, 0.5),
+                    rgba(255, 230, 109, 0.5)),
+                url("https://toukashop.ir/site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp") no-repeat center center / cover;
+        }
+
+        .small-banner:last-child {
+            background: linear-gradient(rgba(78, 205, 196, 0.5),
+                    rgba(255, 158, 183, 0.5)),
+                url("https://toukashop.ir/site/images/categoryBackgroud.jpg") no-repeat center center / cover;
+        }
+
+        .small-banner-content {
+            text-align: center;
+            padding: 20px;
+            z-index: 2;
+        }
+
+        .small-banner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .banner-btn {
+            background-color: white;
+            color: var(--dark-color);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .banner-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .main-banner .banner-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* تزئینات خلاقانه */
+        .banner-decoration {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+        .decoration-1 {
+            top: 20px;
+            right: 20px;
+            font-size: 5rem;
+        }
+
+        .decoration-2 {
+            bottom: 30px;
+            left: 30px;
+            font-size: 4rem;
+        }
+
+        .decoration-3 {
+            top: 15px;
+            left: 15px;
+            font-size: 3rem;
+        }
+
+        .decoration-4 {
+            bottom: 20px;
+            right: 20px;
+            font-size: 3.5rem;
+        }
+
+        /* واکنش‌گرایی */
+        @media (max-width: 992px) {
+            .banner-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .main-banner,
+            .small-banner {
+                min-height: 300px;
+            }
+
+            .side-banners {
+                flex-direction: row;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .side-banners {
+                flex-direction: column;
+            }
+
+            .main-banner h2 {
+                font-size: 2rem;
+            }
+
+            .small-banner h3 {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 @endsection
 
@@ -1288,7 +1474,7 @@
             <div class="slide-content">
                 <span class="slide-subtitle">بهترین برندهای جهانی</span>
                 <h1 class="slide-title">لوازم لاکچری برای حیوانات خانگی</h1>
-                <p class="slide-description">در توکا پت، بهترین و شیک‌ترین محصولات را برای حیوانات خانگی دوست‌داشتنی شما
+                <p class="slide-description">در توکا پت، بهترین محصولات برای حیوانات دوست‌داشتنی شما
                     آماده کرده‌ایم. کیفیت را با ما تجربه کنید.</p>
                 <button class="slide-btn">مشاهده محصولات</button>
             </div>
@@ -1372,8 +1558,41 @@
         </div>
     </div>
 
+    <section class="creative-banner-section">
+        <div class="banner-container">
+            <div class="main-banner">
+                <div class="main-banner-content">
+                    <h2>محصولات ویژه برای حیوانات خانگی</h2>
+                    <p>با جدیدترین و باکیفیت‌ترین محصولات برای بهترین دوستان خود آشنا شوید</p>
+                    <button class="banner-btn">همین حالا ببینید</button>
+                </div>
+                <div class="banner-decoration decoration-1">🐾</div>
+                <div class="banner-decoration decoration-2">❤️</div>
+            </div>
+
+            <div class="side-banners">
+                <div class="small-banner">
+                    <div class="small-banner-content">
+                        <h3>تخفیف‌های ویژه</h3>
+                        <p>تا 50% تخفیف برای خریدهای بالای 200 هزار تومان</p>
+                        <button class="banner-btn">مشاهده تخفیف‌ها</button>
+                    </div>
+                    <div class="banner-decoration decoration-3">🎯</div>
+                </div>
+
+                <div class="small-banner">
+                    <div class="small-banner-content">
+                        <h3>عضویت در خبرنامه</h3>
+                        <p>از آخرین تخفیف‌ها و محصولات جدید باخبر شوید</p>
+                        <button class="banner-btn">عضویت رایگان</button>
+                    </div>
+                    <div class="banner-decoration decoration-4">✉️</div>
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- Hero Section -->
-    <section class="hero">
+    {{-- <section class="hero">
         <div class="hero-content animate__animated animate__fadeIn">
             <h1>توکا پت شاپ , انتخابی مطمئن برای سلامت و شادی حیوانات</h1>
             <p>
@@ -1391,7 +1610,7 @@
         <i class="bi bi-bone pet-icon floating" style="top: 70%; right: 15%; animation-delay: 0.5s;"></i>
         <i class="bi bi-balloon-heart pet-icon floating" style="top: 30%; right: 20%; animation-delay: 0.7s;"></i>
         <i class="bi bi-gem pet-icon floating" style="bottom: 10%; left: 20%; animation-delay: 0.3s;"></i>
-    </section>
+    </section> --}}
 
     <!-- Features Section -->
     <section class="container my-5 pt-5">
