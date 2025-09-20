@@ -87,11 +87,10 @@
                     <div class="footer-links">
                         <h5>لینک‌های سریع</h5>
                         <ul>
-                            <li><a href="#">خانه</a></li>
-                            <li><a href="#">محصولات</a></li>
-                            <li><a href="#">خدمات</a></li>
-                            <li><a href="#">وبلاگ</a></li>
-                            <li><a href="#">درباره ما</a></li>
+                            <li><a href="{{ route('page.home') }}">خانه</a></li>
+                            <li><a href="{{ route('products.index') }}">محصولات</a></li>
+                            <li><a href="{{ route('posts.index') }}">وبلاگ</a></li>
+                            <li><a href="{{ route('page.about_us') }}">درباره ما</a></li>
                         </ul>
                     </div>
                 </div>
@@ -99,11 +98,10 @@
                     <div class="footer-links">
                         <h5>دسته‌بندی‌ها</h5>
                         <ul>
-                            <li><a href="#">سگ‌ها</a></li>
-                            <li><a href="#">گربه‌ها</a></li>
-                            <li><a href="#">پرندگان</a></li>
-                            <li><a href="#">آبزیان</a></li>
-                            <li><a href="#">جوندگان</a></li>
+                            @foreach (get_product_categoris() as $item)
+                                <li><a href="{{ route('products.categories', $item->slug) }}">{{ $item->name }}</a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>

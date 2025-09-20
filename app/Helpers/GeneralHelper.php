@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\URL;
@@ -130,3 +131,11 @@ function persian_slug($string, $separator = '-')
 }
 
 
+function get_product_categoris()
+{
+    return Cache::remember('product_categories', 60 * 30, function () {
+        return Category::where('type', 'product')
+            ->orderBy('id', 'desc')
+            ->get();
+    });
+}

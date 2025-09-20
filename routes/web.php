@@ -23,9 +23,12 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::get('logout', 'logout')->name('logout');
     });
 
-    Route::get('/', [HomeController::class, 'home'])->name('page.home');
-    Route::get('privacy', [HomeController::class, 'privacy'])->name('page.privacy');
-    Route::get('order-tracking', [HomeController::class, 'orderTracking'])->name('page.orderTracking');
+    Route::name('page.')->controller(HomeController::class)->group(function () {
+        Route::get('/', 'home')->name('home');
+        Route::get('privacy', 'privacy')->name('privacy');
+        Route::get('order-tracking', 'orderTracking')->name('orderTracking');
+        Route::get('about-us', 'aboutUs')->name('about_us');
+    });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
         Route::get('/', 'index')->name('index');
