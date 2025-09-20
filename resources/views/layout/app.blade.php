@@ -48,7 +48,7 @@
 
 
                     <li class="nav-item"><a class="nav-link" href="{{ route('page.about_us') }}">درباره ما</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('posts.index') }}">وبلاگ</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('posts.*') || request()->is('posts*') ? 'active' : '' }}" href="{{ route('posts.index') }}">وبلاگ</a></li>
                 </ul>
                 <div class="d-flex align-items-center me-3">
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>

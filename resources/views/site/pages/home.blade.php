@@ -1701,7 +1701,7 @@
                                 <img src="{{ asset('site/images/users/80.png') }}" class="testimonial-img me-3">
                                 <div>
                                     <h6 class="mb-1">سارا محمدی</h6>
-                                    <small class="text-muted">مالک گربه</small>
+                                    <small class="text-muted">سرپرست گربه</small>
                                 </div>
                             </div>
                             <p>محصولات توکا پت واقعا کیفیت بالایی دارند. گربه من عاشق غذای تونایی شده و هر بار با اشتها
@@ -1714,7 +1714,7 @@
                                 <img src="{{ asset('site/images/users/12.png') }}" class="testimonial-img me-3">
                                 <div>
                                     <h6 class="mb-1">امیر حسینی</h6>
-                                    <small class="text-muted">مالب سگ</small>
+                                    <small class="text-muted">سرپرست سگ</small>
                                 </div>
                             </div>
                             <p>قلاده چرمی که خریدم واقعا لاکچریه و دوام بالایی داره. تحویل سریع و بسته‌بندی شیک هم از مزایای
@@ -1727,7 +1727,7 @@
                                 <img src="{{ asset('site/images/users/90.png') }}" class="testimonial-img me-3">
                                 <div>
                                     <h6 class="mb-1">نازنین رضایی</h6>
-                                    <small class="text-muted">مالک پرنده</small>
+                                    <small class="text-muted">سرپرست پرنده</small>
                                 </div>
                             </div>
                             <p>قفس پرنده‌ای که از توکا پت خریدم طراحی فوق‌العاده‌ای داره و واقعا برای پرنده‌ام فضای مناسبی

@@ -365,13 +365,6 @@
                         <i class="bi bi-whatsapp"></i>
                     </a>
 
-                    {{-- Instagram (نداره لینک مستقیم برای share) --}}
-                    {{-- بهترین راه کپی لینک هست --}}
-                    <a href="https://www.instagram.com/?url={{ urlencode(request()->fullUrl()) }}" class="social-btn"
-                        target="_blank" rel="noopener">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-
                     {{-- Copy Link (با JS لینک کپی میشه) --}}
                     <a href="javascript:void(0)" onclick="copyPostLink()" class="social-btn">
                         <i class="bi bi-link-45deg"></i>
