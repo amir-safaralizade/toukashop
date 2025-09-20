@@ -238,101 +238,30 @@
             </div>
 
             <div class="articles-container">
-                <!-- مقاله ۱ -->
-                <div class="article-card animate__animated animate__fadeInLeft">
-                    <a href="#" class="article-link"
-                        aria-label="مطالعه مقاله ۱۰ نکته طلایی برای تغذیه مناسب گربه ها"></a>
-                    <div class="article-image">
-                        <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                            alt="تغذیه مناسب گربه">
-                        <span class="article-badge">تغذیه</span>
-                    </div>
-                    <div class="article-content">
-                        <h3 class="article-title">۱۰ نکته طلایی برای تغذیه مناسب گربه ها</h3>
-                        <p class="article-excerpt">
-                            چگونه بهترین رژیم غذایی را برای گربه خود انتخاب کنید؟ در این مقاله به بررسی نیازهای غذایی
-                            گربه‌ها در سنین مختلف می‌پردازیم.
-                        </p>
-                        <div class="article-meta">
-                            <span class="article-date"><i class="bi bi-calendar"></i> ۲۵ مرداد ۱۴۰۲</span>
-                            <a href="#" class="article-read-more">
-                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
-                            </a>
+                @foreach ($posts as $post)
+                    <div class="article-card animate__animated animate__fadeInLeft">
+                        <a href="{{ route('posts.show', $post->slug) }}" class="article-link"
+                            aria-label="{{ $post->title }}"></a>
+                        <div class="article-image">
+                            <img src="{{ $post->firstMedia('main_image')?->full_url }}" alt="{{ $post->title }}">
+                            <span class="article-badge">{{ $post->category->name }}</span>
+                        </div>
+                        <div class="article-content">
+                            <h3 class="article-title">{{ $post->title }}</h3>
+                            <p class="article-excerpt">
+                                {{ $post->summary }}
+                            </p>
+                            <div class="article-meta">
+                                <span class="article-date"><i class="bi bi-calendar"></i>
+                                    {{ jdate($post->created_at)->format('Y.m.d') }}</span>
+                                <a href="{{ route('posts.show', $post->slug) }}" class="article-read-more">
+                                    مطالعه مقاله <i class="bi bi-arrow-left"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
 
-                <!-- مقاله ۲ -->
-                <div class="article-card animate__animated animate__fadeInUp">
-                    <a href="#" class="article-link"
-                        aria-label="مطالعه مقاله آموزش فرمان‌های básic به سگ ها در ۱۰ روز"></a>
-                    <div class="article-image">
-                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
-                            alt="آموزش سگ">
-                        <span class="article-badge">آموزش</span>
-                    </div>
-                    <div class="article-content">
-                        <h3 class="article-title">آموزش فرمان‌های básic به سگ ها در ۱۰ روز</h3>
-                        <p class="article-excerpt">
-                            روش‌های موثر و اصولی برای آموزش سگ‌ها بدون نیاز به مربی حرفه‌ای. این تکنیک‌ها بر پایه روانشناسی
-                            حیوانات طراحی شده‌اند.
-                        </p>
-                        <div class="article-meta">
-                            <span class="article-date"><i class="bi bi-calendar"></i> ۱۸ مرداد ۱۴۰۲</span>
-                            <a href="#" class="article-read-more">
-                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- مقاله ۳ -->
-                <div class="article-card animate__animated animate__fadeInUp">
-                    <a href="#" class="article-link"
-                        aria-label="مطالعه مقاله نشانه‌های بیماری در پرندگان زینتی و راه‌های پیشگیری"></a>
-                    <div class="article-image">
-                        <img src="https://images.unsplash.com/photo-1596272875729-ed2ff7d6d9c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                            alt="سلامت پرندگان">
-                        <span class="article-badge">سلامت</span>
-                    </div>
-                    <div class="article-content">
-                        <h3 class="article-title">نشانه‌های بیماری در پرندگان زینتی و راه‌های پیشگیری</h3>
-                        <p class="article-excerpt">
-                            چگونه متوجه شویم پرنده خانگی ما بیمار است؟ در این مقاله به بررسی علائم هشداردهنده و روش‌های
-                            پیشگیری از بیماری‌های شایع پرندگان می‌پردازیم.
-                        </p>
-                        <div class="article-meta">
-                            <span class="article-date"><i class="bi bi-calendar"></i> ۱۲ مرداد ۱۴۰۲</span>
-                            <a href="#" class="article-read-more">
-                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- مقاله ۴ -->
-                <div class="article-card animate__animated animate__fadeInRight">
-                    <a href="#" class="article-link"
-                        aria-label="مطالعه مقاله انتخاب اسباب بازی مناسب برای حیوانات خانگی"></a>
-                    <div class="article-image">
-                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                            alt="اسباب بازی حیوانات">
-                        <span class="article-badge">سرگرمی</span>
-                    </div>
-                    <div class="article-content">
-                        <h3 class="article-title">انتخاب اسباب بازی مناسب برای حیوانات خانگی</h3>
-                        <p class="article-excerpt">
-                            چگونه بهترین اسباب بازی را برای حیوان خانگی خود انتخاب کنیم؟ در این مقاله به بررسی انواع اسباب
-                            بازی‌ها و مزایای هر کدام می‌پردازیم.
-                        </p>
-                        <div class="article-meta">
-                            <span class="article-date"><i class="bi bi-calendar"></i> ۵ مرداد ۱۴۰۲</span>
-                            <a href="#" class="article-read-more">
-                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="view-all-btn">
