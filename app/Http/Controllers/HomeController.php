@@ -45,4 +45,9 @@ class HomeController extends Controller
         recordVisit($page);
         return view('site.pages.sizeSelectionGuide');
     }
+
+    public function aboutUs()
+    {
+        return view('site.pages.about_us');
+    }
 }
