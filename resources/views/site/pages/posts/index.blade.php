@@ -1,368 +1,355 @@
 @extends('layout.app')
 
 @section('styles')
-<style>
-    :root {
-        --pink: #ff9eb7;
-        --light-pink: #ffd6de;
-        --dark-pink: #ff7ba3;
-        --purple: #b399d4;
-        --light-purple: #d9c5f4;
-        --cream: #fff4f6;
-        --white: #ffffff;
-        --text-dark: #5a3d5c;
-        --text-light: #ffffff;
-        --black: #1a1a1a;
-    }
-    
-    .articles-archive {
-        padding: 5rem 0;
-        background-color: var(--cream);
-        min-height: 100vh;
-    }
-    
-    .archive-header {
-        text-align: center;
-        margin-bottom: 3rem;
-    }
-    
-    .archive-title {
-        font-family: "Dancing Script", cursive;
-        font-size: 3rem;
-        color: var(--text-dark);
-        margin-bottom: 1rem;
-        position: relative;
-        display: inline-block;
-    }
-    
-    .archive-title::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 3px;
-        background: linear-gradient(to right, var(--pink), var(--purple));
-    }
-    
-    .archive-description {
-        color: var(--text-dark);
-        font-size: 1.1rem;
-        max-width: 700px;
-        margin: 0 auto;
-        line-height: 1.7;
-    }
-    
-    .articles-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 2rem;
-    }
-    
-    .article-card {
-        background-color: var(--white);
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 20px rgba(179, 153, 212, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .article-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(179, 153, 212, 0.2);
-    }
-    
-    .article-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-    
-    .article-content {
-        padding: 1.5rem;
-    }
-    
-    .article-title {
-        font-family: "Dancing Script", cursive;
-        font-size: 1.5rem;
-        color: var(--text-dark);
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
-    }
-    
-    .article-excerpt {
-        color: var(--text-dark);
-        opacity: 0.8;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 1rem;
-    }
-    
-    .article-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 1rem;
-        font-size: 0.85rem;
-        color: var(--text-dark);
-        opacity: 0.7;
-    }
-    
-    .read-more {
-        display: inline-block;
-        background: linear-gradient(to right, var(--pink), var(--purple));
-        color: var(--white);
-        padding: 0.5rem 1.2rem;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-    }
-    
-    .read-more:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(179, 153, 212, 0.3);
-    }
-    
-    .tags-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 1rem;
-    }
-    
-    .tag {
-        background-color: var(--light-purple);
-        color: var(--text-dark);
-        padding: 0.3rem 0.8rem;
-        border-radius: 50px;
-        font-size: 0.75rem;
-    }
-    
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 3rem;
-    }
-    
-    .pagination-link {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 5px;
-        border-radius: 50%;
-        background-color: var(--white);
-        color: var(--text-dark);
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .pagination-link:hover,
-    .pagination-link.active {
-        background: linear-gradient(to right, var(--pink), var(--purple));
-        color: var(--white);
-    }
-    
-    .categories-filter {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .category-btn {
-        background-color: var(--white);
-        color: var(--text-dark);
-        padding: 0.5rem 1.5rem;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: 2px solid var(--light-purple);
-    }
-    
-    .category-btn:hover,
-    .category-btn.active {
-        background: linear-gradient(to right, var(--pink), var(--purple));
-        color: var(--white);
-        border-color: transparent;
-    }
-    
-    /* رسپانسیو */
-    @media (max-width: 768px) {
-        .archive-title {
-            font-size: 2.2rem;
+    <style>
+        .articles-section {
+            padding: 80px 0;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
         }
-        
-        .articles-grid {
-            grid-template-columns: 1fr;
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
         }
-    }
-</style>
+
+        .section-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .articles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .article-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            text-decoration: none;
+        }
+
+        .article-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .article-card:hover .article-image img {
+            transform: scale(1.1);
+        }
+
+        .article-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+        }
+
+        .article-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            line-height: 1.4;
+        }
+
+        .article-excerpt {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            flex-grow: 1;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            position: relative;
+            z-index: 2;
+        }
+
+        .article-date {
+            color: #888;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .article-date i {
+            margin-left: 5px;
+        }
+
+        .article-read-more {
+            color: var(--primary-color);
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 3;
+            /* بالاتر از لینک کلی کارت */
+        }
+
+        .article-read-more:hover {
+            color: var(--secondary-color);
+        }
+
+        .article-read-more i {
+            margin-right: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .article-read-more:hover i {
+            transform: translateX(-5px);
+        }
+
+        .view-all-btn {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* رسپانسیو برای موبایل */
+        @media (max-width: 992px) {
+            .articles-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
 @endsection
 
 @section('content')
-<section class="articles-archive" style="margin-top: 128px">
-    <div class="container">
-        <div class="archive-header">
-            <h1 class="archive-title">آرشیو مقالات</h1>
-            <p class="archive-description">
-                در این بخش می‌توانید تمام مقالات آموزشی، راهنماها و نکات مفید در مورد کفش‌های ورزشی و مراقبت از پا را مطالعه کنید.
-            </p>
-        </div>
-        
-        <div class="categories-filter">
-            <button class="category-btn active">همه مقالات</button>
-            <button class="category-btn">کفش دویدن</button>
-            <button class="category-btn">کفش بدنسازی</button>
-            <button class="category-btn">مراقبت از پا</button>
-            <button class="category-btn">تغذیه و ورزش</button>
-        </div>
-        
-        <div class="articles-grid">
-            <!-- مقاله ۱ -->
-            <div class="article-card">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" 
-                     alt="کفش ورزشی" 
-                     class="article-image">
-                <div class="article-content">
-                    <h2 class="article-title">راهنمای انتخاب کفش ورزشی مناسب</h2>
-                    <p class="article-excerpt">
-                        انتخاب کفش ورزشی مناسب یکی از مهم‌ترین عوامل در بهبود عملکرد و جلوگیری از آسیب‌های ورزشی است...
-                    </p>
-                    <div class="tags-container">
-                        <span class="tag">کفش ورزشی</span>
-                        <span class="tag">سلامت</span>
+    <!-- سکشن مقالات -->
+    <section class="articles-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge animate__animated animate__pulse animate__infinite">مطالب آموزشی</span>
+                <h2 class="section-title animate__animated animate__fadeInDown">مقالات تخصصی توکا پت</h2>
+                <p class="section-subtitle animate__animated animate__fadeInUp">
+                    جدیدترین مطالب آموزشی و تخصصی در زمینه نگهداری، تغذیه و سلامت حیوانات خانگی
+                </p>
+            </div>
+
+            <div class="articles-container">
+                <!-- مقاله ۱ -->
+                <div class="article-card animate__animated animate__fadeInLeft">
+                    <a href="#" class="article-link"
+                        aria-label="مطالعه مقاله ۱۰ نکته طلایی برای تغذیه مناسب گربه ها"></a>
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                            alt="تغذیه مناسب گربه">
+                        <span class="article-badge">تغذیه</span>
                     </div>
-                    <div class="article-meta">
-                        <span>۲۵ خرداد ۱۴۰۲</span>
-                        <span>۱,۲۴۵ بازدید</span>
+                    <div class="article-content">
+                        <h3 class="article-title">۱۰ نکته طلایی برای تغذیه مناسب گربه ها</h3>
+                        <p class="article-excerpt">
+                            چگونه بهترین رژیم غذایی را برای گربه خود انتخاب کنید؟ در این مقاله به بررسی نیازهای غذایی
+                            گربه‌ها در سنین مختلف می‌پردازیم.
+                        </p>
+                        <div class="article-meta">
+                            <span class="article-date"><i class="bi bi-calendar"></i> ۲۵ مرداد ۱۴۰۲</span>
+                            <a href="#" class="article-read-more">
+                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
+                            </a>
+                        </div>
                     </div>
-                    <a href="#" class="read-more">مطالعه بیشتر</a>
+                </div>
+
+                <!-- مقاله ۲ -->
+                <div class="article-card animate__animated animate__fadeInUp">
+                    <a href="#" class="article-link"
+                        aria-label="مطالعه مقاله آموزش فرمان‌های básic به سگ ها در ۱۰ روز"></a>
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+                            alt="آموزش سگ">
+                        <span class="article-badge">آموزش</span>
+                    </div>
+                    <div class="article-content">
+                        <h3 class="article-title">آموزش فرمان‌های básic به سگ ها در ۱۰ روز</h3>
+                        <p class="article-excerpt">
+                            روش‌های موثر و اصولی برای آموزش سگ‌ها بدون نیاز به مربی حرفه‌ای. این تکنیک‌ها بر پایه روانشناسی
+                            حیوانات طراحی شده‌اند.
+                        </p>
+                        <div class="article-meta">
+                            <span class="article-date"><i class="bi bi-calendar"></i> ۱۸ مرداد ۱۴۰۲</span>
+                            <a href="#" class="article-read-more">
+                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مقاله ۳ -->
+                <div class="article-card animate__animated animate__fadeInUp">
+                    <a href="#" class="article-link"
+                        aria-label="مطالعه مقاله نشانه‌های بیماری در پرندگان زینتی و راه‌های پیشگیری"></a>
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1596272875729-ed2ff7d6d9c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                            alt="سلامت پرندگان">
+                        <span class="article-badge">سلامت</span>
+                    </div>
+                    <div class="article-content">
+                        <h3 class="article-title">نشانه‌های بیماری در پرندگان زینتی و راه‌های پیشگیری</h3>
+                        <p class="article-excerpt">
+                            چگونه متوجه شویم پرنده خانگی ما بیمار است؟ در این مقاله به بررسی علائم هشداردهنده و روش‌های
+                            پیشگیری از بیماری‌های شایع پرندگان می‌پردازیم.
+                        </p>
+                        <div class="article-meta">
+                            <span class="article-date"><i class="bi bi-calendar"></i> ۱۲ مرداد ۱۴۰۲</span>
+                            <a href="#" class="article-read-more">
+                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مقاله ۴ -->
+                <div class="article-card animate__animated animate__fadeInRight">
+                    <a href="#" class="article-link"
+                        aria-label="مطالعه مقاله انتخاب اسباب بازی مناسب برای حیوانات خانگی"></a>
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                            alt="اسباب بازی حیوانات">
+                        <span class="article-badge">سرگرمی</span>
+                    </div>
+                    <div class="article-content">
+                        <h3 class="article-title">انتخاب اسباب بازی مناسب برای حیوانات خانگی</h3>
+                        <p class="article-excerpt">
+                            چگونه بهترین اسباب بازی را برای حیوان خانگی خود انتخاب کنیم؟ در این مقاله به بررسی انواع اسباب
+                            بازی‌ها و مزایای هر کدام می‌پردازیم.
+                        </p>
+                        <div class="article-meta">
+                            <span class="article-date"><i class="bi bi-calendar"></i> ۵ مرداد ۱۴۰۲</span>
+                            <a href="#" class="article-read-more">
+                                مطالعه مقاله <i class="bi bi-arrow-left"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <!-- مقاله ۲ -->
-            <div class="article-card">
-                <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28" 
-                     alt="کفش دویدن" 
-                     class="article-image">
-                <div class="article-content">
-                    <h2 class="article-title">۱۰ نکته طلایی برای انتخاب کفش دویدن</h2>
-                    <p class="article-excerpt">
-                        اگر به دنبال بهبود عملکرد دویدن خود هستید، انتخاب کفش مناسب اولین قدم است...
-                    </p>
-                    <div class="tags-container">
-                        <span class="tag">دویدن</span>
-                        <span class="tag">کفش</span>
-                    </div>
-                    <div class="article-meta">
-                        <span>۱۸ خرداد ۱۴۰۲</span>
-                        <span>۹۸۷ بازدید</span>
-                    </div>
-                    <a href="#" class="read-more">مطالعه بیشتر</a>
-                </div>
-            </div>
-            
-            <!-- مقاله ۳ -->
-            <div class="article-card">
-                <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a" 
-                     alt="کفش بدنسازی" 
-                     class="article-image">
-                <div class="article-content">
-                    <h2 class="article-title">کفش بدنسازی مناسب چه ویژگی‌هایی دارد؟</h2>
-                    <p class="article-excerpt">
-                        کفش بدنسازی با کفش دویدن تفاوت‌های اساسی دارد. در این مقاله به بررسی ویژگی‌های یک کفش بدنسازی ایده‌آل می‌پردازیم...
-                    </p>
-                    <div class="tags-container">
-                        <span class="tag">بدنسازی</span>
-                        <span class="tag">تمرین</span>
-                    </div>
-                    <div class="article-meta">
-                        <span>۱۰ خرداد ۱۴۰۲</span>
-                        <span>۱,۵۶۲ بازدید</span>
-                    </div>
-                    <a href="#" class="read-more">مطالعه بیشتر</a>
-                </div>
-            </div>
-            
-            <!-- مقاله ۴ -->
-            <div class="article-card">
-                <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06" 
-                     alt="مراقبت از پا" 
-                     class="article-image">
-                <div class="article-content">
-                    <h2 class="article-title">راهکارهای ساده برای مراقبت از پاها</h2>
-                    <p class="article-excerpt">
-                        پاهای شما بار تمام وزن بدن را تحمل می‌کنند. با این راهکارهای ساده می‌توانید از پاهای خود بهتر مراقبت کنید...
-                    </p>
-                    <div class="tags-container">
-                        <span class="tag">سلامت</span>
-                        <span class="tag">مراقبت</span>
-                    </div>
-                    <div class="article-meta">
-                        <span>۵ خرداد ۱۴۰۲</span>
-                        <span>۲,۰۴۳ بازدید</span>
-                    </div>
-                    <a href="#" class="read-more">مطالعه بیشتر</a>
-                </div>
-            </div>
-            
-            <!-- مقاله ۵ -->
-            <div class="article-card">
-                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b" 
-                     alt="کفش پیاده‌روی" 
-                     class="article-image">
-                <div class="article-content">
-                    <h2 class="article-title">بهترین کفش‌ها برای پیاده‌روی طولانی</h2>
-                    <p class="article-excerpt">
-                        اگر عاشق پیاده‌روی هستید، انتخاب کفش مناسب می‌تواند تجربه شما را کاملاً دگرگون کند...
-                    </p>
-                    <div class="tags-container">
-                        <span class="tag">پیاده‌روی</span>
-                        <span class="tag">کفش</span>
-                    </div>
-                    <div class="article-meta">
-                        <span>۲۸ اردیبهشت ۱۴۰۲</span>
-                        <span>۱,۳۲۱ بازدید</span>
-                    </div>
-                    <a href="#" class="read-more">مطالعه بیشتر</a>
-                </div>
-            </div>
-            
-            <!-- مقاله ۶ -->
-            <div class="article-card">
-                <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c" 
-                     alt="تغذیه و ورزش" 
-                     class="article-image">
-                <div class="article-content">
-                    <h2 class="article-title">تغذیه مناسب برای ورزشکاران</h2>
-                    <p class="article-excerpt">
-                        تغذیه مناسب نقش کلیدی در عملکرد ورزشی دارد. در این مقاله به بررسی رژیم غذایی ایده‌آل برای ورزشکاران می‌پردازیم...
-                    </p>
-                    <div class="tags-container">
-                        <span class="tag">تغذیه</span>
-                        <span class="tag">ورزش</span>
-                    </div>
-                    <div class="article-meta">
-                        <span>۲۰ اردیبهشت ۱۴۰۲</span>
-                        <span>۲,۵۶۷ بازدید</span>
-                    </div>
-                    <a href="#" class="read-more">مطالعه بیشتر</a>
-                </div>
+
+            <div class="view-all-btn">
+                <a href="#" class="btn btn-primary">مشاهده همه مقالات</a>
             </div>
         </div>
-        
-        <div class="pagination">
-            <a href="#" class="pagination-link active">1</a>
-            <a href="#" class="pagination-link">2</a>
-            <a href="#" class="pagination-link">3</a>
-            <a href="#" class="pagination-link">4</a>
-            <a href="#" class="pagination-link">5</a>
-        </div>
-    </div>
-</section>
+    </section>
+@endsection
+
+@section('scripts')
+    <script>
+        // افزودن انیمیشن هنگام اسکرول
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.article-card');
+
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+    </script>
 @endsection
