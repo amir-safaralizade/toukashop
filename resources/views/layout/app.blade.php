@@ -48,11 +48,10 @@
 
 
                     <li class="nav-item"><a class="nav-link" href="{{ route('page.about_us') }}">درباره ما</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">تماس با ما</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('posts.index') }}">وبلاگ</a></li>
                 </ul>
                 <div class="d-flex align-items-center me-3">
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
-                    <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-heart"></i></a>
                     <a href="{{ route('cart.mycart') }}" class="btn btn-sm btn-outline-dark ms-3"><i
                             class="bi bi-cart3"></i></a>
                 </div>
