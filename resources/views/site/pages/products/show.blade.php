@@ -790,82 +790,108 @@
         });
 
         // Size and color selection, and Add to cart with Ajax
-        addToCartBtn.addEventListener('click', function() {
-            const productId = {{ $product->id }};
-            const quantity = document.getElementById('quantity').value;
-            const colorInput = document.querySelector('input[name="product-color"]:checked');
-            const sizeInput = document.querySelector('input[name="product-size"]:checked');
-            const color = colorInput ? colorInput.value : null;
-            const size = sizeInput ? sizeInput.value : null;
-
-            addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> در حال پردازش...';
-            addToCartBtn.disabled = true;
-
-            fetch('{{ route('cart.addToCartAjax') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        product_id: productId,
-                        quantity: quantity,
-                        color: color,
-                        size: size
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const cartCount = document.querySelector('.cart-count');
-                        if (cartCount && data.cart_count) {
-                            cartCount.textContent = data.cart_count;
-                        }
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'محصول اضافه شد!',
-                            text: 'محصول با موفقیت به سبد خرید اضافه شد',
-                            showCancelButton: true,
-                            confirmButtonText: 'مشاهده سبد خرید',
-                            cancelButtonText: 'ادامه خرید',
-                            confirmButtonColor: '#8e44ad',
-                            cancelButtonColor: '#aaa'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '{{ route('cart.mycart') }}';
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'خطا',
-                            text: data.message || 'خطایی در افزودن به سبد خرید رخ داد',
-                            confirmButtonText: 'باشه',
-                            confirmButtonColor: '#8e44ad'
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'خطا',
-                        text: 'خطایی در ارتباط با سرور رخ داد',
-                        confirmButtonText: 'باشه',
-                        confirmButtonColor: '#8e44ad'
-                    });
-                })
-                .finally(() => {
-                    addToCartBtn.innerHTML = '<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید';
-                    addToCartBtn.disabled = false;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Size selection
+            document.querySelectorAll('input[name="product-size"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    document.querySelectorAll('.size-option').forEach(l => l.classList.remove(
+                        'active'));
+                    const label = document.querySelector(`label[for="size-${this.value}"]`);
+                    label.classList.add('active');
                 });
+            });
+
+            // Color selection
+            document.querySelectorAll('input[name="product-color"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    document.querySelectorAll('.color-option').forEach(l => l.classList.remove(
+                        'active'));
+                    const label = document.querySelector(`label[for="color-${this.value}"]`);
+                    label.classList.add('active');
+                });
+            });
+
+            // Add to cart functionality
+            const addToCartBtn = document.querySelector('.s-p-add-to-cart');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', function() {
+                    const productId = {{ $product->id }};
+                    const quantity = document.getElementById('quantity').value;
+                    const colorInput = document.querySelector('input[name="product-color"]:checked');
+                    const sizeInput = document.querySelector('input[name="product-size"]:checked');
+                    const color = colorInput ? colorInput.value : null;
+                    const size = sizeInput ? sizeInput.value : null;
+
+                    addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> در حال پردازش...';
+                    addToCartBtn.disabled = true;
+
+                    fetch('{{ route('cart.addToCartAjax') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                product_id: productId,
+                                quantity: quantity,
+                                color: color,
+                                size: size
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'موفقیت آمیز',
+                                    text: 'محصول با موفقیت به سبد خرید اضافه شد',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'باشه',
+                                    cancelButtonText: 'برو به سبد خرید',
+                                    confirmButtonColor: '#8e44ad',
+                                    cancelButtonColor: '#007bff'
+                                }).then((result) => {
+                                    if (result.isDismissed) {
+                                        window.location.href = '{{ route('cart.mycart') }}';
+                                    }
+                                });
+                                const cartCount = document.querySelector('.cart-count');
+                                if (cartCount && data.cart_count) {
+                                    cartCount.textContent = data.cart_count;
+                                }
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'خطا',
+                                    text: data.message || 'خطایی در افزودن به سبد خرید رخ داد',
+                                    confirmButtonText: 'باشه',
+                                    confirmButtonColor: '#8e44ad'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'خطا',
+                                text: 'خطایی در ارتباط با سرور رخ داد',
+                                confirmButtonText: 'باشه',
+                                confirmButtonColor: '#8e44ad'
+                            });
+                        })
+                        .finally(() => {
+                            addToCartBtn.innerHTML =
+                                '<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید';
+                            addToCartBtn.disabled = false;
+                        });
+                });
+            } else {
+                console.warn('دکمه افزودن به سبد خرید یافت نشد.');
+            }
         });
-    </script>
 
-
-    <script>
+        // Product card click effect
         document.addEventListener('DOMContentLoaded', function() {
             const productCards = document.querySelectorAll('.product-card');
 
@@ -899,33 +925,6 @@
                             window.location.href = productLink.href;
                         }, 300);
                     }
-                });
-            });
-        });
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const copyBtn = document.getElementById('copyLinkBtn');
-            copyBtn.addEventListener('click', function() {
-                const productUrl = "{{ route('products.show', $product->slug) }}";
-                navigator.clipboard.writeText(productUrl).then(function() {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'کپی شد!',
-                        text: 'لینک محصول در کلیپ‌بورد کپی شد.',
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-                }).catch(function(err) {
-                    console.error('خطا در کپی لینک:', err);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'خطا',
-                        text: 'امکان کپی لینک وجود ندارد',
-                        confirmButtonColor: '#8e44ad'
-                    });
                 });
             });
         });
