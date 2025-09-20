@@ -3,7 +3,7 @@
 return [
 
     'zibal' => [
-        'merchantId' => '689b172ca45c72001ab59ea3'
+        'merchantId' => '68ce466fa45c72000ed7bc10'
     ],
 
     'AqayePardakht' => [
@@ -18,6 +18,6 @@ return [
 
 
     'default' => 'zibal',
-    'active_provider' => 'AqayePardakht',
+    'active_provider' => 'zibal',
 
 ];
