@@ -263,10 +263,6 @@
                 @endforeach
 
             </div>
-
-            <div class="view-all-btn">
-                <a href="#" class="btn btn-primary">مشاهده همه مقالات</a>
-            </div>
         </div>
     </section>
 @endsection
