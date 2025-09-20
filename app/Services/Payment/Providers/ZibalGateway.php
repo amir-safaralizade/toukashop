@@ -36,7 +36,7 @@ class ZibalGateway implements PaymentGatewayInterface
             $startGateWayUrl = "https://gateway.zibal.ir/start/{$trackId}";
             return $startGateWayUrl;
         } else {
-            return redirect()->back()->with('error', 'خطا در اتصال به درگاه بانکی لطفا بعدا امتحان کنید');
+            throw new \RuntimeException('خطا در اتصال به درگاه بانکی لطفا بعدا امتحان کنید');
         }
     }
 
