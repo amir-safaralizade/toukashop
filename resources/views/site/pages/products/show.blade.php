@@ -57,7 +57,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
-        .product-title {
+        .single-pro-product-title {
             font-weight: 900;
             font-size: 2rem;
             margin-bottom: 15px;
@@ -83,7 +83,7 @@
             margin: 25px 0;
         }
 
-        .current-price {
+        .single-pro-current-price {
             font-weight: 900;
             font-size: 2rem;
             color: var(--primary-color);
@@ -142,7 +142,7 @@
             margin-top: 30px;
         }
 
-        .add-to-cart {
+        .s-p-add-to-cart {
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -153,7 +153,7 @@
             transition: all 0.3s ease;
         }
 
-        .add-to-cart:hover {
+        .s-p-add-to-cart:hover {
             background-color: #e05a5a;
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -422,7 +422,7 @@
                 flex-direction: column;
             }
 
-            .add-to-cart {
+            .s-p-add-to-cart {
                 margin-left: 0;
                 margin-bottom: 15px;
                 width: 100%;
@@ -447,7 +447,7 @@
 @endsection
 
 @section('content')
-    <!-- Breadcrumb --> 
+    <!-- Breadcrumb -->
     <div class="container mt-128">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -490,7 +490,7 @@
                 <!-- Product Info -->
                 <div class="col-lg-6">
                     <div class="product-info">
-                        <h1 class="product-title">{{ $product->name }}</h1>
+                        <h1 class="single-pro-product-title">{{ $product->name }}</h1>
                         <div class="product-meta">
                             <div class="rating ">
                                 <i class="bi bi-star-fill"></i>
@@ -509,7 +509,7 @@
 
                         <div class="price-container">
                             <span class="old-price">{{ number_format(ceil($product->price * 1.12)) }} تومان</span>
-                            <span class="current-price">{{ number_format($product->price) }} تومان</span>
+                            <span class="single-pro-current-price">{{ number_format($product->price) }} تومان</span>
                             <span class="discount-badge">۱۲٪ تخفیف</span>
                         </div>
 
@@ -558,7 +558,7 @@
 
                         <div class="action-btns">
                             @if ($product->stock > 0)
-                                <button class="add-to-cart pulse-animation">
+                                <button class="s-p-add-to-cart pulse-animation">
                                     <i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید
                                 </button>
                             @else
@@ -659,59 +659,59 @@
                 </div>
             </div>
 
-            <!-- Related Products -->
-            @if (sizeof($relatedProducts) > 0)
-                <div class="related-products mt-5">
-                    <div class="text-center mb-5">
-                        <h2 class="section-title">محصولات مرتبط</h2>
-                        <p class="lead">شاید این محصولات هم مورد پسند شما باشد</p>
-                    </div>
-                    <div class="row">
-                        @foreach ($relatedProducts as $r_product)
-                            <div class="col-lg-3 col-md-6">
-                                <div class="product-card">
-                                    @if ($r_product->is_best_seller)
-                                        <div class="product-badge">پرفروش</div>
-                                    @elseif ($r_product->is_new)
-                                        <div class="product-badge">جدید</div>
-                                    @endif
-                                    <img src="{{ $r_product->firstMedia('main_image')->full_url }}"
-                                        class="product-img w-100" alt="{{ $r_product->name }}" />
-                                    <div class="p-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span
-                                                class="badge bg-light text-dark">{{ $r_product->category->name ?? 'محصول' }}</span>
-                                            <div class="text-warning">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    <i
-                                                        class="bi {{ $i <= $r_product->average_rating ? 'bi-star-fill' : ($i - 0.5 == $r_product->average_rating ? 'bi-star-half' : 'bi-star') }}"></i>
-                                                @endfor
-                                            </div>
-                                        </div>
-                                        <h5>{{ $r_product->name }}</h5>
-                                        <p class="text-muted small">
-                                            {{ $r_product->short_description ?? 'محصول با کیفیت' }}</p>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <div>
-                                                <span class="price">{{ number_format($r_product->price) }} تومان</span>
-                                                @if ($r_product->has_discount)
-                                                    <span
-                                                        class="old-price ms-2">{{ number_format(ceil($r_product->price * 1.12)) }}
-                                                        تومان</span>
-                                                @endif
-                                            </div>
-                                            <a href="{{ route('products.show', $r_product->slug) }}"
-                                                class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-cart-plus"></i>
-                                            </a>
-                                        </div>
+            <section class="container my-5 py-5">
+                <div class="text-center mb-5">
+                    <h2 class="section-title animate__animated animate__fadeInUp">محصولات مرتبط</h2>
+                    <p class="lead">محصولاتی که ممکن است آنها را نیز بپسندید</p>
+                </div>
+                <div class="products-container">
+                    @foreach ($relatedProducts as $product)
+                        <div class="product-card animate__animated animate__fadeInUp">
+                            <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
+                            <div class="product-badge">پرفروش</div>
+                            <button class="product-wishlist">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                            <div class="product-img-container">
+                                <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
+                                    alt="{{ $product->name }}">
+                            </div>
+                            <div class="product-content">
+                                <span class="product-category">{{ $product->category->name }}</span>
+                                <h3 class="product-title">{{ $product->name }}</h3>
+                                {{-- <p class="product-description">غذای کامل و مقوی مخصوص گربه های بالغ با طعم مرغ</p> --}}
+
+                                <div class="product-rating">
+                                    <div class="rating-stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </div>
+                                    <span class="rating-count">(42)</span>
+                                </div>
+
+                                <div class="product-price-container">
+                                    <div class="product-price">
+                                        <span class="current-price">{{ number_format($product->price) }} تومان</span>
+                                        <span class="old-price">{{ number_format($product->price * 1.12) }} تومان</span>
+                                    </div>
+                                    <div class="product-actions">
+                                        <a href="{{ route('products.show', $product->slug) }}" class="s-p-add-to-cart">
+                                            <i class="bi bi-cart-plus"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
-            @endif
+                <div class="text-center mt-5">
+                    <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg text-dark">مشاهده همه
+                        محصولات</a>
+                </div>
+            </section>
         </div>
     </section>
 @endsection
@@ -806,7 +806,7 @@
             });
 
             // Add to cart functionality
-            const addToCartBtn = document.querySelector('.add-to-cart');
+            const addToCartBtn = document.querySelector('.s-p-add-to-cart');
             if (addToCartBtn) {
                 addToCartBtn.addEventListener('click', function() {
                     const productId = {{ $product->id }};
@@ -876,6 +876,46 @@
             } else {
                 console.warn('دکمه افزودن به سبد خرید یافت نشد.');
             }
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach(card => {
+                // ایجاد افکت کلیک
+                card.addEventListener('click', function(e) {
+                    // جلوگیری از اجرا وقتی روی دکمه‌ها کلیک می‌شود
+                    if (e.target.closest('.product-wishlist') || e.target.closest('.add-to-cart')) {
+                        return;
+                    }
+
+                    // ایجاد افکت دایره‌ای
+                    const effect = document.createElement('div');
+                    effect.className = 'click-effect';
+                    effect.style.width = '100px';
+                    effect.style.height = '100px';
+                    effect.style.left = e.offsetX - 50 + 'px';
+                    effect.style.top = e.offsetY - 50 + 'px';
+                    this.appendChild(effect);
+
+                    // حذف افکت بعد از انیمیشن
+                    setTimeout(() => {
+                        effect.remove();
+                    }, 600);
+
+                    // گرفتن لینک محصول
+                    const productLink = this.querySelector('a.product-link');
+                    if (productLink) {
+                        // هدایت به صفحه محصول بعد از تاخیر کوتاه
+                        setTimeout(() => {
+                            window.location.href = productLink.href;
+                        }, 300);
+                    }
+                });
+            });
         });
     </script>
 @endsection

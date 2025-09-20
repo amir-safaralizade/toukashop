@@ -4,271 +4,6 @@
 @section('styles')
     <style>
         /* استایل جدید برای کارت محصولات با افکت کلیک */
-        .products-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            position: relative;
-            height: 530px;
-            /* ارتفاع بیشتر برای کارت */
-            display: flex;
-            flex-direction: column;
-            transform-origin: center;
-        }
-
-        .product-card:active {
-            transform: scale(0.97);
-        }
-
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(78, 205, 196, 0.1);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-            z-index: 1;
-        }
-
-        .product-card:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .product-img-container {
-            position: relative;
-            overflow: hidden;
-            height: 450px;
-            /* ارتفاع بیشتر برای تصاویر */
-            transition: height 0.4s ease;
-        }
-
-        .product-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: all 0.5s ease;
-        }
-
-        .product-card:hover .product-img {
-            transform: scale(1.05);
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 6px 15px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            z-index: 2;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-wishlist {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ccc;
-            transition: all 0.3s ease;
-            z-index: 2;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-        }
-
-        .product-wishlist:hover {
-            color: var(--primary-color);
-            transform: scale(1.1);
-        }
-
-        .product-content {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-category {
-            font-size: 0.85rem;
-            color: #777;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .product-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--dark-color);
-            line-height: 1.4;
-            height: 60px;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        .product-description {
-            color: #777;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            flex-grow: 1;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .product-rating {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .rating-stars {
-            color: #FFD700;
-            margin-left: 5px;
-        }
-
-        .rating-count {
-            font-size: 0.85rem;
-            color: #777;
-        }
-
-        .product-price-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-        }
-
-        .product-price {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .current-price {
-            font-weight: 900;
-            color: var(--primary-color);
-            font-size: 1.3rem;
-        }
-
-        .old-price {
-            text-decoration: line-through;
-            color: #999;
-            font-size: 0.9rem;
-            margin-top: 2px;
-        }
-
-        .add-to-cart {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            z-index: 2;
-            position: relative;
-        }
-
-        .add-to-cart:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        /* افکت کلیک برای رفتن به صفحه محصول */
-        .product-link {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .click-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 107, 107, 0.3);
-            transform: scale(0);
-            animation: clickEffect 0.6s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes clickEffect {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
-        /* رسپانسیو برای موبایل */
-        @media (max-width: 768px) {
-            .products-container {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 15px;
-                padding: 10px;
-            }
-
-            .product-card {
-                height: 400px;
-                /* ارتفاع بیشتر برای کارت در موبایل */
-            }
-
-            .product-img-container {
-                height: 220px;
-                /* ارتفاع بیشتر برای تصاویر در موبایل */
-            }
-
-            .product-content {
-                padding: 15px;
-            }
-
-            .product-title {
-                font-size: 1.1rem;
-                height: auto;
-            }
-
-            .current-price {
-                font-size: 1.1rem;
-            }
-        }
 
 
         .featured-section {
@@ -1612,41 +1347,6 @@
         <i class="bi bi-gem pet-icon floating" style="bottom: 10%; left: 20%; animation-delay: 0.3s;"></i>
     </section> --}}
 
-    <!-- Features Section -->
-    <section class="container my-5 pt-5">
-        <div class="text-center mb-5">
-            <h2 class="section-title animate__animated animate__fadeInUp">چرا توکا پت؟</h2>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4 animate__animated animate__fadeInUp" data-wow-delay="0.1s">
-                <div class="feature-box">
-                    <div class="feature-icon">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <h4>کیفیت تضمینی</h4>
-                    <p>تمام محصولات ما با بالاترین استانداردهای کیفیت انتخاب شده‌اند و سلامت حیوان شما را تضمین می‌کنند.</p>
-                </div>
-            </div>
-            <div class="col-md-4 animate__animated animate__fadeInUp" data-wow-delay="0.3s">
-                <div class="feature-box">
-                    <div class="feature-icon">
-                        <i class="bi bi-truck"></i>
-                    </div>
-                    <h4>تحویل سریع</h4>
-                    <p>سفارشات شما در کمترین زمان ممکن آماده و به درب منزل شما ارسال می‌شود.</p>
-                </div>
-            </div>
-            <div class="col-md-4 animate__animated animate__fadeInUp" data-wow-delay="0.5s">
-                <div class="feature-box">
-                    <div class="feature-icon">
-                        <i class="bi bi-headset"></i>
-                    </div>
-                    <h4>پشتیبانی 24/7</h4>
-                    <p>تیم پشتیبانی ما همیشه آماده پاسخگویی به سوالات و راهنمایی شماست.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Creative Section 1 - Pet Categories -->
     <section class="creative-section">
@@ -2100,6 +1800,43 @@
                         <input type="text" class="form-control" placeholder="شماره همراه شما">
                         <button class="btn btn-dark" type="button">عضویت</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Features Section -->
+    <section class="container my-5 pt-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title animate__animated animate__fadeInUp">چرا توکا پت؟</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4 animate__animated animate__fadeInUp" data-wow-delay="0.1s">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>کیفیت تضمینی</h4>
+                    <p>تمام محصولات ما با بالاترین استانداردهای کیفیت انتخاب شده‌اند و سلامت حیوان شما را تضمین می‌کنند.</p>
+                </div>
+            </div>
+            <div class="col-md-4 animate__animated animate__fadeInUp" data-wow-delay="0.3s">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h4>تحویل سریع</h4>
+                    <p>سفارشات شما در کمترین زمان ممکن آماده و به درب منزل شما ارسال می‌شود.</p>
+                </div>
+            </div>
+            <div class="col-md-4 animate__animated animate__fadeInUp" data-wow-delay="0.5s">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <h4>پشتیبانی 24/7</h4>
+                    <p>تیم پشتیبانی ما همیشه آماده پاسخگویی به سوالات و راهنمایی شماست.</p>
                 </div>
             </div>
         </div>
