@@ -1675,7 +1675,7 @@
                     <div class="type-icon">
                         <i class="bi bi-box-seam"></i>
                     </div>
-                    <h3 class="type-title">بکس‌های حمل و نقل</h3>
+                    <h3 class="type-title">باکس های حمل و نقل</h3>
                     <p class="type-description">
                         باکس‌های ایمن و راحت برای سفر و حمل و نقل حیوانات. طراحی شده برای
                         ایمنی و آرامش حیوان در هنگام جابجایی.
