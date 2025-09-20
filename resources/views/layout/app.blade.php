@@ -47,7 +47,7 @@
                     </li>
 
 
-                    <li class="nav-item"><a class="nav-link" href="#">درباره ما</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('page.about_us') }}">درباره ما</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">تماس با ما</a></li>
                 </ul>
                 <div class="d-flex align-items-center me-3">
