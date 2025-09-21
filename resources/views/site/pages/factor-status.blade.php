@@ -672,25 +672,12 @@
                                 <a href="{{ route('products.index') }}" class="btn btn-outline-primary">
                                     <i class="bi bi-house me-2"></i>بازگشت به فروشگاه
                                 </a>
-                            @elseif($transaction->gateway === 'manual' && $transaction->status === 'pending')
-                                <button class="btn btn-warning me-2" onclick="uploadReceipt()">
-                                    <i class="bi bi-upload me-2"></i>آپلود رسید
-                                </button>
-                                <a href="{{ route('page.home') }}" class="btn btn-outline-primary me-2">
-                                    <i class="bi bi-cart me-2"></i>ویرایش سفارش
-                                </a>
+                            @else
                                 <a href="{{ route('products.index') }}" class="btn btn-outline-primary">
                                     <i class="bi bi-house me-2"></i>بازگشت به فروشگاه
                                 </a>
-                            @else
-                                <a href="{{ route('page.home') }}" class="btn btn-primary me-2">
-                                    <i class="bi bi-arrow-repeat me-2"></i>تلاش مجدد
-                                </a>
                                 <a href="{{ route('page.home') }}" class="btn btn-outline-primary me-2">
-                                    <i class="bi bi-cart me-2"></i>بازگشت به سبد خرید
-                                </a>
-                                <a href="{{ route('contact') }}" class="btn btn-outline-danger">
-                                    <i class="bi bi-headset me-2"></i>تماس با پشتیبانی
+                                    <i class="bi bi-home me-2"></i>برو به صفحه اصلی
                                 </a>
                             @endif
                         </div>
