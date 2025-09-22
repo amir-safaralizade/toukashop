@@ -33,14 +33,14 @@ class Product extends Model
             $builder->where('status', true); // یا 1
         });
     }
-    
+
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
     public function attributes()
-    { 
+    {
         return $this->belongsToMany(Attribute::class, 'attribute_product')
             ->withPivot('attribute_value_id')
             ->withTimestamps();
@@ -51,5 +51,10 @@ class Product extends Model
         return $this->belongsToMany(AttributeValue::class, 'attribute_product')
             ->withPivot('attribute_id')
             ->withTimestamps();
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

@@ -409,6 +409,60 @@
         .floating {
             animation: float 3s ease-in-out infinite;
         }
+
+
+
+
+        .sorting-filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sort-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .sort-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .sort-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .sort-icon {
+            margin-left: 8px;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .sorting-filters {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .sort-btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+        }
     </style>
 @endsection
 
@@ -443,6 +497,29 @@
             @endforeach
         </div>
     </div>
+
+
+    <div class="container">
+        <div class="sorting-filters">
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}"
+                class="sort-btn {{ $sort == 'newest' ? 'active' : '' }}">
+                <i class="bi bi-clock-history sort-icon"></i>جدیدترین
+            </a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'bestselling']) }}"
+                class="sort-btn {{ $sort == 'bestselling' ? 'active' : '' }}">
+                <i class="bi bi-trophy sort-icon"></i>پرفروش‌ترین
+            </a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_low_high']) }}"
+                class="sort-btn {{ $sort == 'price_low_high' ? 'active' : '' }}">
+                <i class="bi bi-arrow-up sort-icon"></i>قیمت (کم به زیاد)
+            </a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_high_low']) }}"
+                class="sort-btn {{ $sort == 'price_high_low' ? 'active' : '' }}">
+                <i class="bi bi-arrow-down sort-icon"></i>قیمت (زیاد به کم)
+            </a>
+        </div>
+    </div>
+
 
     <!-- Products Grid -->
     <div class="container">
