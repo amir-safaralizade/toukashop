@@ -63,12 +63,80 @@
 
         .category-tabs {
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            justify-content: flex-start;
             gap: 15px;
             margin-bottom: 40px;
-            padding: 0 15px;
+            padding: 20px 15px;
+            scrollbar-width: thin;
+            /* نمایش اسکرول بار در دسکتاپ */
+            scrollbar-color: var(--primary-color) #f1f1f1;
+            /* رنگ اسکرول بار */
+            -ms-overflow-style: auto;
+            /* نمایش اسکرول بار در IE */
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            position: relative;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    transparent 95%,
+                    rgba(78, 205, 196, 0.1) 100%);
         }
+
+        /* استایل اسکرول بار برای مرورگرهای وبکیت */
+        .category-tabs::-webkit-scrollbar {
+            height: 6px;
+            display: block;
+            /* نمایش در دسکتاپ */
+        }
+
+        .category-tabs::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* نشانگر اسکرول‌پذیری */
+        .category-tabs::before {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234ECDC4'%3E%3Cpath d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.7;
+            animation: bounceHint 2s infinite;
+            pointer-events: none;
+            display: none;
+            /* مخفی در دسکتاپ */
+        }
+
+        @keyframes bounceHint {
+
+            0%,
+            100% {
+                transform: translateY(-50%) translateX(0);
+            }
+
+            50% {
+                transform: translateY(-50%) translateX(-5px);
+            }
+        }
+
 
         .category-btn {
             background: white;
@@ -80,17 +148,23 @@
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            flex-shrink: 0;
+            position: relative;
+            border: 2px solid transparent;
         }
 
         .category-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-color);
         }
 
         .category-btn.active {
             background: var(--primary-color);
             color: white;
+            border-color: var(--primary-color);
         }
+
 
         .category-icon {
             margin-left: 8px;
@@ -364,11 +438,25 @@
             }
 
             .category-tabs {
+                padding: 15px 10px;
                 gap: 10px;
+                margin-bottom: 30px;
+                scrollbar-width: none;
+                /* مخفی کردن اسکرول بار در موبایل */
+            }
+
+            .category-tabs::-webkit-scrollbar {
+                display: none;
+                /* مخفی کردن اسکرول بار در موبایل */
+            }
+
+            .category-tabs::before {
+                display: block;
+                /* نمایش نشانگر در موبایل */
             }
 
             .category-btn {
-                padding: 10px 15px;
+                padding: 10px 20px;
                 font-size: 0.9rem;
             }
         }
@@ -378,10 +466,53 @@
                 grid-template-columns: 1fr;
             }
 
-            .category-btn {
-                padding: 8px 12px;
-                font-size: 0.8rem;
+            .category-tabs {
+                gap: 8px;
+                padding: 12px 8px;
             }
+
+            .category-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+
+            .category-icon {
+                font-size: 1rem;
+                margin-left: 6px;
+            }
+
+
+            .category-tabs-container {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .category-tabs-container::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 40px;
+                background: linear-gradient(90deg,
+                        transparent 0%,
+                        rgba(248, 249, 250, 0.8) 50%,
+                        #f8f9fa 100%);
+                pointer-events: none;
+                z-index: 1;
+                transition: opacity 0.3s ease;
+            }
+
+            /* نشان دادن گرادیانت فقط وقتی اسکرول امکان‌پذیر است */
+            .category-tabs:not(.at-end)::after {
+                opacity: 1;
+            }
+
+            .category-tabs.at-end::after {
+                opacity: 0;
+            }
+
+
         }
 
         .pet-icon {
@@ -409,8 +540,6 @@
         .floating {
             animation: float 3s ease-in-out infinite;
         }
-
-
 
 
         .sorting-filters {
@@ -485,16 +614,19 @@
 
     <!-- Category Tabs -->
     <div class="container">
-        <div class="category-tabs">
-            <a class="btn category-btn active" href="{{ route('products.index') }}">
-                <i class="bi bi-grid category-icon"></i>همه محصولات
-            </a>
-            @foreach ($categories as $category)
-                <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn" data-category="dogs">
-                    <i class="bi bi-bag category-icon"></i>
-                    {{ $category->name }}
+        <div class="category-tabs-container">
+            <div class="category-tabs">
+                <a class="btn category-btn active" href="{{ route('products.index') }}">
+                    <i class="bi bi-grid category-icon"></i>همه محصولات
                 </a>
-            @endforeach
+                @foreach ($categories as $category)
+                    <a href="{{ route('products.categories', $category->slug) }}"
+                        class="btn category-btn ">
+                        <i class="bi bi-bag category-icon"></i>
+                        {{ $category->name }}
+                    </a>
+                @endforeach
+            </div>
         </div>
     </div>
 
@@ -583,4 +715,145 @@
             </ul>
         </nav> --}}
     </div>
+@endsection
+
+
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productCards = document.querySelectorAll('.product-card');
+            const categoryTabs = document.querySelector('.category-tabs');
+            const categoryTabsContainer = document.querySelector('.category-tabs-container');
+
+            // افکت کلیک برای محصولات
+            productCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (e.target.closest('.product-wishlist') || e.target.closest('.add-to-cart')) {
+                        return;
+                    }
+
+                    const effect = document.createElement('div');
+                    effect.className = 'click-effect';
+                    effect.style.width = '100px';
+                    effect.style.height = '100px';
+                    effect.style.left = e.offsetX - 50 + 'px';
+                    effect.style.top = e.offsetY - 50 + 'px';
+                    this.appendChild(effect);
+
+                    setTimeout(() => {
+                        effect.remove();
+                    }, 600);
+
+                    const productLink = this.querySelector('a.product-link');
+                    if (productLink) {
+                        setTimeout(() => {
+                            window.location.href = productLink.href;
+                        }, 300);
+                    }
+                });
+            });
+
+            // اسکرول بهبود یافته برای دسته‌بندی‌ها
+            if (categoryTabs) {
+                let startX, scrollLeft, isDown = false;
+
+                // اسکرول با ماوس برای دسکتاپ و موبایل
+                categoryTabs.addEventListener('wheel', function(e) {
+                    e.preventDefault();
+
+                    // تشخیص جهت اسکرول و تنظیم سرعت
+                    const scrollAmount = e.deltaY * (window.innerWidth <= 768 ? 0.5 : 1);
+                    this.scrollLeft += scrollAmount;
+
+                    updateScrollIndicator();
+                }, {
+                    passive: false
+                });
+
+                // اسکرول تاچ برای موبایل
+                categoryTabs.addEventListener('touchstart', function(e) {
+                    isDown = true;
+                    startX = e.touches[0].pageX - this.offsetLeft;
+                    scrollLeft = this.scrollLeft;
+                });
+
+                categoryTabs.addEventListener('touchmove', function(e) {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.touches[0].pageX - this.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    this.scrollLeft = scrollLeft - walk;
+                    updateScrollIndicator();
+                });
+
+                categoryTabs.addEventListener('touchend', function() {
+                    isDown = false;
+                });
+
+                // اسکرول با drag ماوس برای دسکتاپ
+                categoryTabs.addEventListener('mousedown', function(e) {
+                    isDown = true;
+                    startX = e.pageX - this.offsetLeft;
+                    scrollLeft = this.scrollLeft;
+                    this.style.cursor = 'grabbing';
+                });
+
+                categoryTabs.addEventListener('mouseleave', function() {
+                    isDown = false;
+                    this.style.cursor = 'grab';
+                });
+
+                categoryTabs.addEventListener('mouseup', function() {
+                    isDown = false;
+                    this.style.cursor = 'grab';
+                });
+
+                categoryTabs.addEventListener('mousemove', function(e) {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - this.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    this.scrollLeft = scrollLeft - walk;
+                    updateScrollIndicator();
+                });
+
+                // نشانگر وضعیت اسکرول
+                function updateScrollIndicator() {
+                    const maxScroll = categoryTabs.scrollWidth - categoryTabs.clientWidth;
+                    const currentScroll = categoryTabs.scrollLeft;
+
+                    if (currentScroll >= maxScroll - 10) {
+                        categoryTabs.classList.add('at-end');
+                    } else {
+                        categoryTabs.classList.remove('at-end');
+                    }
+                }
+
+                // اسکرول خودکار به مرکز برای دکمه فعال
+                function scrollActiveToCenter() {
+                    const activeBtn = categoryTabs.querySelector('.category-btn.active');
+                    if (activeBtn) {
+                        const containerWidth = categoryTabs.offsetWidth;
+                        const activeBtnLeft = activeBtn.offsetLeft;
+                        const activeBtnWidth = activeBtn.offsetWidth;
+
+                        const scrollPosition = activeBtnLeft - (containerWidth / 2) + (activeBtnWidth / 2);
+
+                        categoryTabs.scrollTo({
+                            left: scrollPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+
+                // اجرا پس از لود کامل صفحه
+                setTimeout(scrollActiveToCenter, 100);
+
+                // آپدیت نشانگر اسکرول
+                categoryTabs.addEventListener('scroll', updateScrollIndicator);
+                updateScrollIndicator();
+            }
+        });
+    </script>
 @endsection
