@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\api\PublicController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthController; 
 use App\Http\Controllers\OTPController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Http\Controllers\SiteMapCpntroller;
@@ -28,6 +28,7 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::get('privacy', 'privacy')->name('privacy');
         Route::get('order-tracking', 'orderTracking')->name('orderTracking');
         Route::get('about-us', 'aboutUs')->name('about_us');
+        Route::get('search_page', 'search_page')->name('search_page');
     });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
