@@ -53,4 +53,8 @@ class HomeController extends Controller
         recordVisit($page);
         return view('site.pages.about_us', compact('page'));
     }
+
+    public function search_page(){
+        return view('site.pages.search_page');
+    }
 }
