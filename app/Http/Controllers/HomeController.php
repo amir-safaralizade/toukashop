@@ -21,6 +21,7 @@ class HomeController extends Controller
         $data->special_products = $special_products;
         $data->posts = Post::orderby('id', 'desc')->take(4)->get();
         $data->cage_products = Product::where('category_id', 4)->OrderBy('id', 'desc')->where('stock', '>', 0)->take(4)->get();
+        $data->page = $page;
         return view('site.pages.home', compact('data'));
     }
 

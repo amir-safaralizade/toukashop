@@ -1,5 +1,8 @@
 @extends('layout.app')
 
+@section('seo')
+    <x-seo::seo-meta-display :model="$data->page" />
+@endsection
 
 @section('styles')
     <style>

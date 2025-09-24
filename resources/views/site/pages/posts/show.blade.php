@@ -1,5 +1,9 @@
 @extends('layout.app')
 
+@section('seo')
+    <x-seo::seo-meta-display :model="$product" />
+@endsection
+
 @section('styles')
     <style>
         .article-header {
@@ -303,6 +307,7 @@
         }
     </style>
 @endsection
+
 
 @section('content')
     <div class="mt-128"></div>
