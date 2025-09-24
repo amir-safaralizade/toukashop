@@ -342,7 +342,7 @@
                 </div>
             </div>
 
-            <div class="team-section">
+            {{-- <div class="team-section">
                 <div class="team-header">
                     <h2 class="section-title animate__animated animate__fadeInDown">تیم متخصص ما</h2>
                     <p class="section-subtitle animate__animated animate__fadeInUp">
@@ -402,7 +402,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
 @endsection
