@@ -49,6 +49,7 @@ class HomeController extends Controller
 
     public function aboutUs()
     {
-        return view('site.pages.about_us');
+        $page = Page::where('name', 'about_us')->firstOrfail();
+        return view('site.pages.about_us', compact('page'));
     }
 }
