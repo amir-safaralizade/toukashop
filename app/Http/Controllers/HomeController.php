@@ -44,7 +44,7 @@ class HomeController extends Controller
     {
         $page = Page::where('name', 'size-selection-guide')->firstOrfail();
         recordVisit($page);
-        return view('site.pages.sizeSelectionGuide');
+        return view('site.pages.sizeSelectionGuide', compact('page'));
     }
 
     public function aboutUs()
