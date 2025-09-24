@@ -87,10 +87,7 @@ class ProductController extends Controller
 
     public function tests()
     {
-        foreach (Product::all() as $product) {
-            $product->slug = persian_slug($product->name);
-            $product->save();
-        }
+        return;
     }
 
     public function category(Request $request, $slug)

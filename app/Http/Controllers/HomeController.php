@@ -50,6 +50,7 @@ class HomeController extends Controller
     public function aboutUs()
     {
         $page = Page::where('name', 'about_us')->firstOrfail();
+        recordVisit($page);
         return view('site.pages.about_us', compact('page'));
     }
 }
