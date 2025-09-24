@@ -112,7 +112,7 @@ class ProductController extends Controller
         switch ($sort) {
             case 'bestselling':
                 $productsQuery->orderBy('total_sold', 'desc');
-                break;
+                break; 
 
             case 'price_low_high':
                 $productsQuery->orderBy('price', 'asc');

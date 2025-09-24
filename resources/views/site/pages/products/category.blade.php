@@ -1,5 +1,11 @@
 @extends('layout.app')
 
+
+@section('seo')
+    <x-seo::seo-meta-display :model="$category" />
+@endsection
+
+
 @section('styles')
     <style>
         body {
