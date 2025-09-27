@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @yield('seo')
-    <title>@yield('title', 'توکا پت | فروشگاه آنلاین لوازم حیوانات شما')</title>
+    @if (View::hasSection('seo'))
+        @yield('seo')
+    @else
+        <title>@yield('title', 'توکا پت | فروشگاه آنلاین لوازم حیوانات شما ')</title>
+    @endif
     <!-- Bootstrap 5 RTL -->
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap.rtl.min.css') }}">
     <!-- Font Awesome -->
@@ -48,7 +51,9 @@
 
 
                     <li class="nav-item"><a class="nav-link" href="{{ route('page.about_us') }}">درباره ما</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('posts.*') || request()->is('posts*') ? 'active' : '' }}" href="{{ route('posts.index') }}">وبلاگ</a></li>
+                    <li class="nav-item"><a
+                            class="nav-link {{ request()->routeIs('posts.*') || request()->is('posts*') ? 'active' : '' }}"
+                            href="{{ route('posts.index') }}">وبلاگ</a></li>
                 </ul>
                 <div class="d-flex align-items-center me-3">
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
