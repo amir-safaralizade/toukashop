@@ -662,9 +662,6 @@
                                 <button class="btn btn-primary me-2" onclick="window.print()">
                                     <i class="bi bi-printer me-2"></i>چاپ رسید
                                 </button>
-                                <button class="btn btn-outline-primary me-2" onclick="downloadInvoice()">
-                                    <i class="bi bi-receipt me-2"></i>دانلود فاکتور
-                                </button>
                                 <a href="{{ route('page.orderTracking', $order->tracking_code) }}"
                                     class="btn btn-success me-2">
                                     <i class="bi bi-truck me-2"></i>پیگیری سفارش
