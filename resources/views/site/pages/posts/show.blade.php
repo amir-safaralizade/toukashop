@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('seo')
-    <x-seo::seo-meta-display :model="$product" />
+    <x-seo::seo-meta-display :model="$post" />
 @endsection
 
 @section('styles')

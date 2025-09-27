@@ -83,6 +83,21 @@ body {
     left: 0;
 }
 
+.cart-badge {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
 .hero {
     background: linear-gradient(
             135deg,

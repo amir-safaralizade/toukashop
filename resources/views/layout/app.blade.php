@@ -57,8 +57,10 @@
                 </ul>
                 <div class="d-flex align-items-center me-3">
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
-                    <a href="{{ route('cart.mycart') }}" class="btn btn-sm btn-outline-dark ms-3"><i
-                            class="bi bi-cart3"></i></a>
+                    <a href="{{ route('cart.mycart') }}" class="btn btn-sm btn-outline-dark ms-3 position-relative">
+                        <i class="bi bi-cart3"></i>
+                        <span class="cart-badge">3</span>
+                    </a>
                 </div>
             </div>
         </div>
