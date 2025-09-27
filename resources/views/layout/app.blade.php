@@ -59,7 +59,7 @@
                     <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
                     <a href="{{ route('cart.mycart') }}" class="btn btn-sm btn-outline-dark ms-3 position-relative">
                         <i class="bi bi-cart3"></i>
-                        <span class="cart-badge">3</span>
+                        <span class="cart-badge" id="touka_cart_items_count">{{ $cartItemCount }}</span>
                     </a>
                 </div>
             </div>

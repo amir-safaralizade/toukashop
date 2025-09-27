@@ -856,7 +856,7 @@
                                         window.location.href = '{{ route('cart.mycart') }}';
                                     }
                                 });
-                                const cartCount = document.querySelector('.cart-count');
+                                const cartCount = document.getElementById('touka_cart_items_count');
                                 if (cartCount && data.cart_count) {
                                     cartCount.textContent = data.cart_count;
                                 }
@@ -896,14 +896,11 @@
             const productCards = document.querySelectorAll('.product-card');
 
             productCards.forEach(card => {
-                // ایجاد افکت کلیک
                 card.addEventListener('click', function(e) {
-                    // جلوگیری از اجرا وقتی روی دکمه‌ها کلیک می‌شود
                     if (e.target.closest('.product-wishlist') || e.target.closest('.add-to-cart')) {
                         return;
                     }
 
-                    // ایجاد افکت دایره‌ای
                     const effect = document.createElement('div');
                     effect.className = 'click-effect';
                     effect.style.width = '100px';
@@ -912,15 +909,12 @@
                     effect.style.top = e.offsetY - 50 + 'px';
                     this.appendChild(effect);
 
-                    // حذف افکت بعد از انیمیشن
                     setTimeout(() => {
                         effect.remove();
                     }, 600);
 
-                    // گرفتن لینک محصول
                     const productLink = this.querySelector('a.product-link');
                     if (productLink) {
-                        // هدایت به صفحه محصول بعد از تاخیر کوتاه
                         setTimeout(() => {
                             window.location.href = productLink.href;
                         }, 300);
