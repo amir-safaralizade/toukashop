@@ -1031,8 +1031,7 @@
 
         .main-banner {
             flex: 2;
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-                url("https://toukashop.ir/site/images/photo-1594149929911-78975a43d4f5.jpeg") no-repeat center center / cover;
+
             border-radius: 20px;
             overflow: hidden;
             position: relative;
@@ -1287,10 +1286,12 @@
 
     <section class="creative-banner-section">
         <div class="banner-container">
-            <div class="main-banner">
+            <div class="main-banner"
+                style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+            url('{{ get_full_url($data->main_banner->image) ?? '' }}') no-repeat center center / cover;">
                 <div class="main-banner-content">
-                    <h2>محصولات ویژه برای حیوانات خانگی</h2>
-                    <p>با جدیدترین و باکیفیت‌ترین محصولات برای بهترین دوستان خود آشنا شوید</p>
+                    <h2>{{ $data->main_banner->title }}</h2>
+                    <p>{{ $data->main_banner->description }}</p>
                     <button class="banner-btn">همین حالا ببینید</button>
                 </div>
                 <div class="banner-decoration decoration-1">🐾</div>
@@ -1298,24 +1299,31 @@
             </div>
 
             <div class="side-banners">
-                <div class="small-banner">
+                {{-- Second Banner --}}
+                <div class="small-banner"
+                    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                    url('{{ get_full_url($data->second_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
-                        <h3>تخفیف‌های ویژه</h3>
-                        <p>تا 50% تخفیف برای خریدهای بالای 200 هزار تومان</p>
-                        <button class="banner-btn">مشاهده تخفیف‌ها</button>
+                        <h3>{{ $data->second_banner->title }}</h3>
+                        <p>{{ $data->second_banner->description }}</p>
+                        <button class="banner-btn">{{ $data->second_banner->button_text ?? 'مشاهده' }}</button>
                     </div>
                     <div class="banner-decoration decoration-3">🎯</div>
                 </div>
 
-                <div class="small-banner">
+                {{-- Third Banner --}}
+                <div class="small-banner"
+                    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                    url('{{ get_full_url($data->third_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
-                        <h3>عضویت در خبرنامه</h3>
-                        <p>از آخرین تخفیف‌ها و محصولات جدید باخبر شوید</p>
-                        <button class="banner-btn">عضویت رایگان</button>
+                        <h3>{{ $data->third_banner->title }}</h3>
+                        <p>{{ $data->third_banner->description }}</p>
+                        <button class="banner-btn">{{ $data->third_banner->button_text ?? 'بیشتر' }}</button>
                     </div>
                     <div class="banner-decoration decoration-4">✉️</div>
                 </div>
             </div>
+
         </div>
     </section>
     <!-- Hero Section -->
