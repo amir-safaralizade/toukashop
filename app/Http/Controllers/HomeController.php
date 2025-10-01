@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\Product;
+use App\Models\Slider;
 use stdClass;
 
 
@@ -16,11 +17,13 @@ class HomeController extends Controller
         recordVisit($page);
         $products = Product::orderBy('id', 'desc')->take(4)->get();
         $special_products = Product::orderBy('id', 'desc')->where('category_id', 2)->take(6)->get();
+        $sliders = Slider::orderBy('sort_order' , 'asc')->get();
         $data = new stdClass();
         $data->products = $products;
         $data->special_products = $special_products;
         $data->posts = Post::orderby('id', 'desc')->take(4)->get();
         $data->cage_products = Product::where('category_id', 4)->OrderBy('id', 'desc')->where('stock', '>', 0)->take(4)->get();
+        $data->sliders = $sliders;
         $data->page = $page;
         return view('site.pages.home', compact('data'));
     }

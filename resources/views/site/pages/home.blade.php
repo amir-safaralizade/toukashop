@@ -1206,79 +1206,67 @@
 
 @section('content')
     <div class="hero-slider">
-        <!-- Slide 1 -->
-        <div class="slide active" style="background-image: url('{{ asset('site/sliders/s3.webp') }}');">
-            <div class="slide-overlay"></div>
-            <div class="slide-content">
-                <span class="slide-subtitle">بهترین برندهای جهانی</span>
-                <h1 class="slide-title">لوازم لاکچری برای حیوانات خانگی</h1>
-                <p class="slide-description">در توکا پت، بهترین محصولات برای حیوانات دوست‌داشتنی شما
-                    آماده کرده‌ایم. کیفیت را با ما تجربه کنید.</p>
-                <button class="slide-btn">مشاهده محصولات</button>
+        @forelse ($data->slider as $index => $slider)
+            <div class="slide {{ $index == 0 ? 'active' : '' }}"
+                style="background-image: url('{{ asset('storage/' . $slider->image) }}');">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <span class="slide-subtitle">{{ $slider->title }}</span>
+                    <h1 class="slide-title">{{ $slider->title }}</h1>
+                    <p class="slide-description">{{ $slider->title }}</p>
+                    @if ($slider->link)
+                        <a href="{{ $slider->link }}" class="slide-btn">مشاهده</a>
+                    @else
+                        <button class="slide-btn">مشاهده</button>
+                    @endif
+                </div>
+
+                <!-- Floating pet icons -->
+                @php
+                    $icons = [
+                        ['class' => 'bi bi-egg-fried', 'top' => '20%', 'left' => '10%', 'delay' => '0.2s'],
+                        ['class' => 'bi bi-bone', 'top' => '70%', 'right' => '15%', 'delay' => '0.5s'],
+                        ['class' => 'bi bi-balloon-heart', 'top' => '30%', 'right' => '20%', 'delay' => '0.7s'],
+                        ['class' => 'bi bi-gem', 'bottom' => '10%', 'left' => '20%', 'delay' => '0.3s'],
+                    ];
+                    // انتخاب تصادفی 2 تا 4 آیکون
+                    $selectedIcons = array_rand(array_flip(array_keys($icons)), rand(2, 4));
+                    foreach ($selectedIcons as $i) {
+                        $icon = $icons[$i];
+                        echo "<i class='{$icon['class']} pet-icon floating' style='";
+                        if (isset($icon['top'])) {
+                            echo "top: {$icon['top']};";
+                        }
+                        if (isset($icon['bottom'])) {
+                            echo "bottom: {$icon['bottom']};";
+                        }
+                        if (isset($icon['left'])) {
+                            echo "left: {$icon['left']};";
+                        }
+                        if (isset($icon['right'])) {
+                            echo "right: {$icon['right']};";
+                        }
+                        echo "animation-delay: {$icon['delay']};'></i>";
+                    }
+                @endphp
             </div>
-
-            <!-- Floating pet icons -->
-            <i class="bi bi-egg-fried pet-icon floating" style="top: 20%; left: 10%; animation-delay: 0.2s;"></i>
-            <i class="bi bi-bone pet-icon floating" style="top: 70%; right: 15%; animation-delay: 0.5s;"></i>
-            <i class="bi bi-balloon-heart pet-icon floating" style="top: 30%; right: 20%; animation-delay: 0.7s;"></i>
-            <i class="bi bi-gem pet-icon floating" style="bottom: 10%; left: 20%; animation-delay: 0.3s;"></i>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="slide" style="background-image: url('{{ asset('site/sliders/s2.webp') }}');">
-            <div class="slide-overlay"></div>
-            <div class="slide-content">
-                <span class="slide-subtitle">تخفیف‌های ویژه</span>
-                <h1 class="slide-title">تا ۳۰٪ تخفیف برای غذای حیوانات</h1>
-                <p class="slide-description">با بهترین قیمت و بالاترین کیفیت، غذای مورد نیاز حیوان خانگی خود را از توکا پت
-                    تهیه کنید.</p>
-                <button class="slide-btn">مشاهده تخفیف‌ها</button>
+        @empty
+            <div class="slide">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <span class="slide-subtitle">اسلایدری وجود ندارد</span>
+                    <h1 class="slide-title">هیچ اسلایدری ثبت نشده است</h1>
+                    <p class="slide-description">لطفاً از پنل مدیریت اسلایدر اضافه کنید.</p>
+                </div>
             </div>
-
-            <!-- Floating pet icons -->
-            <i class="bi bi-egg-fried pet-icon floating" style="top: 25%; right: 10%; animation-delay: 0.4s;"></i>
-            <i class="bi bi-bone pet-icon floating" style="bottom: 20%; left: 15%; animation-delay: 0.8s;"></i>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="slide" style="background-image: url('{{ asset('site/sliders/s1.webp') }}');">
-            <div class="slide-overlay"></div>
-            <div class="slide-content">
-                <span class="slide-subtitle">خدمات حرفه‌ای</span>
-                <h1 class="slide-title">مشاوره رایگان با متخصصین</h1>
-                <p class="slide-description">تیم متخصص ما آماده ارائه مشاوره رایگان برای انتخاب بهترین محصولات برای حیوان
-                    خانگی شماست.</p>
-                <button class="slide-btn">دریافت مشاوره</button>
-            </div>
-
-            <!-- Floating pet icons -->
-            <i class="bi bi-balloon-heart pet-icon floating" style="top: 15%; left: 20%; animation-delay: 0.3s;"></i>
-            <i class="bi bi-gem pet-icon floating" style="bottom: 25%; right: 15%; animation-delay: 0.6s;"></i>
-        </div>
-
-        <!-- Slide 4 -->
-        <div class="slide" style="background-image: url('{{ asset('site/sliders/s3.webp') }}');">
-            <div class="slide-overlay"></div>
-            <div class="slide-content">
-                <span class="slide-subtitle">ارسال سریع و رایگان</span>
-                <h1 class="slide-title">خرید آنلاین با ارسال رایگان</h1>
-                <p class="slide-description">برای خریدهای بالای ۵۰۰ هزار تومان، از ارسال رایگان بهره‌مند شوید و در کمترین
-                    زمان محصولات را دریافت کنید.</p>
-                <button class="slide-btn">سفارش آنلاین</button>
-            </div>
-
-            <!-- Floating pet icons -->
-            <i class="bi bi-egg-fried pet-icon floating" style="top: 40%; right: 12%; animation-delay: 0.5s;"></i>
-            <i class="bi bi-bone pet-icon floating" style="bottom: 30%; left: 18%; animation-delay: 0.9s;"></i>
-        </div>
+        @endforelse
 
         <!-- Slider Controls -->
         <div class="slider-controls">
             <div class="slider-dots">
-                <div class="slider-dot active" data-slide="0"></div>
-                <div class="slider-dot" data-slide="1"></div>
-                <div class="slider-dot" data-slide="2"></div>
-                <div class="slider-dot" data-slide="3"></div>
+                @foreach ($data->slider as $index => $slider)
+                    <div class="slider-dot {{ $index == 0 ? 'active' : '' }}" data-slide="{{ $index }}"></div>
+                @endforeach
             </div>
         </div>
 
@@ -1292,7 +1280,8 @@
         </div>
 
         <div class="slide-counter">
-            <span class="current">01</span> / <span class="total">04</span>
+            <span class="current">01</span> / <span
+                class="total">{{ str_pad(count($data->slider), 2, '0', STR_PAD_LEFT) }}</span>
         </div>
     </div>
 
