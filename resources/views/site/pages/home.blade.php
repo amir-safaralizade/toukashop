@@ -1286,42 +1286,42 @@
 
     <section class="creative-banner-section">
         <div class="banner-container">
-            <div class="main-banner"
+            <a href="{{ $data->main_banner->link }}" class="main-banner"
                 style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
             url('{{ get_full_url($data->main_banner->image) ?? '' }}') no-repeat center center / cover;">
                 <div class="main-banner-content">
                     <h2>{{ $data->main_banner->title }}</h2>
                     <p>{{ $data->main_banner->description }}</p>
-                    <button class="banner-btn">همین حالا ببینید</button>
+                    {{-- <button class="banner-btn">همین حالا ببینید</button> --}}
                 </div>
                 <div class="banner-decoration decoration-1">🐾</div>
                 <div class="banner-decoration decoration-2">❤️</div>
-            </div>
+            </a>
 
             <div class="side-banners">
                 {{-- Second Banner --}}
-                <div class="small-banner"
+                <a class="small-banner" href="{{ $data->second_banner->link }}"
                     style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
                     url('{{ get_full_url($data->second_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
                         <h3>{{ $data->second_banner->title }}</h3>
                         <p>{{ $data->second_banner->description }}</p>
-                        <button class="banner-btn">{{ $data->second_banner->button_text ?? 'مشاهده' }}</button>
+                        {{-- <button class="banner-btn">{{ $data->second_banner->button_text ?? 'مشاهده' }}</button> --}}
                     </div>
                     <div class="banner-decoration decoration-3">🎯</div>
-                </div>
+                </a>
 
                 {{-- Third Banner --}}
-                <div class="small-banner"
+                <a class="small-banner" href="{{ $data->third_banner->link }}"
                     style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
                     url('{{ get_full_url($data->third_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
                         <h3>{{ $data->third_banner->title }}</h3>
                         <p>{{ $data->third_banner->description }}</p>
-                        <button class="banner-btn">{{ $data->third_banner->button_text ?? 'بیشتر' }}</button>
+                        {{-- <button class="banner-btn">{{ $data->third_banner->button_text ?? 'بیشتر' }}</button> --}}
                     </div>
                     <div class="banner-decoration decoration-4">✉️</div>
-                </div>
+                </a>
             </div>
 
         </div>
