@@ -1208,7 +1208,7 @@
     <div class="hero-slider">
         @forelse ($data->sliders as $index => $slider)
             <div class="slide {{ $index == 0 ? 'active' : '' }}"
-                style="background-image: url('{{ asset($slider->image) }}');">
+                style="background-image: url('{{ get_full_url($slider->image) }}');">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <span class="slide-subtitle">{{ $slider->title }}</span>

@@ -139,3 +139,9 @@ function get_product_categoris()
             ->get();
     });
 }
+
+
+function get_full_url($image)
+{
+    return rtrim(config('services.manage_panel'), '/') . '/' . ltrim($image, '/');
+}
