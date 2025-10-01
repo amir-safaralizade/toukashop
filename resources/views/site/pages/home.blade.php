@@ -1206,7 +1206,7 @@
 
 @section('content')
     <div class="hero-slider">
-        @forelse ($data->slider as $index => $slider)
+        @forelse ($data->sliders as $index => $slider)
             <div class="slide {{ $index == 0 ? 'active' : '' }}"
                 style="background-image: url('{{ asset('storage/' . $slider->image) }}');">
                 <div class="slide-overlay"></div>
@@ -1264,7 +1264,7 @@
         <!-- Slider Controls -->
         <div class="slider-controls">
             <div class="slider-dots">
-                @foreach ($data->slider as $index => $slider)
+                @foreach ($data->sliders as $index => $slider)
                     <div class="slider-dot {{ $index == 0 ? 'active' : '' }}" data-slide="{{ $index }}"></div>
                 @endforeach
             </div>
@@ -1281,7 +1281,7 @@
 
         <div class="slide-counter">
             <span class="current">01</span> / <span
-                class="total">{{ str_pad(count($data->slider), 2, '0', STR_PAD_LEFT) }}</span>
+                class="total">{{ str_pad(count($data->sliders), 2, '0', STR_PAD_LEFT) }}</span>
         </div>
     </div>
 
