@@ -1410,9 +1410,9 @@
                 <div class="product-card animate__animated animate__fadeInUp">
                     <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
                     <div class="product-badge">پرفروش</div>
-                    <button class="product-wishlist">
+                    {{-- <button class="product-wishlist">
                         <i class="bi bi-heart"></i>
-                    </button>
+                    </button> --}}
                     <div class="product-img-container">
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
                             alt="{{ $product->name }}">
@@ -1519,9 +1519,9 @@
                 <div class="product-card animate__animated animate__fadeInUp">
                     <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
                     <div class="product-badge">پیشنهادی توکاشاپ</div>
-                    <button class="product-wishlist">
+                    {{-- <button class="product-wishlist">
                         <i class="bi bi-heart"></i>
-                    </button>
+                    </button> --}}
                     <div class="product-img-container">
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
                             alt="{{ $product->name }}">
