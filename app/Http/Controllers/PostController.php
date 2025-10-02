@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::Orderby('id', 'desc')->get();
         return view('site.pages.posts.index', compact('posts'));
     }
 

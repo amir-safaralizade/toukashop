@@ -620,8 +620,7 @@
                     <i class="bi bi-grid category-icon"></i>همه محصولات
                 </a>
                 @foreach ($categories as $category)
-                    <a href="{{ route('products.categories', $category->slug) }}"
-                        class="btn category-btn ">
+                    <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn ">
                         <i class="bi bi-bag category-icon"></i>
                         {{ $category->name }}
                     </a>
@@ -660,9 +659,6 @@
                 <div class="product-card animate__animated animate__fadeInUp" data-category="cats,food">
                     <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
                     <div class="product-badge">پرفروش</div>
-                    <button class="product-wishlist">
-                        <i class="bi bi-heart"></i>
-                    </button>
                     <div class="product-img-container">
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
                             alt="{{ $product->name }}">
