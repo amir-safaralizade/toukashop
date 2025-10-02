@@ -56,7 +56,8 @@
                             href="{{ route('posts.index') }}">وبلاگ</a></li>
                 </ul>
                 <div class="d-flex align-items-center me-3">
-                    <a href="#" class="btn btn-sm btn-outline-dark ms-3"><i class="bi bi-search"></i></a>
+                    <a href="{{ route('page.search_page') }}" class="btn btn-sm btn-outline-dark ms-3"><i
+                            class="bi bi-search"></i></a>
                     <a href="{{ route('cart.mycart') }}" class="btn btn-sm btn-outline-dark ms-3 position-relative">
                         <i class="bi bi-cart3"></i>
                         <span class="cart-badge" id="touka_cart_items_count">{{ $cartItemCount }}</span>
