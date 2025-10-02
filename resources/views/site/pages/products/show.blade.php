@@ -581,8 +581,19 @@
                             </div>
                             <div class="meta-item">
                                 <div class="meta-icon"><i class="bi bi-tags"></i></div>
-                                <div><strong>برچسب‌ها:</strong> </div>
+                                <div>
+                                    <strong>برچسب‌ها:</strong>
+                                    @if ($product->tags->count())
+                                        @foreach ($product->tags as $tag)
+                                            <a href="{{ route('products.tag', $tag->slug) }}"
+                                                class="badge bg-primary me-1">{{ $tag->name }}</a>
+                                        @endforeach
+                                    @else
+                                        <span>بدون برچسب</span>
+                                    @endif
+                                </div>
                             </div>
+
                         </div>
 
                         <div class="share-btns">

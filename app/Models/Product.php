@@ -35,7 +35,7 @@ class Product extends Model
     }
 
     public function category()
-    {
+    { 
         return $this->belongsTo(Category::class);
     }
 
@@ -56,5 +56,10 @@ class Product extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'object', 'tag_objects');
     }
 }

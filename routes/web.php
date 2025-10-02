@@ -35,6 +35,7 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show/{slug}', 'product')->name('show');
         Route::get('/category/{slug}', 'category')->name('categories');
+        Route::get('/tags/{slug}', 'tag')->name('tag');
         Route::get('/testtt', 'tests');
     });
 

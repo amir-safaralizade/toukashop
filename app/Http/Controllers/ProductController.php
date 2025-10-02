@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Page;
+use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
@@ -109,7 +110,7 @@ class ProductController extends Controller
         switch ($sort) {
             case 'bestselling':
                 $productsQuery->orderBy('total_sold', 'desc');
-                break; 
+                break;
 
             case 'price_low_high':
                 $productsQuery->orderBy('price', 'asc');
@@ -133,5 +134,68 @@ class ProductController extends Controller
         $categories = Category::where('type', 'product')->get();
 
         return view('site.pages.products.category', compact('products', 'categories', 'category', 'slug', 'sort'));
+    }
+
+    public function tag(Request $request, $slug)
+    {
+
+        $tag = Tag::where('slug', $slug)->firstOrFail();
+        recordVisit($tag);
+
+        $sort = $request->query('sort', 'newest'); // default sort
+
+        // شروع query روی محصولات
+        $query = Product::query()
+            ->whereHas('tags', function ($q) use ($tag) {
+                $q->where('tags.id', $tag->id);
+            });
+
+        // فیلتر بر اساس دسته‌بندی
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // فیلتر بر اساس جستجو
+        if ($request->filled('query')) {
+            $search = $request->input('query');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('category', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // اضافه کردن تعداد فروش واقعی از order_items
+        $query->withCount(['orderItems as total_sold' => function ($q) {
+            $q->select(DB::raw("COALESCE(SUM(quantity),0)"));
+        }]);
+
+        // اعمال مرتب‌سازی
+        switch ($sort) {
+            case 'bestselling':
+                $query->orderBy('total_sold', 'desc');
+                break;
+
+            case 'price_low_high':
+                $query->orderBy('price', 'asc');
+                break;
+
+            case 'price_high_low':
+                $query->orderBy('price', 'desc');
+                break;
+
+            case 'newest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // مرتب‌سازی ثانویه: موجودی و ID
+        $query->orderBy('stock', 'desc')->orderBy('id', 'desc');
+
+        $products = $query->get();
+
+        return view('site.pages.tag', compact('products', 'sort', 'tag'));
     }
 }

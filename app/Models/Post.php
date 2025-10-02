@@ -155,4 +155,10 @@ class Post extends Model
     {
         return $this->readingTimeText();
     }
+
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'object', 'tag_objects', 'object_id', 'tag_id');
+    }
 }
