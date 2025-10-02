@@ -713,8 +713,6 @@
     </div>
 @endsection
 
-
-
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
