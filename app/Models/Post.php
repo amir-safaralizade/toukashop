@@ -159,6 +159,11 @@ class Post extends Model
 
     public function tags()
     {
-        return $this->morphToMany(Tag::class, 'object', 'tag_objects', 'object_id', 'tag_id');
+        return $this->belongsToMany(
+            \App\Models\Tag::class, // Target model
+            'tag_objects',          // Pivot table
+            'object_id',            // Foreign key on pivot table for Post
+            'tag_id'                // Foreign key on pivot table for Tag
+        );
     }
 }

@@ -11,21 +11,33 @@ class Tag extends Model
     use  Visitable;
     protected $fillable = [
         'type',
-        'object',
         'name',
         'slug'
     ];
 
     public function products()
     {
-        return $this->morphedByMany(Product::class, 'object', 'tag_objects');
+        return $this->belongsToMany(
+            Product::class,    // Target model
+            'tag_objects',     // Pivot table
+            'tag_id',          // Foreign key on pivot table for Tag
+            'object_id'        // Foreign key on pivot table for Product
+        );
     }
 
-    // Relation with posts
+    /**
+     * Get all posts assigned to this tag without considering object_type
+     */
     public function posts()
     {
-        return $this->morphedByMany(Post::class, 'object', 'tag_objects');
+        return $this->belongsToMany(
+            \App\Models\Post::class,
+            'tag_objects',
+            'tag_id',
+            'object_id'
+        );
     }
+
 
     public function objectsCount()
     {

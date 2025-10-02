@@ -349,10 +349,13 @@
 
             <div class="article-footer">
                 <div class="tags">
-                    <span class="tag">گربه</span>
-                    <span class="tag">تغذیه</span>
-                    <span class="tag">سلامت حیوانات</span>
-                    <span class="tag">نگهداری گربه</span>
+                    @if ($post->tags->count())
+                        @foreach ($post->tags as $tag)
+                            <a href="{{ route('posts.tag', $tag->slug) }}" class="tag">{{ $tag->name }}</a>
+                        @endforeach
+                    @else
+                        <span>بدون برچسب</span>
+                    @endif
                 </div>
 
                 <div class="social-share">

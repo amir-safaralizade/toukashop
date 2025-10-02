@@ -35,7 +35,7 @@ class Product extends Model
     }
 
     public function category()
-    { 
+    {
         return $this->belongsTo(Category::class);
     }
 
@@ -60,6 +60,11 @@ class Product extends Model
 
     public function tags()
     {
-        return $this->morphToMany(Tag::class, 'object', 'tag_objects');
+        return $this->belongsToMany(
+            \App\Models\Tag::class,
+            'tag_objects',
+            'object_id', // Foreign key on pivot table for Product
+            'tag_id'
+        );
     }
 }
