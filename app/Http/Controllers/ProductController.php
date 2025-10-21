@@ -72,7 +72,7 @@ class ProductController extends Controller
 
     public function product($slug)
     {
-        $product = Product::where('slug', $slug)->firstOrfail();
+        $product = Product::where('slug', $slug)->firstOrFail();
         recordVisit($product);
 
         $relatedProducts = Product::where('category_id', $product->category_id)
@@ -81,10 +81,61 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        $product->load('attributeValues.attribute');
+        // بارگذاری واریانت‌ها و موجودی‌ها - استفاده از variants
+        $product->load([
+            'attributeValues.attribute',
+            'variants.attributeValues.attribute'
+        ]);
+
+        // ساختار داده‌ای برای مدیریت موجودی در فرانت‌اند
+        $variantStockData = [];
+
+        // اگر واریانتی وجود دارد
+        if ($product->variants->count() > 0) {
+            foreach ($product->variants as $variant) {
+                // فقط واریانت‌های موجود را اضافه کن
+                if ($variant->stock > 0) {
+                    $attributes = [];
+                    foreach ($variant->attributeValues as $attrValue) {
+                        $attributes[$attrValue->attribute->name] = $attrValue->id;
+                    }
+
+                    $variantStockData[] = [
+                        'variant_id' => $variant->id,
+                        'stock' => $variant->stock,
+                        'attributes' => $attributes,
+                        'price' => $variant->price ?? $product->price
+                    ];
+                }
+            }
+
+            // اگر هیچ واریانت موجودی پیدا نشد
+            if (count($variantStockData) === 0) {
+                $variantStockData[] = [
+                    'variant_id' => 0,
+                    'stock' => 0,
+                    'attributes' => [],
+                    'price' => $product->price
+                ];
+            }
+        } else {
+            // اگر محصول واریانت ندارد، خود محصول را به عنوان یک واریانت در نظر بگیرید
+            $variantStockData[] = [
+                'variant_id' => 0,
+                'stock' => $product->stock,
+                'attributes' => [],
+                'price' => $product->price
+            ];
+        }
+
         recordVisit($product);
-        return view('site.pages.products.show', compact('product', 'relatedProducts'));
+        return view('site.pages.products.show', compact(
+            'product',
+            'relatedProducts',
+            'variantStockData'
+        ));
     }
+
 
     public function tests()
     {

@@ -527,7 +527,6 @@
                                                 <div style="display:inline-flex;align-items:center;margin-left:8px;">
                                                     <span
                                                         style="display:inline-block;width:18px;height:18px;border:1px solid #ccc;border-radius:4px;background-color: {{ $colorValue }};margin-left:5px;"></span>
-                                                    <span class="ms-1">{{ $val->value }}</span>
                                                 </div>
                                             @else
                                                 <div class="attribute-item">

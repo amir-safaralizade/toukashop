@@ -738,9 +738,9 @@
 
                         <div class="action-btns">
                             @if ($product->stock > 0)
-                                <button class="s-p-add-to-cart pulse-animation">
+                                <button class="s-p-add-to-cart pulse-animation" data-product-id="{{ $product->id }}">
                                     <i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید
-                                </button>
+                                </button>ّ
                             @else
                                 <button class="btn btn-danger pulse-animation">
                                     <i class="bi bi-cart-plus me-2"></i> ناموجود (تماس بگیرید)
@@ -867,347 +867,376 @@
 @endsection
 
 @section('scripts')
-    <script>
-        // Image gallery functions
-        function changeImage(thumb, newSrc) {
-            const mainImage = document.getElementById('mainImage');
-            mainImage.src = newSrc;
-            document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
-            thumb.classList.add('active');
-            mainImage.style.transform = 'scale(1)';
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== GLOBAL VARIABLES ==========
+    const variantStockData = @json($variantStockData);
+    console.log('Variant Stock Data:', variantStockData);
+
+    // ========== IMAGE GALLERY ==========
+    function changeImage(thumb, newSrc) {
+        const mainImage = document.getElementById('mainImage');
+        mainImage.src = newSrc;
+        document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
+        thumb.classList.add('active');
+        mainImage.style.transform = 'scale(1)';
+    }
+
+    function zoomImage(img) {
+        if (img.classList.contains('zoomed')) {
+            img.classList.remove('zoomed');
+            document.body.style.overflow = 'auto';
+        } else {
+            img.classList.add('zoomed');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // ========== QUANTITY SELECTOR ==========
+    function increaseQuantity() {
+        const qtyInput = document.getElementById('quantity');
+        const maxQty = getMaxAvailableQuantity();
+        let newVal = parseInt(qtyInput.value) + 1;
+        qtyInput.value = newVal > maxQty ? maxQty : newVal;
+    }
+
+    function decreaseQuantity() {
+        const qtyInput = document.getElementById('quantity');
+        if (parseInt(qtyInput.value) > 1) {
+            qtyInput.value = parseInt(qtyInput.value) - 1;
+        }
+    }
+
+    // ========== SELECTION SUMMARY ==========
+    function updateSelectionSummary() {
+        const sizeInput = document.querySelector('input[name="product-size"]:checked');
+        const colorInput = document.querySelector('input[name="product-color"]:checked');
+        const attributeSelects = document.querySelectorAll('.attribute-select');
+
+        const summaryElement = document.getElementById('selectionSummary');
+        let hasSelection = false;
+
+        // Size
+        if (sizeInput) {
+            const sizeLabel = document.querySelector(`label[for="size-${sizeInput.value}"]`);
+            if (sizeLabel) {
+                document.getElementById('selectedSizeValue').textContent = sizeLabel.textContent;
+                hasSelection = true;
+            }
         }
 
-        function zoomImage(img) {
-            if (img.classList.contains('zoomed')) {
-                img.classList.remove('zoomed');
-                document.body.style.overflow = 'auto';
+        // Color
+        if (colorInput) {
+            const colorLabel = document.querySelector(`label[for="color-${colorInput.value}"]`);
+            if (colorLabel) {
+                const colorName = colorLabel.getAttribute('data-color-name');
+                document.getElementById('selectedColorValue').textContent = colorName;
+                document.getElementById('selectedColorPreview').style.backgroundColor = colorName;
+                hasSelection = true;
+            }
+        }
+
+        // Other attributes
+        let attributeSelected = false;
+        attributeSelects.forEach(select => {
+            if (select.value && select.selectedIndex > 0) {
+                const attributeName = select.getAttribute('data-attribute-name');
+                const selectedOption = select.options[select.selectedIndex];
+                document.getElementById('selectedAttributeLabel').textContent = attributeName + ':';
+                document.getElementById('selectedAttributeValue').textContent = selectedOption.textContent;
+                document.getElementById('selectedAttributeItem').style.display = 'flex';
+                attributeSelected = true;
+                hasSelection = true;
+            }
+        });
+
+        if (!attributeSelected) {
+            document.getElementById('selectedAttributeItem').style.display = 'none';
+        }
+
+        summaryElement.style.display = hasSelection ? 'block' : 'none';
+        updateAvailabilityStatus();
+    }
+
+    // ========== AVAILABILITY CHECK ==========
+    function getCurrentAttributes() {
+        const attributes = {};
+        
+        // Size
+        const sizeInput = document.querySelector('input[name="product-size"]:checked');
+        if (sizeInput) attributes.size = sizeInput.value;
+        
+        // Color
+        const colorInput = document.querySelector('input[name="product-color"]:checked');
+        if (colorInput) attributes.color = colorInput.value;
+        
+        // Other attributes
+        document.querySelectorAll('.attribute-select').forEach(select => {
+            if (select.value && select.selectedIndex > 0) {
+                const attributeName = select.getAttribute('data-attribute-name');
+                attributes[attributeName] = select.value;
+            }
+        });
+        
+        return attributes;
+    }
+
+    function findMatchingVariant(attributes) {
+        return variantStockData.find(variant => {
+            let match = true;
+            Object.keys(attributes).forEach(attrKey => {
+                if (variant.attributes[attrKey] !== parseInt(attributes[attrKey])) {
+                    match = false;
+                }
+            });
+            return match && variant.stock > 0;
+        });
+    }
+
+    function getMaxAvailableQuantity() {
+        const attributes = getCurrentAttributes();
+        const variant = findMatchingVariant(attributes);
+        return variant ? variant.stock : 0;
+    }
+
+    function updateAvailabilityStatus() {
+        const attributes = getCurrentAttributes();
+        const variant = findMatchingVariant(attributes);
+        const addToCartBtn = document.querySelector('.s-p-add-to-cart');
+        const quantityInput = document.getElementById('quantity');
+        
+        if (variant && variant.stock > 0) {
+            // Available
+            addToCartBtn.innerHTML = `<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید`;
+            addToCartBtn.className = 's-p-add-to-cart pulse-animation btn-success';
+            addToCartBtn.disabled = false;
+            quantityInput.max = variant.stock;
+            
+            // Show stock info
+            const stockBadge = document.querySelector('.stock-badge');
+            if (stockBadge) {
+                stockBadge.textContent = `موجودی: ${variant.stock}`;
+                stockBadge.className = 'badge bg-success stock-badge';
+            }
+        } else {
+            // Unavailable
+            let btnText = 'ترکیب ناموجود';
+            if (Object.keys(attributes).length === 0 && variantStockData.length === 0) {
+                btnText = 'ناموجود';
+            }
+            
+            addToCartBtn.innerHTML = `<i class="bi bi-cart-x me-2"></i>${btnText}`;
+            addToCartBtn.className = 's-p-add-to-cart btn-danger';
+            addToCartBtn.disabled = true;
+            quantityInput.max = 0;
+            
+            // Show stock info
+            const stockBadge = document.querySelector('.stock-badge');
+            if (stockBadge) {
+                stockBadge.textContent = 'ناموجود';
+                stockBadge.className = 'badge bg-danger stock-badge';
+            }
+        }
+    }
+
+    // ========== ADD TO CART ==========
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.s-p-add-to-cart') && !e.target.closest('.s-p-add-to-cart').disabled) {
+            e.preventDefault();
+            const addToCartBtn = e.target.closest('.s-p-add-to-cart');
+            handleAddToCart(addToCartBtn);
+        }
+    });
+
+    function handleAddToCart(addToCartBtn) {
+        const productId = addToCartBtn.getAttribute('data-product-id');
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const attributes = getCurrentAttributes();
+
+        // ========== LOADING ==========
+        const originalText = addToCartBtn.innerHTML;
+        addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner me-2"></i>در حال افزودن...';
+        addToCartBtn.disabled = true;
+
+        // ========== AJAX ==========
+        fetch('{{ route('cart.addToCartAjax') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                product_id: parseInt(productId),
+                quantity: quantity,
+                size: attributes.size || null,
+                color: attributes.color || null,
+                attributes: Object.keys(attributes).filter(key => !['size', 'color'].includes(key))
+                    .reduce((obj, key) => { obj[key] = attributes[key]; return obj; }, {})
+            })
+        })
+        .then(response => {
+            if (response.status === 422) {
+                return response.json().then(data => { throw { status: 422, data }; });
+            }
+            if (!response.ok) {
+                throw { status: response.status, message: `خطای سرور: ${response.status}` };
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'موفق!',
+                    text: data.message,
+                    showCancelButton: true,
+                    confirmButtonText: 'ادامه خرید',
+                    cancelButtonText: 'مشاهده سبد',
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#007bff'
+                }).then((result) => {
+                    if (result.isDismissed || result.dismiss === 'cancel') {
+                        window.location.href = '{{ route('cart.mycart') }}';
+                    }
+                });
+                updateCartCount(data.cart_count);
+                playSuccessSound();
+            }
+        })
+        .catch(error => {
+            console.error('Add to cart error:', error);
+            
+            let title = 'خطا', errorMessage = 'خطای نامشخص', icon = 'error';
+
+            if (error.status === 422 && error.data) {
+                switch(error.data.type) {
+                    case 'combination_unavailable':
+                    case 'variant_not_found':
+                        title = 'ترکیب ناموجود';
+                        errorMessage = 'ترکیب انتخابی موجود نمی‌باشد.';
+                        icon = 'warning';
+                        highlightInvalidSelection();
+                        break;
+                    case 'insufficient_stock':
+                        title = 'موجودی کم';
+                        errorMessage = `تعداد موجود: ${error.data.available_stock}`;
+                        icon = 'warning';
+                        break;
+                    case 'insufficient_stock_with_cart':
+                        title = 'موجودی کم';
+                        errorMessage = `موجودی: ${error.data.available_stock} - در سبد: ${error.data.current_in_cart}`;
+                        icon = 'warning';
+                        break;
+                    default:
+                        errorMessage = error.data.message || 'خطا در افزودن';
+                }
+            } else if (error.status >= 500) {
+                title = 'خطای سرور';
+                errorMessage = 'لطفاً دوباره تلاش کنید.';
             } else {
-                img.classList.add('zoomed');
-                document.body.style.overflow = 'hidden';
+                errorMessage = 'مشکل در اتصال به سرور';
             }
-        }
 
-        document.addEventListener('click', function(e) {
-            const zoomedImg = document.querySelector('.main-image.zoomed');
-            if (zoomedImg && !zoomedImg.contains(e.target)) {
-                zoomImage(zoomedImg);
+            Swal.fire({
+                icon: icon,
+                title: title,
+                html: errorMessage,
+                confirmButtonText: 'متوجه شدم',
+                confirmButtonColor: '#dc3545'
+            });
+        })
+        .finally(() => {
+            updateAvailabilityStatus();
+        });
+    }
+
+    // ========== HIGHLIGHT INVALID ==========
+    function highlightInvalidSelection() {
+        ['size', 'color'].forEach(type => {
+            const input = document.querySelector(`input[name="product-${type}"]:checked`);
+            if (input) {
+                const label = document.querySelector(`label[for="${type}-${input.value}"]`);
+                if (label) {
+                    label.style.borderColor = '#dc3545';
+                    label.style.boxShadow = '0 0 0 2px #dc3545';
+                    setTimeout(() => {
+                        label.style.borderColor = '';
+                        label.style.boxShadow = '';
+                    }, 3000);
+                }
             }
         });
+    }
 
-        // Quantity selector
-        function increaseQuantity() {
-            const qtyInput = document.getElementById('quantity');
-            qtyInput.value = parseInt(qtyInput.value) + 1;
-        }
-
-        function decreaseQuantity() {
-            const qtyInput = document.getElementById('quantity');
-            if (parseInt(qtyInput.value) > 1) {
-                qtyInput.value = parseInt(qtyInput.value) - 1;
-            }
-        }
-
-        // Rating system
-        let currentRating = 0;
-
-        function fillStars(count) {
-            const stars = document.querySelectorAll('#reviews .rating i');
-            stars.forEach((star, index) => {
-                if (index < count) {
-                    star.classList.add('bi-star-fill');
-                    star.classList.remove('bi-star');
-                } else {
-                    star.classList.add('bi-star');
-                    star.classList.remove('bi-star-fill');
-                }
-            });
-        }
-
-        function setRating(count) {
-            currentRating = count;
-            fillStars(count);
-            document.getElementById('reviewRating').value = count;
-        }
-
-        // تابع برای به‌روزرسانی خلاصه انتخاب‌ها
-        function updateSelectionSummary() {
-            const sizeInput = document.querySelector('input[name="product-size"]:checked');
-            const colorInput = document.querySelector('input[name="product-color"]:checked');
-            const attributeSelects = document.querySelectorAll('.attribute-select');
-
-            const summaryElement = document.getElementById('selectionSummary');
-            let hasSelection = false;
-
-            // به‌روزرسانی سایز
-            if (sizeInput) {
-                const sizeLabel = document.querySelector(`label[for="size-${sizeInput.value}"]`);
-                if (sizeLabel) {
-                    document.getElementById('selectedSizeValue').textContent = sizeLabel.textContent;
-                    hasSelection = true;
-                }
-            }
-
-            // به‌روزرسانی رنگ
-            if (colorInput) {
-                const colorLabel = document.querySelector(`label[for="color-${colorInput.value}"]`);
-                if (colorLabel) {
-                    const colorName = colorLabel.getAttribute('data-color-name');
-                    document.getElementById('selectedColorValue').textContent = colorName;
-                    document.getElementById('selectedColorPreview').style.backgroundColor = colorName;
-                    hasSelection = true;
-                }
-            }
-
-            // به‌روزرسانی سایر ویژگی‌ها
-            let attributeSelected = false;
-            attributeSelects.forEach(select => {
-                if (select.value && select.selectedIndex > 0) {
-                    const attributeName = select.getAttribute('data-attribute-name');
-                    const selectedOption = select.options[select.selectedIndex];
-
-                    document.getElementById('selectedAttributeLabel').textContent = attributeName + ':';
-                    document.getElementById('selectedAttributeValue').textContent = selectedOption.textContent;
-
-                    document.getElementById('selectedAttributeItem').style.display = 'flex';
-                    attributeSelected = true;
-                    hasSelection = true;
-                }
-            });
-
-            if (!attributeSelected) {
-                document.getElementById('selectedAttributeItem').style.display = 'none';
-            }
-
-            // نمایش یا پنهان کردن خلاصه
-            summaryElement.style.display = hasSelection ? 'block' : 'none';
-        }
-
-        document.querySelector('#reviews .rating')?.addEventListener('mouseleave', function() {
-            fillStars(currentRating);
-        });
-
-        // Size and color selection, and Add to cart with Ajax
-        document.addEventListener('DOMContentLoaded', function() {
-            // Size selection
-            document.querySelectorAll('input[name="product-size"]').forEach(input => {
-                input.addEventListener('change', function() {
-                    document.querySelectorAll('.size-option').forEach(l => l.classList.remove(
-                        'active'));
-                    const label = document.querySelector(`label[for="size-${this.value}"]`);
-                    if (label) {
-                        label.classList.add('active');
-                    }
-                    updateSelectionSummary();
-                });
-            });
-
-            // Color selection
-            document.querySelectorAll('input[name="product-color"]').forEach(input => {
-                input.addEventListener('change', function() {
-                    document.querySelectorAll('.color-option').forEach(l => l.classList.remove(
-                        'active'));
-                    const label = document.querySelector(`label[for="color-${this.value}"]`);
-                    if (label) {
-                        label.classList.add('active');
-                    }
-                    updateSelectionSummary();
-                });
-            });
-
-            // سایر ویژگی‌ها
-            document.querySelectorAll('.attribute-select').forEach(select => {
-                select.addEventListener('change', function() {
-                    updateSelectionSummary();
-                });
-            });
-
-            // به‌روزرسانی اولیه خلاصه
+    // ========== EVENT LISTENERS ==========
+    // Size
+    document.querySelectorAll('input[name="product-size"]').forEach(input => {
+        input.addEventListener('change', () => {
+            document.querySelectorAll('.size-option').forEach(l => l.classList.remove('active'));
+            const label = document.querySelector(`label[for="size-${input.value}"]`);
+            if (label) label.classList.add('active');
             updateSelectionSummary();
-
-            // Add to cart functionality
-            const addToCartBtn = document.querySelector('.s-p-add-to-cart');
-            if (addToCartBtn) {
-                addToCartBtn.addEventListener('click', function() {
-                    const productId = {{ $product->id }};
-                    const quantity = document.getElementById('quantity').value;
-                    const colorInput = document.querySelector('input[name="product-color"]:checked');
-                    const sizeInput = document.querySelector('input[name="product-size"]:checked');
-
-                    // جمع‌آوری سایر ویژگی‌ها
-                    const attributes = {};
-                    document.querySelectorAll('.attribute-select').forEach(select => {
-                        const attributeName = select.getAttribute('data-attribute-name');
-                        if (select.value && select.selectedIndex > 0) {
-                            attributes[attributeName] = select.value;
-                        }
-                    });
-
-                    const color = colorInput ? colorInput.value : null;
-                    const size = sizeInput ? sizeInput.value : null;
-
-                    // نمایش وضعیت بارگذاری
-                    const originalText = addToCartBtn.innerHTML;
-                    addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> در حال پردازش...';
-                    addToCartBtn.disabled = true;
-
-                    fetch('{{ route('cart.addToCartAjax') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                product_id: productId,
-                                quantity: parseInt(quantity),
-                                color: color,
-                                size: size,
-                                attributes: attributes
-                            })
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                // نمایش پیام موفقیت
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'موفقیت آمیز',
-                                    text: data.message,
-                                    showCancelButton: true,
-                                    confirmButtonText: 'ادامه خرید',
-                                    cancelButtonText: 'مشاهده سبد خرید',
-                                    confirmButtonColor: '#8e44ad',
-                                    cancelButtonColor: '#007bff',
-                                    showCloseButton: true
-                                }).then((result) => {
-                                    if (result.isDismissed || result.dismiss === 'cancel') {
-                                        window.location.href = '{{ route('cart.mycart') }}';
-                                    }
-                                });
-
-                                // به‌روزرسانی شمارنده سبد خرید
-                                updateCartCount(data.cart_count);
-
-                                // پخش صدای موفقیت (اختیاری)
-                                playSuccessSound();
-
-                            } else {
-                                // نمایش پیام خطا با جزئیات بیشتر
-                                let errorMessage = data.message;
-                                if (data.type === 'insufficient_stock' && data.available_stock) {
-                                    errorMessage += ` (موجودی: ${data.available_stock})`;
-                                } else if (data.type === 'insufficient_stock_with_cart') {
-                                    errorMessage +=
-                                        ` (موجودی: ${data.available_stock} - در سبد: ${data.current_in_cart})`;
-                                }
-
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'خطا',
-                                    text: errorMessage,
-                                    confirmButtonText: 'متوجه شدم',
-                                    confirmButtonColor: '#8e44ad'
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'خطا در ارتباط',
-                                text: 'خطایی در ارتباط با سرور رخ داد. لطفاً دوباره تلاش کنید.',
-                                confirmButtonText: 'باشه',
-                                confirmButtonColor: '#8e44ad'
-                            });
-                        })
-                        .finally(() => {
-                            // بازگشت به حالت عادی
-                            addToCartBtn.innerHTML = originalText;
-                            addToCartBtn.disabled = false;
-                        });
-                });
-            }
-
-            function updateCartCount(count) {
-                // به‌روزرسانی تمام المان‌های شمارنده سبد خرید
-                const cartBadges = document.querySelectorAll('#touka_cart_items_count, .cart-count, .cart-badge');
-                cartBadges.forEach(badge => {
-                    badge.textContent = count;
-                    badge.style.display = count > 0 ? 'inline' : 'none';
-                });
-
-                // افزودن انیمیشن به شمارنده
-                const cartIcons = document.querySelectorAll('.cart-icon, .bi-cart');
-                cartIcons.forEach(icon => {
-                    icon.classList.add('pulse-animation');
-                    setTimeout(() => {
-                        icon.classList.remove('pulse-animation');
-                    }, 1000);
-                });
-            }
-
-            // تابع برای پخش صدای موفقیت (اختیاری)
-            function playSuccessSound() {
-                // می‌توانید یک صدای موفقیت اضافه کنید
-                try {
-                    const audio = new Audio('/sounds/success.mp3');
-                    audio.volume = 0.3;
-                    audio.play().catch(e => console.log('Audio play failed:', e));
-                } catch (e) {
-                    console.log('Audio not supported');
-                }
-            }
-
-            // استایل برای اسپینر
-            const style = document.createElement('style');
-            style.textContent = `
-                .spinner {
-                    animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-                .pulse-animation {
-                    animation: pulse 0.5s ease-in-out;
-                }
-            `;
-            document.head.appendChild(style);
-
-
-            // Product card click effect
-            const productCards = document.querySelectorAll('.product-card');
-            productCards.forEach(card => {
-                card.addEventListener('click', function(e) {
-                    if (e.target.closest('.product-wishlist') || e.target.closest('.add-to-cart')) {
-                        return;
-                    }
-
-                    const effect = document.createElement('div');
-                    effect.className = 'click-effect';
-                    effect.style.width = '100px';
-                    effect.style.height = '100px';
-                    effect.style.left = e.offsetX - 50 + 'px';
-                    effect.style.top = e.offsetY - 50 + 'px';
-                    this.appendChild(effect);
-
-                    setTimeout(() => {
-                        effect.remove();
-                    }, 600);
-
-                    const productLink = this.querySelector('a.product-link');
-                    if (productLink) {
-                        setTimeout(() => {
-                            window.location.href = productLink.href;
-                        }, 300);
-                    }
-                });
-            });
         });
-    </script>
+    });
+
+    // Color
+    document.querySelectorAll('input[name="product-color"]').forEach(input => {
+        input.addEventListener('change', () => {
+            document.querySelectorAll('.color-option').forEach(l => l.classList.remove('active'));
+            const label = document.querySelector(`label[for="color-${input.value}"]`);
+            if (label) label.classList.add('active');
+            updateSelectionSummary();
+        });
+    });
+
+    // Attributes
+    document.querySelectorAll('.attribute-select').forEach(select => {
+        select.addEventListener('change', updateSelectionSummary);
+    });
+
+    // Quantity buttons
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('quantity-btn')) {
+            e.preventDefault();
+            if (e.target.textContent === '+') increaseQuantity();
+            else decreaseQuantity();
+        }
+    });
+
+    // Initial setup
+    updateSelectionSummary();
+    updateAvailabilityStatus();
+
+    // ========== UTILITIES ==========
+    function updateCartCount(count) {
+        document.querySelectorAll('#touka_cart_items_count, .cart-count, .cart-badge')
+            .forEach(badge => {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'inline' : 'none';
+            });
+    }
+
+    function playSuccessSound() {
+        try {
+            new Audio('/sounds/success.mp3').play().catch(() => {});
+        } catch (e) {}
+    }
+
+    // ========== STYLES ==========
+    const style = document.createElement('style');
+    style.textContent = `
+        .spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .stock-badge { margin-left: 10px; }
+        .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+    `;
+    document.head.appendChild(style);
+
+    // Zoom
+    document.getElementById('mainImage').addEventListener('click', function() {
+        zoomImage(this);
+    });
+});
+</script>
 @endsection

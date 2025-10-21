@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\api\PublicController;
-use App\Http\Controllers\AuthController; 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OTPController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Http\Controllers\SiteMapCpntroller;
@@ -51,8 +51,9 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::post('/api/add', 'addToCartAjax')->name('addToCartAjax');
         Route::get('/item-count', 'getItemCount')->name('itemCount');
         Route::get('/factor-status/{transaction}', 'FactorStatus')->name('factor-status');
+        Route::get('wishlist/add', 'wishlist')->name('wishlist.add');
     });
-
+    Route::get('wishlist/add', [CartController::class, 'wishlist'])->name('wishlist.add');
     Route::prefix('posts')->controller(PostController::class)->name('posts.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show/{slug}', 'show')->name('show');

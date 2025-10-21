@@ -26,11 +26,10 @@ class Product extends Model
         'stock' => 'integer',
     ];
 
-
     protected static function booted(): void
     {
         static::addGlobalScope('active', function (Builder $builder) {
-            $builder->where('status', true); // یا 1
+            $builder->where('status', true);
         });
     }
 
@@ -63,8 +62,78 @@ class Product extends Model
         return $this->belongsToMany(
             \App\Models\Tag::class,
             'tag_objects',
-            'object_id', // Foreign key on pivot table for Product
+            'object_id',
             'tag_id'
         );
     }
+
+    /** ✅ Add this missing relationship */
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function availableVariants()
+    {
+        return $this->hasMany(ProductVariant::class)->where('stock', '>', 0);
+    }
+
+    public function updateTotalStock()
+    {
+        $total_stock = $this->variants()->sum('stock');
+        $this->stock = $total_stock;
+        $this->save();
+    }
+
+       public function hasVariants(): bool
+    {
+        return $this->variants()->count() > 0;
+    }
+
+        public function getMinVariantPrice()
+    {
+        if (!$this->hasVariants()) {
+            return $this->price;
+        }
+
+        return $this->availableVariants()->min('price') ?? $this->price;
+    }
+
+    // متد کمکی برای گرفتن حداکثر قیمت واریانت‌ها
+    public function getMaxVariantPrice()
+    {
+        if (!$this->hasVariants()) {
+            return $this->price;
+        }
+
+        return $this->availableVariants()->max('price') ?? $this->price;
+    }
+
+
+        public function getMinVariantPriceAttribute()
+    {
+        if (!$this->hasAvailableVariants()) {
+            return $this->price;
+        }
+
+        return $this->availableVariants()->min('price') ?? $this->price;
+    }
+
+    /**
+     * گرفتن حداکثر قیمت واریانت‌ها
+     */
+    public function getMaxVariantPriceAttribute()
+    {
+        if (!$this->hasAvailableVariants()) {
+            return $this->price;
+        }
+
+        return $this->availableVariants()->max('price') ?? $this->price;
+    }
+
+    public function hasAvailableVariants(): bool
+{
+    return $this->variants()->where('stock', '>', 0)->count() > 0;
+}
+
 }
