@@ -818,17 +818,17 @@
                     <p class="lead">محصولاتی که ممکن است آنها را نیز بپسندید</p>
                 </div>
                 <div class="products-container">
-                    @foreach ($relatedProducts as $product)
+                    @foreach ($relatedProducts as $r_product)
                         <div class="product-card animate__animated animate__fadeInUp">
-                            <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
+                            <a href="{{ route('products.show', $r_product->slug) }}" class="product-link"></a>
                             <div class="product-badge">پرفروش</div>
                             <div class="product-img-container">
-                                <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
-                                    alt="{{ $product->name }}">
+                                <img src="{{ asset($r_product->firstMedia('main_image')->full_url) }}"
+                                    class="product-img" alt="{{ $r_product->name }}">
                             </div>
                             <div class="product-content">
-                                <span class="product-category">{{ $product->category->name }}</span>
-                                <h3 class="product-title">{{ $product->name }}</h3>
+                                <span class="product-category">{{ $r_product->category->name }}</span>
+                                <h3 class="product-title">{{ $r_product->name }}</h3>
                                 {{-- <p class="product-description">غذای کامل و مقوی مخصوص گربه های بالغ با طعم مرغ</p> --}}
 
                                 <div class="product-rating">
@@ -844,11 +844,11 @@
 
                                 <div class="product-price-container">
                                     <div class="product-price">
-                                        <span class="current-price">{{ number_format($product->price) }} تومان</span>
-                                        <span class="old-price">{{ number_format($product->price * 1.12) }} تومان</span>
+                                        <span class="current-price">{{ number_format($r_product->price) }} تومان</span>
+                                        <span class="old-price">{{ number_format($r_product->price * 1.12) }} تومان</span>
                                     </div>
                                     <div class="product-actions">
-                                        <a href="{{ route('products.show', $product->slug) }}" class="s-p-add-to-cart">
+                                        <a href="{{ route('products.show', $r_product->slug) }}" class="s-p-add-to-cart">
                                             <i class="bi bi-cart-plus"></i>
                                         </a>
                                     </div>
@@ -1037,13 +1037,17 @@
                     const attributes = {};
                     document.querySelectorAll('.attribute-select').forEach(select => {
                         const attributeName = select.getAttribute('data-attribute-name');
-                        attributes[attributeName] = select.value;
+                        if (select.value && select.selectedIndex > 0) {
+                            attributes[attributeName] = select.value;
+                        }
                     });
 
                     const color = colorInput ? colorInput.value : null;
                     const size = sizeInput ? sizeInput.value : null;
 
-                    addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> در حال پردازش...';
+                    // نمایش وضعیت بارگذاری
+                    const originalText = addToCartBtn.innerHTML;
+                    addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> در حال پردازش...';
                     addToCartBtn.disabled = true;
 
                     fetch('{{ route('cart.addToCartAjax') }}', {
@@ -1055,7 +1059,7 @@
                             },
                             body: JSON.stringify({
                                 product_id: productId,
-                                quantity: quantity,
+                                quantity: parseInt(quantity),
                                 color: color,
                                 size: size,
                                 attributes: attributes
@@ -1069,36 +1073,44 @@
                         })
                         .then(data => {
                             if (data.success) {
+                                // نمایش پیام موفقیت
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'موفقیت آمیز',
-                                    text: 'محصول با موفقیت به سبد خرید اضافه شد',
+                                    text: data.message,
                                     showCancelButton: true,
-                                    confirmButtonText: 'باشه',
-                                    cancelButtonText: 'برو به سبد خرید',
+                                    confirmButtonText: 'ادامه خرید',
+                                    cancelButtonText: 'مشاهده سبد خرید',
                                     confirmButtonColor: '#8e44ad',
-                                    cancelButtonColor: '#007bff'
+                                    cancelButtonColor: '#007bff',
+                                    showCloseButton: true
                                 }).then((result) => {
-                                    if (result.isDismissed) {
+                                    if (result.isDismissed || result.dismiss === 'cancel') {
                                         window.location.href = '{{ route('cart.mycart') }}';
                                     }
                                 });
 
-                                // Update cart count in navbar
-                                const cartBadge = document.getElementById('touka_cart_items_count');
-                                const cartCount = document.querySelector('.cart-count');
-                                if (cartBadge && data.cart_count !== undefined) {
-                                    cartBadge.textContent = data.cart_count;
-                                }
-                                if (cartCount && data.cart_count !== undefined) {
-                                    cartCount.textContent = data.cart_count;
-                                }
+                                // به‌روزرسانی شمارنده سبد خرید
+                                updateCartCount(data.cart_count);
+
+                                // پخش صدای موفقیت (اختیاری)
+                                playSuccessSound();
+
                             } else {
+                                // نمایش پیام خطا با جزئیات بیشتر
+                                let errorMessage = data.message;
+                                if (data.type === 'insufficient_stock' && data.available_stock) {
+                                    errorMessage += ` (موجودی: ${data.available_stock})`;
+                                } else if (data.type === 'insufficient_stock_with_cart') {
+                                    errorMessage +=
+                                        ` (موجودی: ${data.available_stock} - در سبد: ${data.current_in_cart})`;
+                                }
+
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'خطا',
-                                    text: data.message || 'خطایی در افزودن به سبد خرید رخ داد',
-                                    confirmButtonText: 'باشه',
+                                    text: errorMessage,
+                                    confirmButtonText: 'متوجه شدم',
                                     confirmButtonColor: '#8e44ad'
                                 });
                             }
@@ -1107,19 +1119,66 @@
                             console.error('Error:', error);
                             Swal.fire({
                                 icon: 'error',
-                                title: 'خطا',
-                                text: 'خطایی در ارتباط با سرور رخ داد',
+                                title: 'خطا در ارتباط',
+                                text: 'خطایی در ارتباط با سرور رخ داد. لطفاً دوباره تلاش کنید.',
                                 confirmButtonText: 'باشه',
                                 confirmButtonColor: '#8e44ad'
                             });
                         })
                         .finally(() => {
-                            addToCartBtn.innerHTML =
-                                '<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید';
+                            // بازگشت به حالت عادی
+                            addToCartBtn.innerHTML = originalText;
                             addToCartBtn.disabled = false;
                         });
                 });
             }
+
+            function updateCartCount(count) {
+                // به‌روزرسانی تمام المان‌های شمارنده سبد خرید
+                const cartBadges = document.querySelectorAll('#touka_cart_items_count, .cart-count, .cart-badge');
+                cartBadges.forEach(badge => {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'inline' : 'none';
+                });
+
+                // افزودن انیمیشن به شمارنده
+                const cartIcons = document.querySelectorAll('.cart-icon, .bi-cart');
+                cartIcons.forEach(icon => {
+                    icon.classList.add('pulse-animation');
+                    setTimeout(() => {
+                        icon.classList.remove('pulse-animation');
+                    }, 1000);
+                });
+            }
+
+            // تابع برای پخش صدای موفقیت (اختیاری)
+            function playSuccessSound() {
+                // می‌توانید یک صدای موفقیت اضافه کنید
+                try {
+                    const audio = new Audio('/sounds/success.mp3');
+                    audio.volume = 0.3;
+                    audio.play().catch(e => console.log('Audio play failed:', e));
+                } catch (e) {
+                    console.log('Audio not supported');
+                }
+            }
+
+            // استایل برای اسپینر
+            const style = document.createElement('style');
+            style.textContent = `
+                .spinner {
+                    animation: spin 1s linear infinite;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .pulse-animation {
+                    animation: pulse 0.5s ease-in-out;
+                }
+            `;
+            document.head.appendChild(style);
+
 
             // Product card click effect
             const productCards = document.querySelectorAll('.product-card');
