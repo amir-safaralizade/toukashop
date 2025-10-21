@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Page;
+use App\Models\ProductVariant;
 use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 
@@ -139,6 +140,36 @@ class ProductController extends Controller
 
     public function tests()
     {
+
+        // پیدا کردن محصولاتی که صفت دارند اما واریانت ندارند
+        $products = Product::whereDoesntHave('variants')
+            ->whereHas('attributes')
+            ->get();
+
+        if ($products->isEmpty()) {
+            return;
+        }
+        foreach ($products as $product) {
+            // ایجاد واریانت جدید با موجودی ۰
+            $variant = new ProductVariant([
+                'product_id' => $product->id,
+                'stock' => 0,
+                
+                'sku' => $product->slug . '-default', // می‌تونی SKU رو به دلخواه تغییر بدی یا تولید کنی
+            ]);
+            $variant->save();
+
+            // کپی صفت‌ها و مقادیرشون از محصول به واریانت
+            foreach ($product->attributes as $attribute) {
+                $value_id = $attribute->pivot->attribute_value_id;
+                $variant->attributes()->attach($attribute->id, ['attribute_value_id' => $value_id]);
+            }
+
+            // آپدیت مجموع موجودی محصول (بر اساس متد موجود در مدل)
+            $product->updateTotalStock();
+        }
+
+
         return;
     }
 
