@@ -85,12 +85,12 @@ class Product extends Model
         $this->save();
     }
 
-       public function hasVariants(): bool
+    public function hasVariants(): bool
     {
         return $this->variants()->count() > 0;
     }
 
-        public function getMinVariantPrice()
+    public function getMinVariantPrice()
     {
         if (!$this->hasVariants()) {
             return $this->price;
@@ -110,7 +110,7 @@ class Product extends Model
     }
 
 
-        public function getMinVariantPriceAttribute()
+    public function getMinVariantPriceAttribute()
     {
         if (!$this->hasAvailableVariants()) {
             return $this->price;
@@ -132,8 +132,13 @@ class Product extends Model
     }
 
     public function hasAvailableVariants(): bool
-{
-    return $this->variants()->where('stock', '>', 0)->count() > 0;
-}
+    {
+        return $this->variants()->where('stock', '>', 0)->count() > 0;
+    }
 
+
+    public function technicalDetails()
+    {
+        return $this->hasMany(TechnicalDetail::class);
+    }
 }

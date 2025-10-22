@@ -770,41 +770,18 @@
                     <div class="tab-pane fade show active" id="description" role="tabpanel">
                         <h4>{{ $product->name }}</h4>
                         <p>{{ $product->description }}</p>
-                        <p>مزایای محصول:</p>
-                        <ul>
-                            <li>حاوی اسیدهای چرب امگا ۳ و ۶ برای سلامت پوست و مو</li>
-                            <li>تقویت سیستم ایمنی بدن با ویتامین‌های E و C</li>
-                            <li>پیشگیری از تشکیل گلوله مو در دستگاه گوارش</li>
-                            <li>حفظ سلامت دندان‌ها و لثه‌ها</li>
-                            <li>مناسب برای گربه‌های بالغ از تمام نژادها</li>
-                        </ul>
                     </div>
                     <div class="tab-pane fade" id="specs" role="tabpanel">
                         <h4>مشخصات فنی</h4>
                         <div class="table-responsive">
                             <table class="table">
                                 <tbody>
-                                    <tr>
-                                        <th>نوع محصول</th>
-                                        <td>{{ $product->type ?? 'غذای خشک گربه' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>گروه سنی</th>
-                                        <td>{{ $product->age_group ?? 'گربه‌های بالغ (۱ سال به بالا)' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>وزن بسته‌بندی</th>
-                                        <td>{{ $product->weight ?? '۲ کیلوگرم' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>ترکیبات اصلی</th>
-                                        <td>{{ $product->ingredients ?? 'ماهی تونا (۴۵٪)، برنج، مخمر، روغن ماهی، ویتامین‌ها و مواد معدنی' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>کشور سازنده</th>
-                                        <td>{{ $product->country ?? 'آلمان' }}</td>
-                                    </tr>
+                                    @foreach ($product->technicalDetails as $t_item)
+                                        <tr>
+                                            <th>{{ $t_item->title }}</th>
+                                            <td>{{ $t_item->value }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -867,376 +844,395 @@
 @endsection
 
 @section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ========== GLOBAL VARIABLES ==========
-    const variantStockData = @json($variantStockData);
-    console.log('Variant Stock Data:', variantStockData);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ========== GLOBAL VARIABLES ==========
+            const variantStockData = @json($variantStockData);
+            console.log('Variant Stock Data:', variantStockData);
 
-    // ========== IMAGE GALLERY ==========
-    function changeImage(thumb, newSrc) {
-        const mainImage = document.getElementById('mainImage');
-        mainImage.src = newSrc;
-        document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
-        thumb.classList.add('active');
-        mainImage.style.transform = 'scale(1)';
-    }
-
-    function zoomImage(img) {
-        if (img.classList.contains('zoomed')) {
-            img.classList.remove('zoomed');
-            document.body.style.overflow = 'auto';
-        } else {
-            img.classList.add('zoomed');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    // ========== QUANTITY SELECTOR ==========
-    function increaseQuantity() {
-        const qtyInput = document.getElementById('quantity');
-        const maxQty = getMaxAvailableQuantity();
-        let newVal = parseInt(qtyInput.value) + 1;
-        qtyInput.value = newVal > maxQty ? maxQty : newVal;
-    }
-
-    function decreaseQuantity() {
-        const qtyInput = document.getElementById('quantity');
-        if (parseInt(qtyInput.value) > 1) {
-            qtyInput.value = parseInt(qtyInput.value) - 1;
-        }
-    }
-
-    // ========== SELECTION SUMMARY ==========
-    function updateSelectionSummary() {
-        const sizeInput = document.querySelector('input[name="product-size"]:checked');
-        const colorInput = document.querySelector('input[name="product-color"]:checked');
-        const attributeSelects = document.querySelectorAll('.attribute-select');
-
-        const summaryElement = document.getElementById('selectionSummary');
-        let hasSelection = false;
-
-        // Size
-        if (sizeInput) {
-            const sizeLabel = document.querySelector(`label[for="size-${sizeInput.value}"]`);
-            if (sizeLabel) {
-                document.getElementById('selectedSizeValue').textContent = sizeLabel.textContent;
-                hasSelection = true;
+            // ========== IMAGE GALLERY ==========
+            function changeImage(thumb, newSrc) {
+                const mainImage = document.getElementById('mainImage');
+                mainImage.src = newSrc;
+                document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
+                thumb.classList.add('active');
+                mainImage.style.transform = 'scale(1)';
             }
-        }
 
-        // Color
-        if (colorInput) {
-            const colorLabel = document.querySelector(`label[for="color-${colorInput.value}"]`);
-            if (colorLabel) {
-                const colorName = colorLabel.getAttribute('data-color-name');
-                document.getElementById('selectedColorValue').textContent = colorName;
-                document.getElementById('selectedColorPreview').style.backgroundColor = colorName;
-                hasSelection = true;
-            }
-        }
-
-        // Other attributes
-        let attributeSelected = false;
-        attributeSelects.forEach(select => {
-            if (select.value && select.selectedIndex > 0) {
-                const attributeName = select.getAttribute('data-attribute-name');
-                const selectedOption = select.options[select.selectedIndex];
-                document.getElementById('selectedAttributeLabel').textContent = attributeName + ':';
-                document.getElementById('selectedAttributeValue').textContent = selectedOption.textContent;
-                document.getElementById('selectedAttributeItem').style.display = 'flex';
-                attributeSelected = true;
-                hasSelection = true;
-            }
-        });
-
-        if (!attributeSelected) {
-            document.getElementById('selectedAttributeItem').style.display = 'none';
-        }
-
-        summaryElement.style.display = hasSelection ? 'block' : 'none';
-        updateAvailabilityStatus();
-    }
-
-    // ========== AVAILABILITY CHECK ==========
-    function getCurrentAttributes() {
-        const attributes = {};
-        
-        // Size
-        const sizeInput = document.querySelector('input[name="product-size"]:checked');
-        if (sizeInput) attributes.size = sizeInput.value;
-        
-        // Color
-        const colorInput = document.querySelector('input[name="product-color"]:checked');
-        if (colorInput) attributes.color = colorInput.value;
-        
-        // Other attributes
-        document.querySelectorAll('.attribute-select').forEach(select => {
-            if (select.value && select.selectedIndex > 0) {
-                const attributeName = select.getAttribute('data-attribute-name');
-                attributes[attributeName] = select.value;
-            }
-        });
-        
-        return attributes;
-    }
-
-    function findMatchingVariant(attributes) {
-        return variantStockData.find(variant => {
-            let match = true;
-            Object.keys(attributes).forEach(attrKey => {
-                if (variant.attributes[attrKey] !== parseInt(attributes[attrKey])) {
-                    match = false;
+            function zoomImage(img) {
+                if (img.classList.contains('zoomed')) {
+                    img.classList.remove('zoomed');
+                    document.body.style.overflow = 'auto';
+                } else {
+                    img.classList.add('zoomed');
+                    document.body.style.overflow = 'hidden';
                 }
-            });
-            return match && variant.stock > 0;
-        });
-    }
-
-    function getMaxAvailableQuantity() {
-        const attributes = getCurrentAttributes();
-        const variant = findMatchingVariant(attributes);
-        return variant ? variant.stock : 0;
-    }
-
-    function updateAvailabilityStatus() {
-        const attributes = getCurrentAttributes();
-        const variant = findMatchingVariant(attributes);
-        const addToCartBtn = document.querySelector('.s-p-add-to-cart');
-        const quantityInput = document.getElementById('quantity');
-        
-        if (variant && variant.stock > 0) {
-            // Available
-            addToCartBtn.innerHTML = `<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید`;
-            addToCartBtn.className = 's-p-add-to-cart pulse-animation btn-success';
-            addToCartBtn.disabled = false;
-            quantityInput.max = variant.stock;
-            
-            // Show stock info
-            const stockBadge = document.querySelector('.stock-badge');
-            if (stockBadge) {
-                stockBadge.textContent = `موجودی: ${variant.stock}`;
-                stockBadge.className = 'badge bg-success stock-badge';
             }
-        } else {
-            // Unavailable
-            let btnText = 'ترکیب ناموجود';
-            if (Object.keys(attributes).length === 0 && variantStockData.length === 0) {
-                btnText = 'ناموجود';
-            }
-            
-            addToCartBtn.innerHTML = `<i class="bi bi-cart-x me-2"></i>${btnText}`;
-            addToCartBtn.className = 's-p-add-to-cart btn-danger';
-            addToCartBtn.disabled = true;
-            quantityInput.max = 0;
-            
-            // Show stock info
-            const stockBadge = document.querySelector('.stock-badge');
-            if (stockBadge) {
-                stockBadge.textContent = 'ناموجود';
-                stockBadge.className = 'badge bg-danger stock-badge';
-            }
-        }
-    }
 
-    // ========== ADD TO CART ==========
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.s-p-add-to-cart') && !e.target.closest('.s-p-add-to-cart').disabled) {
-            e.preventDefault();
-            const addToCartBtn = e.target.closest('.s-p-add-to-cart');
-            handleAddToCart(addToCartBtn);
-        }
-    });
-
-    function handleAddToCart(addToCartBtn) {
-        const productId = addToCartBtn.getAttribute('data-product-id');
-        const quantity = parseInt(document.getElementById('quantity').value);
-        const attributes = getCurrentAttributes();
-
-        // ========== LOADING ==========
-        const originalText = addToCartBtn.innerHTML;
-        addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner me-2"></i>در حال افزودن...';
-        addToCartBtn.disabled = true;
-
-        // ========== AJAX ==========
-        fetch('{{ route('cart.addToCartAjax') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                product_id: parseInt(productId),
-                quantity: quantity,
-                size: attributes.size || null,
-                color: attributes.color || null,
-                attributes: Object.keys(attributes).filter(key => !['size', 'color'].includes(key))
-                    .reduce((obj, key) => { obj[key] = attributes[key]; return obj; }, {})
-            })
-        })
-        .then(response => {
-            if (response.status === 422) {
-                return response.json().then(data => { throw { status: 422, data }; });
+            // ========== QUANTITY SELECTOR ==========
+            function increaseQuantity() {
+                const qtyInput = document.getElementById('quantity');
+                const maxQty = getMaxAvailableQuantity();
+                let newVal = parseInt(qtyInput.value) + 1;
+                qtyInput.value = newVal > maxQty ? maxQty : newVal;
             }
-            if (!response.ok) {
-                throw { status: response.status, message: `خطای سرور: ${response.status}` };
+
+            function decreaseQuantity() {
+                const qtyInput = document.getElementById('quantity');
+                if (parseInt(qtyInput.value) > 1) {
+                    qtyInput.value = parseInt(qtyInput.value) - 1;
+                }
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'موفق!',
-                    text: data.message,
-                    showCancelButton: true,
-                    confirmButtonText: 'ادامه خرید',
-                    cancelButtonText: 'مشاهده سبد',
-                    confirmButtonColor: '#28a745',
-                    cancelButtonColor: '#007bff'
-                }).then((result) => {
-                    if (result.isDismissed || result.dismiss === 'cancel') {
-                        window.location.href = '{{ route('cart.mycart') }}';
+
+            // ========== SELECTION SUMMARY ==========
+            function updateSelectionSummary() {
+                const sizeInput = document.querySelector('input[name="product-size"]:checked');
+                const colorInput = document.querySelector('input[name="product-color"]:checked');
+                const attributeSelects = document.querySelectorAll('.attribute-select');
+
+                const summaryElement = document.getElementById('selectionSummary');
+                let hasSelection = false;
+
+                // Size
+                if (sizeInput) {
+                    const sizeLabel = document.querySelector(`label[for="size-${sizeInput.value}"]`);
+                    if (sizeLabel) {
+                        document.getElementById('selectedSizeValue').textContent = sizeLabel.textContent;
+                        hasSelection = true;
+                    }
+                }
+
+                // Color
+                if (colorInput) {
+                    const colorLabel = document.querySelector(`label[for="color-${colorInput.value}"]`);
+                    if (colorLabel) {
+                        const colorName = colorLabel.getAttribute('data-color-name');
+                        document.getElementById('selectedColorValue').textContent = colorName;
+                        document.getElementById('selectedColorPreview').style.backgroundColor = colorName;
+                        hasSelection = true;
+                    }
+                }
+
+                // Other attributes
+                let attributeSelected = false;
+                attributeSelects.forEach(select => {
+                    if (select.value && select.selectedIndex > 0) {
+                        const attributeName = select.getAttribute('data-attribute-name');
+                        const selectedOption = select.options[select.selectedIndex];
+                        document.getElementById('selectedAttributeLabel').textContent = attributeName + ':';
+                        document.getElementById('selectedAttributeValue').textContent = selectedOption
+                            .textContent;
+                        document.getElementById('selectedAttributeItem').style.display = 'flex';
+                        attributeSelected = true;
+                        hasSelection = true;
                     }
                 });
-                updateCartCount(data.cart_count);
-                playSuccessSound();
-            }
-        })
-        .catch(error => {
-            console.error('Add to cart error:', error);
-            
-            let title = 'خطا', errorMessage = 'خطای نامشخص', icon = 'error';
 
-            if (error.status === 422 && error.data) {
-                switch(error.data.type) {
-                    case 'combination_unavailable':
-                    case 'variant_not_found':
-                        title = 'ترکیب ناموجود';
-                        errorMessage = 'ترکیب انتخابی موجود نمی‌باشد.';
-                        icon = 'warning';
-                        highlightInvalidSelection();
-                        break;
-                    case 'insufficient_stock':
-                        title = 'موجودی کم';
-                        errorMessage = `تعداد موجود: ${error.data.available_stock}`;
-                        icon = 'warning';
-                        break;
-                    case 'insufficient_stock_with_cart':
-                        title = 'موجودی کم';
-                        errorMessage = `موجودی: ${error.data.available_stock} - در سبد: ${error.data.current_in_cart}`;
-                        icon = 'warning';
-                        break;
-                    default:
-                        errorMessage = error.data.message || 'خطا در افزودن';
+                if (!attributeSelected) {
+                    document.getElementById('selectedAttributeItem').style.display = 'none';
                 }
-            } else if (error.status >= 500) {
-                title = 'خطای سرور';
-                errorMessage = 'لطفاً دوباره تلاش کنید.';
-            } else {
-                errorMessage = 'مشکل در اتصال به سرور';
+
+                summaryElement.style.display = hasSelection ? 'block' : 'none';
+                updateAvailabilityStatus();
             }
 
-            Swal.fire({
-                icon: icon,
-                title: title,
-                html: errorMessage,
-                confirmButtonText: 'متوجه شدم',
-                confirmButtonColor: '#dc3545'
+            // ========== AVAILABILITY CHECK ==========
+            function getCurrentAttributes() {
+                const attributes = {};
+
+                // Size
+                const sizeInput = document.querySelector('input[name="product-size"]:checked');
+                if (sizeInput) attributes.size = sizeInput.value;
+
+                // Color
+                const colorInput = document.querySelector('input[name="product-color"]:checked');
+                if (colorInput) attributes.color = colorInput.value;
+
+                // Other attributes
+                document.querySelectorAll('.attribute-select').forEach(select => {
+                    if (select.value && select.selectedIndex > 0) {
+                        const attributeName = select.getAttribute('data-attribute-name');
+                        attributes[attributeName] = select.value;
+                    }
+                });
+
+                return attributes;
+            }
+
+            function findMatchingVariant(attributes) {
+                return variantStockData.find(variant => {
+                    let match = true;
+                    Object.keys(attributes).forEach(attrKey => {
+                        if (variant.attributes[attrKey] !== parseInt(attributes[attrKey])) {
+                            match = false;
+                        }
+                    });
+                    return match && variant.stock > 0;
+                });
+            }
+
+            function getMaxAvailableQuantity() {
+                const attributes = getCurrentAttributes();
+                const variant = findMatchingVariant(attributes);
+                return variant ? variant.stock : 0;
+            }
+
+            function updateAvailabilityStatus() {
+                const attributes = getCurrentAttributes();
+                const variant = findMatchingVariant(attributes);
+                const addToCartBtn = document.querySelector('.s-p-add-to-cart');
+                const quantityInput = document.getElementById('quantity');
+
+                if (variant && variant.stock > 0) {
+                    // Available
+                    addToCartBtn.innerHTML = `<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید`;
+                    addToCartBtn.className = 's-p-add-to-cart pulse-animation btn-success';
+                    addToCartBtn.disabled = false;
+                    quantityInput.max = variant.stock;
+
+                    // Show stock info
+                    const stockBadge = document.querySelector('.stock-badge');
+                    if (stockBadge) {
+                        stockBadge.textContent = `موجودی: ${variant.stock}`;
+                        stockBadge.className = 'badge bg-success stock-badge';
+                    }
+                } else {
+                    // Unavailable
+                    let btnText = 'ترکیب ناموجود';
+                    if (Object.keys(attributes).length === 0 && variantStockData.length === 0) {
+                        btnText = 'ناموجود';
+                    }
+
+                    addToCartBtn.innerHTML = `<i class="bi bi-cart-x me-2"></i>${btnText}`;
+                    addToCartBtn.className = 's-p-add-to-cart btn-danger';
+                    addToCartBtn.disabled = true;
+                    quantityInput.max = 0;
+
+                    // Show stock info
+                    const stockBadge = document.querySelector('.stock-badge');
+                    if (stockBadge) {
+                        stockBadge.textContent = 'ناموجود';
+                        stockBadge.className = 'badge bg-danger stock-badge';
+                    }
+                }
+            }
+
+            // ========== ADD TO CART ==========
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.s-p-add-to-cart') && !e.target.closest('.s-p-add-to-cart')
+                    .disabled) {
+                    e.preventDefault();
+                    const addToCartBtn = e.target.closest('.s-p-add-to-cart');
+                    handleAddToCart(addToCartBtn);
+                }
             });
-        })
-        .finally(() => {
+
+            function handleAddToCart(addToCartBtn) {
+                const productId = addToCartBtn.getAttribute('data-product-id');
+                const quantity = parseInt(document.getElementById('quantity').value);
+                const attributes = getCurrentAttributes();
+
+                // ========== LOADING ==========
+                const originalText = addToCartBtn.innerHTML;
+                addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner me-2"></i>در حال افزودن...';
+                addToCartBtn.disabled = true;
+
+                // ========== AJAX ==========
+                fetch('{{ route('cart.addToCartAjax') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            product_id: parseInt(productId),
+                            quantity: quantity,
+                            size: attributes.size || null,
+                            color: attributes.color || null,
+                            attributes: Object.keys(attributes).filter(key => !['size', 'color']
+                                    .includes(key))
+                                .reduce((obj, key) => {
+                                    obj[key] = attributes[key];
+                                    return obj;
+                                }, {})
+                        })
+                    })
+                    .then(response => {
+                        if (response.status === 422) {
+                            return response.json().then(data => {
+                                throw {
+                                    status: 422,
+                                    data
+                                };
+                            });
+                        }
+                        if (!response.ok) {
+                            throw {
+                                status: response.status,
+                                message: `خطای سرور: ${response.status}`
+                            };
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'موفق!',
+                                text: data.message,
+                                showCancelButton: true,
+                                confirmButtonText: 'ادامه خرید',
+                                cancelButtonText: 'مشاهده سبد',
+                                confirmButtonColor: '#28a745',
+                                cancelButtonColor: '#007bff'
+                            }).then((result) => {
+                                if (result.isDismissed || result.dismiss === 'cancel') {
+                                    window.location.href = '{{ route('cart.mycart') }}';
+                                }
+                            });
+                            updateCartCount(data.cart_count);
+                            playSuccessSound();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Add to cart error:', error);
+
+                        let title = 'خطا',
+                            errorMessage = 'خطای نامشخص',
+                            icon = 'error';
+
+                        if (error.status === 422 && error.data) {
+                            switch (error.data.type) {
+                                case 'combination_unavailable':
+                                case 'variant_not_found':
+                                    title = 'ترکیب ناموجود';
+                                    errorMessage = 'ترکیب انتخابی موجود نمی‌باشد.';
+                                    icon = 'warning';
+                                    highlightInvalidSelection();
+                                    break;
+                                case 'insufficient_stock':
+                                    title = 'موجودی کم';
+                                    errorMessage = `تعداد موجود: ${error.data.available_stock}`;
+                                    icon = 'warning';
+                                    break;
+                                case 'insufficient_stock_with_cart':
+                                    title = 'موجودی کم';
+                                    errorMessage =
+                                        `موجودی: ${error.data.available_stock} - در سبد: ${error.data.current_in_cart}`;
+                                    icon = 'warning';
+                                    break;
+                                default:
+                                    errorMessage = error.data.message || 'خطا در افزودن';
+                            }
+                        } else if (error.status >= 500) {
+                            title = 'خطای سرور';
+                            errorMessage = 'لطفاً دوباره تلاش کنید.';
+                        } else {
+                            errorMessage = 'مشکل در اتصال به سرور';
+                        }
+
+                        Swal.fire({
+                            icon: icon,
+                            title: title,
+                            html: errorMessage,
+                            confirmButtonText: 'متوجه شدم',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    })
+                    .finally(() => {
+                        updateAvailabilityStatus();
+                    });
+            }
+
+            // ========== HIGHLIGHT INVALID ==========
+            function highlightInvalidSelection() {
+                ['size', 'color'].forEach(type => {
+                    const input = document.querySelector(`input[name="product-${type}"]:checked`);
+                    if (input) {
+                        const label = document.querySelector(`label[for="${type}-${input.value}"]`);
+                        if (label) {
+                            label.style.borderColor = '#dc3545';
+                            label.style.boxShadow = '0 0 0 2px #dc3545';
+                            setTimeout(() => {
+                                label.style.borderColor = '';
+                                label.style.boxShadow = '';
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
+            // ========== EVENT LISTENERS ==========
+            // Size
+            document.querySelectorAll('input[name="product-size"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    document.querySelectorAll('.size-option').forEach(l => l.classList.remove(
+                        'active'));
+                    const label = document.querySelector(`label[for="size-${input.value}"]`);
+                    if (label) label.classList.add('active');
+                    updateSelectionSummary();
+                });
+            });
+
+            // Color
+            document.querySelectorAll('input[name="product-color"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    document.querySelectorAll('.color-option').forEach(l => l.classList.remove(
+                        'active'));
+                    const label = document.querySelector(`label[for="color-${input.value}"]`);
+                    if (label) label.classList.add('active');
+                    updateSelectionSummary();
+                });
+            });
+
+            // Attributes
+            document.querySelectorAll('.attribute-select').forEach(select => {
+                select.addEventListener('change', updateSelectionSummary);
+            });
+
+            // Quantity buttons
+            document.addEventListener('click', e => {
+                if (e.target.classList.contains('quantity-btn')) {
+                    e.preventDefault();
+                    if (e.target.textContent === '+') increaseQuantity();
+                    else decreaseQuantity();
+                }
+            });
+
+            // Initial setup
+            updateSelectionSummary();
             updateAvailabilityStatus();
-        });
-    }
 
-    // ========== HIGHLIGHT INVALID ==========
-    function highlightInvalidSelection() {
-        ['size', 'color'].forEach(type => {
-            const input = document.querySelector(`input[name="product-${type}"]:checked`);
-            if (input) {
-                const label = document.querySelector(`label[for="${type}-${input.value}"]`);
-                if (label) {
-                    label.style.borderColor = '#dc3545';
-                    label.style.boxShadow = '0 0 0 2px #dc3545';
-                    setTimeout(() => {
-                        label.style.borderColor = '';
-                        label.style.boxShadow = '';
-                    }, 3000);
-                }
+            // ========== UTILITIES ==========
+            function updateCartCount(count) {
+                document.querySelectorAll('#touka_cart_items_count, .cart-count, .cart-badge')
+                    .forEach(badge => {
+                        badge.textContent = count;
+                        badge.style.display = count > 0 ? 'inline' : 'none';
+                    });
             }
-        });
-    }
 
-    // ========== EVENT LISTENERS ==========
-    // Size
-    document.querySelectorAll('input[name="product-size"]').forEach(input => {
-        input.addEventListener('change', () => {
-            document.querySelectorAll('.size-option').forEach(l => l.classList.remove('active'));
-            const label = document.querySelector(`label[for="size-${input.value}"]`);
-            if (label) label.classList.add('active');
-            updateSelectionSummary();
-        });
-    });
+            function playSuccessSound() {
+                try {
+                    new Audio('/sounds/success.mp3').play().catch(() => {});
+                } catch (e) {}
+            }
 
-    // Color
-    document.querySelectorAll('input[name="product-color"]').forEach(input => {
-        input.addEventListener('change', () => {
-            document.querySelectorAll('.color-option').forEach(l => l.classList.remove('active'));
-            const label = document.querySelector(`label[for="color-${input.value}"]`);
-            if (label) label.classList.add('active');
-            updateSelectionSummary();
-        });
-    });
-
-    // Attributes
-    document.querySelectorAll('.attribute-select').forEach(select => {
-        select.addEventListener('change', updateSelectionSummary);
-    });
-
-    // Quantity buttons
-    document.addEventListener('click', e => {
-        if (e.target.classList.contains('quantity-btn')) {
-            e.preventDefault();
-            if (e.target.textContent === '+') increaseQuantity();
-            else decreaseQuantity();
-        }
-    });
-
-    // Initial setup
-    updateSelectionSummary();
-    updateAvailabilityStatus();
-
-    // ========== UTILITIES ==========
-    function updateCartCount(count) {
-        document.querySelectorAll('#touka_cart_items_count, .cart-count, .cart-badge')
-            .forEach(badge => {
-                badge.textContent = count;
-                badge.style.display = count > 0 ? 'inline' : 'none';
-            });
-    }
-
-    function playSuccessSound() {
-        try {
-            new Audio('/sounds/success.mp3').play().catch(() => {});
-        } catch (e) {}
-    }
-
-    // ========== STYLES ==========
-    const style = document.createElement('style');
-    style.textContent = `
+            // ========== STYLES ==========
+            const style = document.createElement('style');
+            style.textContent = `
         .spinner { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .stock-badge { margin-left: 10px; }
         .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
     `;
-    document.head.appendChild(style);
+            document.head.appendChild(style);
 
-    // Zoom
-    document.getElementById('mainImage').addEventListener('click', function() {
-        zoomImage(this);
-    });
-});
-</script>
+            // Zoom
+            document.getElementById('mainImage').addEventListener('click', function() {
+                zoomImage(this);
+            });
+        });
+    </script>
 @endsection

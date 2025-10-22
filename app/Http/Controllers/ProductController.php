@@ -154,7 +154,7 @@ class ProductController extends Controller
             $variant = new ProductVariant([
                 'product_id' => $product->id,
                 'stock' => 0,
-                
+
                 'sku' => $product->slug . '-default', // می‌تونی SKU رو به دلخواه تغییر بدی یا تولید کنی
             ]);
             $variant->save();
