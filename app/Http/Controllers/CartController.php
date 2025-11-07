@@ -45,159 +45,165 @@ class CartController extends Controller
             $order = $this->orderService->getCurrentCart(true);
         }
 
+        $post_cost = 100000;
+        if ($order) {
+            foreach ($order->items as $item) {
+                $post_cost += $item->product->transportation_unit * 10000;
+            }
+        }
+
         $provinces = Province::all();
-        return view('site.pages.cart', compact('order', 'provinces', 'is_online_pay_active'));
+        return view('site.pages.cart', compact('order', 'provinces', 'is_online_pay_active' , 'post_cost'));
     }
 
 
-public function addToCartAjax(Request $request)
-{
-    try {
-        Log::info('=== addToCartAjax START ===', $request->all());
+    public function addToCartAjax(Request $request)
+    {
+        try {
+            Log::info('=== addToCartAjax START ===', $request->all());
 
-        // ========== VALIDATION ==========
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'nullable|integer|min:1',
-            'color' => 'nullable|exists:attribute_values,id',
-            'size' => 'nullable|exists:attribute_values,id',
-            'attributes' => 'nullable|array',
-        ]);
-
-        $product = Product::findOrFail($request->product_id);
-        $order = $this->orderService->getCurrentCart(true);
-        $quantity = $request->input('quantity', 1);
-
-        // ========== COLLECT ATTRIBUTES ==========
-        $attributes = [];
-
-        // Color
-        if ($request->filled('color')) {
-            $colorAttr = AttributeValue::find($request->color);
-            if ($colorAttr) $attributes[$colorAttr->attribute_id] = $request->color;
-        }
-        
-        // Size
-        if ($request->filled('size')) {
-            $sizeAttr = AttributeValue::find($request->size);
-            if ($sizeAttr) $attributes[$sizeAttr->attribute_id] = $request->size;
-        }
-
-        // Other attributes
-        if ($request->filled('attributes')) {
-            foreach ($request->attributes as $attributeValueId) {
-                if (!empty($attributeValueId)) {
-                    $attrValue = AttributeValue::find($attributeValueId);
-                    if ($attrValue) $attributes[$attrValue->attribute_id] = $attributeValueId;
-                }
-            }
-        }
-
-        // ========== FIND VARIANT ==========
-        $variant = null;
-        
-        if (!empty($attributes)) {
-            // Find variant with exact attributes match
-            $variantQuery = DB::table('product_variant_attributes')
-                ->select('product_variant_id')
-                ->whereIn('product_variant_id', function($q) use ($product) {
-                    $q->select('id')->from('product_variants')->where('product_id', $product->id);
-                });
-
-            foreach ($attributes as $attrId => $attrValueId) {
-                $variantQuery->where('attribute_id', $attrId)->where('attribute_value_id', $attrValueId);
-            }
-
-            $variantQuery->groupBy('product_variant_id')
-                ->havingRaw('COUNT(*) = ?', [count($attributes)]);
-
-            $variantIds = $variantQuery->pluck('product_variant_id');
-            $variant = ProductVariant::whereIn('id', $variantIds)->first();
-            
-            if (!$variant) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'ترکیب انتخاب شده موجود نمی‌باشد.',
-                    'type' => 'combination_unavailable'
-                ], 422);
-            }
-        } else {
-            // Default variant (no attributes required)
-            $variant = ProductVariant::where('product_id', $product->id)
-                ->whereDoesntHave('attributeValues')
-                ->first() ?: ProductVariant::where('product_id', $product->id)->first();
-                
-            if (!$variant) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'محصول موجود نمی‌باشد.',
-                    'type' => 'no_default_variant'
-                ], 422);
-            }
-        }
-
-        // ========== STOCK VALIDATION ==========
-        $totalQuantity = $quantity;
-        $existingItem = $order->items()->where('product_variant_id', $variant->id)->first();
-        if ($existingItem) $totalQuantity += $existingItem->quantity;
-
-        if ($variant->stock < $totalQuantity) {
-            return response()->json([
-                'success' => false,
-                'type' => $existingItem ? 'insufficient_stock_with_cart' : 'insufficient_stock',
-                'message' => $existingItem 
-                    ? "موجودی کافی نیست (در سبد: {$existingItem->quantity})"
-                    : 'موجودی کافی نیست',
-                'available_stock' => $variant->stock,
-                'current_in_cart' => $existingItem->quantity ?? 0
-            ], 422);
-        }
-
-        // ========== SAVE TO CART ==========
-        if ($existingItem) {
-            $existingItem->quantity = $totalQuantity;
-            $existingItem->total_price = $totalQuantity * $existingItem->unit_price;
-            $existingItem->save();
-        } else {
-            $item = $order->items()->create([
-                'product_id' => $product->id,
-                'product_variant_id' => $variant->id,
-                'quantity' => $quantity,
-                'unit_price' => $variant->price ?? $product->price,
-                'total_price' => ($variant->price ?? $product->price) * $quantity,
+            // ========== VALIDATION ==========
+            $request->validate([
+                'product_id' => 'required|exists:products,id',
+                'quantity' => 'nullable|integer|min:1',
+                'color' => 'nullable|exists:attribute_values,id',
+                'size' => 'nullable|exists:attribute_values,id',
+                'attributes' => 'nullable|array',
             ]);
 
-            // Attach attributes
-            foreach ($attributes as $attrId => $attrValueId) {
-                $item->attributeValues()->attach($attrValueId, ['attribute_id' => $attrId]);
+            $product = Product::findOrFail($request->product_id);
+            $order = $this->orderService->getCurrentCart(true);
+            $quantity = $request->input('quantity', 1);
+
+            // ========== COLLECT ATTRIBUTES ==========
+            $attributes = [];
+
+            // Color
+            if ($request->filled('color')) {
+                $colorAttr = AttributeValue::find($request->color);
+                if ($colorAttr) $attributes[$colorAttr->attribute_id] = $request->color;
             }
+
+            // Size
+            if ($request->filled('size')) {
+                $sizeAttr = AttributeValue::find($request->size);
+                if ($sizeAttr) $attributes[$sizeAttr->attribute_id] = $request->size;
+            }
+
+            // Other attributes
+            if ($request->filled('attributes')) {
+                foreach ($request->attributes as $attributeValueId) {
+                    if (!empty($attributeValueId)) {
+                        $attrValue = AttributeValue::find($attributeValueId);
+                        if ($attrValue) $attributes[$attrValue->attribute_id] = $attributeValueId;
+                    }
+                }
+            }
+
+            // ========== FIND VARIANT ==========
+            $variant = null;
+
+            if (!empty($attributes)) {
+                // Find variant with exact attributes match
+                $variantQuery = DB::table('product_variant_attributes')
+                    ->select('product_variant_id')
+                    ->whereIn('product_variant_id', function ($q) use ($product) {
+                        $q->select('id')->from('product_variants')->where('product_id', $product->id);
+                    });
+
+                foreach ($attributes as $attrId => $attrValueId) {
+                    $variantQuery->where('attribute_id', $attrId)->where('attribute_value_id', $attrValueId);
+                }
+
+                $variantQuery->groupBy('product_variant_id')
+                    ->havingRaw('COUNT(*) = ?', [count($attributes)]);
+
+                $variantIds = $variantQuery->pluck('product_variant_id');
+                $variant = ProductVariant::whereIn('id', $variantIds)->first();
+
+                if (!$variant) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'ترکیب انتخاب شده موجود نمی‌باشد.',
+                        'type' => 'combination_unavailable'
+                    ], 422);
+                }
+            } else {
+                // Default variant (no attributes required)
+                $variant = ProductVariant::where('product_id', $product->id)
+                    ->whereDoesntHave('attributeValues')
+                    ->first() ?: ProductVariant::where('product_id', $product->id)->first();
+
+                if (!$variant) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'محصول موجود نمی‌باشد.',
+                        'type' => 'no_default_variant'
+                    ], 422);
+                }
+            }
+
+            // ========== STOCK VALIDATION ==========
+            $totalQuantity = $quantity;
+            $existingItem = $order->items()->where('product_variant_id', $variant->id)->first();
+            if ($existingItem) $totalQuantity += $existingItem->quantity;
+
+            if ($variant->stock < $totalQuantity) {
+                return response()->json([
+                    'success' => false,
+                    'type' => $existingItem ? 'insufficient_stock_with_cart' : 'insufficient_stock',
+                    'message' => $existingItem
+                        ? "موجودی کافی نیست (در سبد: {$existingItem->quantity})"
+                        : 'موجودی کافی نیست',
+                    'available_stock' => $variant->stock,
+                    'current_in_cart' => $existingItem->quantity ?? 0
+                ], 422);
+            }
+
+            // ========== SAVE TO CART ==========
+            if ($existingItem) {
+                $existingItem->quantity = $totalQuantity;
+                $existingItem->total_price = $totalQuantity * $existingItem->unit_price;
+                $existingItem->save();
+            } else {
+                $item = $order->items()->create([
+                    'product_id' => $product->id,
+                    'product_variant_id' => $variant->id,
+                    'quantity' => $quantity,
+                    'unit_price' => $variant->price ?? $product->price,
+                    'total_price' => ($variant->price ?? $product->price) * $quantity,
+                ]);
+
+                // Attach attributes
+                foreach ($attributes as $attrId => $attrValueId) {
+                    $item->attributeValues()->attach($attrValueId, ['attribute_id' => $attrId]);
+                }
+            }
+
+            $this->recalculateOrderTotals($order);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'محصول با موفقیت به سبد خرید افزوده شد.',
+                'cart_count' => $order->items()->sum('quantity'),
+                'total_price' => $order->total_price,
+                'final_price' => $order->final_price
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'داده‌های ارسالی نامعتبر است.',
+                'type' => 'validation_error'
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('addToCartAjax ERROR:', ['error' => $e->getMessage(), 'request' => $request->all()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'خطای سرور.',
+                'type' => 'server_error'
+            ], 500);
         }
-
-        $this->recalculateOrderTotals($order);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'محصول با موفقیت به سبد خرید افزوده شد.',
-            'cart_count' => $order->items()->sum('quantity'),
-            'total_price' => $order->total_price,
-            'final_price' => $order->final_price
-        ]);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'داده‌های ارسالی نامعتبر است.',
-            'type' => 'validation_error'
-        ], 422);
-    } catch (\Exception $e) {
-        Log::error('addToCartAjax ERROR:', ['error' => $e->getMessage(), 'request' => $request->all()]);
-        return response()->json([
-            'success' => false,
-            'message' => 'خطای سرور.',
-            'type' => 'server_error'
-        ], 500);
     }
-}
 
     private function convertPersianToEnglishNumbers(string $input): string
     {
@@ -218,7 +224,7 @@ public function addToCartAjax(Request $request)
             'shipping_province_id' => ['required', 'exists:provinces,id'],
             'shipping_city_id' => ['required', 'exists:cities,id'],
             'shipping_address' => ['required', 'string', 'max:1000'],
-            'shipping_method' => ['required', 'in:Courier,Vanguard_Post'],
+            'shipping_method' => ['required', 'in:Vanguard_Post'],
             'payment_method' => ['required', 'in:online,card,cod'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ], [
@@ -235,10 +241,12 @@ public function addToCartAjax(Request $request)
         }
 
         $shippingCost = match ($request->shipping_method) {
-            'Vanguard_Post' => 100000,
-            'Courier' => 50000,
+            'Vanguard_Post' => 100000
         };
 
+        foreach ($order->items as $item) {
+            $shippingCost += $item->product->transportation_unit * 10000;
+        }
         $shipment = Shipment::updateOrCreate(
             ['order_id' => $order->id],
             [

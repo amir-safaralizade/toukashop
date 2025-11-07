@@ -38,11 +38,6 @@ class SiteMapCpntroller extends Controller
                         ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
                 )
                 ->add(
-                    Url::create(route('page.size-selection-guide'))
-                        ->setPriority(0.6)
-                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                )
-                ->add(
                     Url::create(route('products.index'))
                         ->setPriority(0.7)
                         ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
@@ -63,7 +58,40 @@ class SiteMapCpntroller extends Controller
                         );
                     }
                 });
-                
+
+            // محصولات
+            Product::query()
+                ->select(['id', 'slug', 'updated_at'])
+                ->orderByDesc('id')
+                ->chunk(1000, function ($products) use ($sitemap) {
+                    foreach ($products as $p) {
+                        $sitemap->add(
+                            Url::create(route('products.show', ['slug' => $p->slug]))
+                                ->setPriority(0.8)
+                                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                                ->setLastModificationDate($p->updated_at instanceof \DateTimeInterface ? $p->updated_at : now())
+                        );
+                    }
+                });
+
+
+
+            // دسته‌های محصولات
+            Category::query()
+                ->select(['id', 'slug', 'updated_at'])
+                ->where('type', 'post')
+                ->orderBy('id')
+                ->chunk(1000, function ($cats) use ($sitemap) {
+                    foreach ($cats as $cat) {
+                        $sitemap->add(
+                            Url::create(route('posts.categories', ['slug' => $cat->slug]))
+                                ->setPriority(0.6)
+                                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                                ->setLastModificationDate($cat->updated_at instanceof \DateTimeInterface ? $cat->updated_at : now())
+                        );
+                    }
+                });
+
             // محصولات
             Product::query()
                 ->select(['id', 'slug', 'updated_at'])

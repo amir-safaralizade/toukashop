@@ -682,11 +682,12 @@
                                             <div class="shipping-icon"><i class="bi bi-envelope"></i></div>
                                             <div class="shipping-info">
                                                 <div class="shipping-title">پست</div>
-                                                <div class="shipping-desc">هزینه: 100,000 تومان</div>
+                                                <div class="shipping-desc">هزینه: {{ number_format($post_cost) }} تومان
+                                                </div>
                                             </div>
                                         </label>
                                     </div>
-                                    <div class="shipping-option">
+                                    {{-- <div class="shipping-option">
                                         <input type="radio" id="shipping-post" name="shipping_method" value="Courier"
                                             class="shipping-radio">
                                         <label for="shipping-post" class="shipping-label">
@@ -696,7 +697,7 @@
                                                 <div class="shipping-desc">تحویل تا 24 ساعت - 50,000 تومان</div>
                                             </div>
                                         </label>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 @error('shipping_method')
                                     <span class="text-danger small">{{ $message }}</span>

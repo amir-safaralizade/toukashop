@@ -574,6 +574,43 @@
             vertical-align: middle;
             border: 1px solid #ddd;
         }
+
+        /* استایل‌های جدید برای برچسب‌ها */
+        .product-tags {
+            margin: 20px 0;
+        }
+
+        .product-tags h5 {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: rgba(78, 205, 196, 0.1);
+            color: var(--secondary-color);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .tag:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
     </style>
 @endsection
 
@@ -622,7 +659,6 @@
                     </div>
                 </div>
 
-                <!-- Product Info -->
                 <!-- Product Info -->
                 <div class="col-lg-6">
                     <div class="product-info">
@@ -729,6 +765,20 @@
                             @endforeach
                         @endif
 
+                        <!-- برچسب‌های محصول -->
+                        @if($product->tags && $product->tags->count())
+                            <div class="product-tags">
+                                <h5>برچسب‌ها:</h5>
+                                <div class="tags-container">
+                                    @foreach($product->tags as $tag)
+                                        <a href="{{ route('products.tag', $tag->slug) }}" class="tag">
+                                            {{ $tag->name }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="quantity-selector mt-4">
                             <label for="quantity" class="me-3">تعداد:</label>
                             <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
@@ -740,19 +790,16 @@
                             @if ($product->stock > 0)
                                 <button class="s-p-add-to-cart pulse-animation" data-product-id="{{ $product->id }}">
                                     <i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید
-                                </button>ّ
+                                </button>
                             @else
                                 <button class="btn btn-danger pulse-animation">
                                     <i class="bi bi-cart-plus me-2"></i> ناموجود (تماس بگیرید)
                                 </button>
                             @endif
                         </div>
-
-                        <!-- بقیه کد بدون تغییر -->
                     </div>
-                </div>ّ
+                </div>
             </div>
-
 
             <!-- Product Tabs -->
             <div class="product-tabs mt-5">
@@ -806,7 +853,6 @@
                             <div class="product-content">
                                 <span class="product-category">{{ $r_product->category->name }}</span>
                                 <h3 class="product-title">{{ $r_product->name }}</h3>
-                                {{-- <p class="product-description">غذای کامل و مقوی مخصوص گربه های بالغ با طعم مرغ</p> --}}
 
                                 <div class="product-rating">
                                     <div class="rating-stars">

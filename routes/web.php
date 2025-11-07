@@ -65,7 +65,7 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::any('/payment/callback/{our_token}', 'paymentCallback')->name('payment.callback')->withoutMiddleware([VerifyCsrfToken::class]);
     });
 });
-
+ 
 Route::prefix('api')->group(function () {
     Route::get('cities', [PublicController::class, 'getCities']);
     Route::post('/send-otp', [OTPController::class, 'send'])->name('otp.send');
