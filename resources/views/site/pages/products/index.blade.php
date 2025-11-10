@@ -61,125 +61,153 @@
             border-radius: 0 0 20px 20px;
         }
 
-        .category-tabs {
+        /* استایل‌های جدید برای چیدمان فیلترها و دسته‌بندی‌ها */
+        .main-content-container {
             display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            justify-content: flex-start;
-            gap: 15px;
-            margin-bottom: 40px;
-            padding: 20px 15px;
-            scrollbar-width: thin;
-            /* نمایش اسکرول بار در دسکتاپ */
-            scrollbar-color: var(--primary-color) #f1f1f1;
-            /* رنگ اسکرول بار */
-            -ms-overflow-style: auto;
-            /* نمایش اسکرول بار در IE */
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-            position: relative;
-            background: linear-gradient(90deg,
-                    transparent 0%,
-                    transparent 95%,
-                    rgba(78, 205, 196, 0.1) 100%);
+            gap: 30px;
+            margin-bottom: 50px;
         }
 
-        /* استایل اسکرول بار برای مرورگرهای وبکیت */
-        .category-tabs::-webkit-scrollbar {
-            height: 6px;
-            display: block;
-            /* نمایش در دسکتاپ */
-        }
-
-        .category-tabs::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .category-tabs::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .category-tabs::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-color);
-        }
-
-        /* نشانگر اسکرول‌پذیری */
-        .category-tabs::before {
-            content: '';
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 24px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234ECDC4'%3E%3Cpath d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.7;
-            animation: bounceHint 2s infinite;
-            pointer-events: none;
-            display: none;
-            /* مخفی در دسکتاپ */
-        }
-
-        @keyframes bounceHint {
-
-            0%,
-            100% {
-                transform: translateY(-50%) translateX(0);
-            }
-
-            50% {
-                transform: translateY(-50%) translateX(-5px);
-            }
-        }
-
-
-        .category-btn {
+        /* سایدبار دسته‌بندی‌ها */
+        .category-sidebar {
+            width: 280px;
+            flex-shrink: 0;
             background: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .category-sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            text-align: right;
+        }
+
+        .category-sidebar-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-sidebar-item {
+            margin-bottom: 12px;
+        }
+
+        .category-sidebar-link {
             display: flex;
             align-items: center;
-            flex-shrink: 0;
-            position: relative;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            color: var(--dark-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
             border: 2px solid transparent;
         }
 
-        .category-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        .category-sidebar-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(-5px);
             border-color: var(--primary-color);
         }
 
-        .category-btn.active {
+        .category-sidebar-link.active {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
         }
 
-
-        .category-icon {
-            margin-left: 8px;
-            font-size: 1.2rem;
+        .category-sidebar-icon {
+            font-size: 1.1rem;
         }
 
+        .category-sidebar-count {
+            background: white;
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .category-sidebar-link:hover .category-sidebar-count {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* محتوای اصلی */
+        .products-main-content {
+            flex: 1;
+        }
+
+        /* مخفی کردن دسته‌بندی‌های افقی در دسکتاپ */
+        .category-tabs-container {
+            display: none;
+        }
+
+        /* فیلترها در بالای صفحه */
+        .sorting-filters {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .sort-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            text-decoration: none;
+        }
+
+        .sort-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .sort-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .sort-icon {
+            margin-left: 8px;
+            font-size: 1rem;
+        }
+
+        /* استایل‌های محصولات */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
             margin-bottom: 50px;
-            padding: 20px;
         }
 
-        /* استایل‌های کپی‌شده از صفحه اصلی برای باکس محصولات */
         .product-card {
             background: white;
             border-radius: 20px;
@@ -367,6 +395,7 @@
             cursor: pointer;
             z-index: 2;
             position: relative;
+            text-decoration: none;
         }
 
         .add-to-cart:hover {
@@ -404,12 +433,147 @@
             }
         }
 
-        /* رسپانسیو برای موبایل */
+        /* استایل‌های دسته‌بندی‌های افقی برای موبایل */
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            justify-content: flex-start;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 20px 15px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #f1f1f1;
+            -ms-overflow-style: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            position: relative;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    transparent 95%,
+                    rgba(78, 205, 196, 0.1) 100%);
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            height: 6px;
+            display: block;
+        }
+
+        .category-tabs::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        .category-tabs::before {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234ECDC4'%3E%3Cpath d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.7;
+            animation: bounceHint 2s infinite;
+            pointer-events: none;
+            display: none;
+        }
+
+        @keyframes bounceHint {
+
+            0%,
+            100% {
+                transform: translateY(-50%) translateX(0);
+            }
+
+            50% {
+                transform: translateY(-50%) translateX(-5px);
+            }
+        }
+
+        .category-btn {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            position: relative;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .category-icon {
+            margin-left: 8px;
+            font-size: 1.2rem;
+        }
+
+        /* رسپانسیو برای موبایل و تبلت */
+        @media (max-width: 992px) {
+            .main-content-container {
+                flex-direction: column;
+            }
+            
+            .category-sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 30px;
+            }
+            
+            /* نمایش دسته‌بندی‌های افقی در موبایل */
+            .category-tabs-container {
+                display: block;
+                margin-bottom: 30px;
+            }
+        }
+
         @media (max-width: 768px) {
+            .sorting-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .sort-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .category-sidebar {
+                padding: 20px;
+            }
+
             .product-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: 15px;
-                padding: 10px;
             }
 
             .product-card {
@@ -442,17 +606,14 @@
                 gap: 10px;
                 margin-bottom: 30px;
                 scrollbar-width: none;
-                /* مخفی کردن اسکرول بار در موبایل */
             }
 
             .category-tabs::-webkit-scrollbar {
                 display: none;
-                /* مخفی کردن اسکرول بار در موبایل */
             }
 
             .category-tabs::before {
                 display: block;
-                /* نمایش نشانگر در موبایل */
             }
 
             .category-btn {
@@ -481,7 +642,6 @@
                 margin-left: 6px;
             }
 
-
             .category-tabs-container {
                 position: relative;
                 overflow: hidden;
@@ -503,7 +663,6 @@
                 transition: opacity 0.3s ease;
             }
 
-            /* نشان دادن گرادیانت فقط وقتی اسکرول امکان‌پذیر است */
             .category-tabs:not(.at-end)::after {
                 opacity: 1;
             }
@@ -511,8 +670,6 @@
             .category-tabs.at-end::after {
                 opacity: 0;
             }
-
-
         }
 
         .pet-icon {
@@ -540,58 +697,6 @@
         .floating {
             animation: float 3s ease-in-out infinite;
         }
-
-
-        .sorting-filters {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .sort-btn {
-            background: white;
-            border: 2px solid #e9ecef;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            color: #6c757d;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .sort-btn:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        .sort-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .sort-icon {
-            margin-left: 8px;
-            font-size: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .sorting-filters {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .sort-btn {
-                width: 100%;
-                max-width: 250px;
-                justify-content: center;
-            }
-        }
     </style>
 @endsection
 
@@ -612,104 +717,118 @@
         </div>
     </div>
 
-    <!-- Category Tabs -->
     <div class="container">
+        <!-- دسته‌بندی‌های افقی برای موبایل -->
         <div class="category-tabs-container">
             <div class="category-tabs">
-                <a class="btn category-btn active" href="{{ route('products.index') }}">
+                <a class="btn category-btn {{ request()->routeIs('products.index') ? 'active' : '' }}" href="{{ route('products.index') }}">
                     <i class="bi bi-grid category-icon"></i>همه محصولات
                 </a>
                 @foreach ($categories as $category)
-                    <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn ">
+                    <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn {{ request()->is('products/categories/' . $category->slug) ? 'active' : '' }}">
                         <i class="bi bi-bag category-icon"></i>
                         {{ $category->name }}
                     </a>
                 @endforeach
             </div>
         </div>
-    </div>
 
+        <div class="main-content-container">
+            <!-- سایدبار دسته‌بندی‌ها برای دسکتاپ -->
+            <aside class="category-sidebar">
+                <h3 class="category-sidebar-title">دسته‌بندی‌ها</h3>
+                <ul class="category-sidebar-list">
+                    <li class="category-sidebar-item">
+                        <a href="{{ route('products.index') }}" class="category-sidebar-link {{ request()->routeIs('products.index') ? 'active' : '' }}">
+                            <span>همه محصولات</span>
+                            <i class="bi bi-grid category-sidebar-icon"></i>
+                        </a>
+                    </li>
+                    @foreach ($categories as $category)
+                        <li class="category-sidebar-item">
+                            <a href="{{ route('products.categories', $category->slug) }}" class="category-sidebar-link {{ request()->is('products/categories/' . $category->slug) ? 'active' : '' }}">
+                                <span>{{ $category->name }}</span>
+                                <i class="bi bi-bag category-sidebar-icon"></i>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </aside>
 
-    <div class="container">
-        <div class="sorting-filters">
-            <a href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}"
-                class="sort-btn {{ $sort == 'newest' ? 'active' : '' }}">
-                <i class="bi bi-clock-history sort-icon"></i>جدیدترین
-            </a>
-            <a href="{{ request()->fullUrlWithQuery(['sort' => 'bestselling']) }}"
-                class="sort-btn {{ $sort == 'bestselling' ? 'active' : '' }}">
-                <i class="bi bi-trophy sort-icon"></i>پرفروش‌ترین
-            </a>
-            <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_low_high']) }}"
-                class="sort-btn {{ $sort == 'price_low_high' ? 'active' : '' }}">
-                <i class="bi bi-arrow-up sort-icon"></i>قیمت (کم به زیاد)
-            </a>
-            <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_high_low']) }}"
-                class="sort-btn {{ $sort == 'price_high_low' ? 'active' : '' }}">
-                <i class="bi bi-arrow-down sort-icon"></i>قیمت (زیاد به کم)
-            </a>
-        </div>
-    </div>
-
-
-    <!-- Products Grid -->
-    <div class="container">
-        <div class="product-grid">
-            @foreach ($products as $product)
-                <div class="product-card animate__animated animate__fadeInUp" data-category="cats,food">
-                    <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
-                    <div class="product-badge">پرفروش</div>
-                    <div class="product-img-container">
-                        <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
-                            alt="{{ $product->name }}">
-                    </div>
-                    <div class="product-content">
-                        <span class="product-category">{{ $product->category->name }}</span>
-                        <h3 class="product-title">{{ $product->name }}</h3>
-                        <div class="product-rating">
-                            <div class="rating-stars">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
-                            </div>
-                            <span class="rating-count">(42)</span>
-                        </div>
-                        <div class="product-price-container">
-                            <div class="product-price">
-                                <span class="current-price">{{ number_format($product->price) }} تومان</span>
-                                <span class="old-price">{{ number_format($product->price * 1.12) }} تومان</span>
-                            </div>
-                            <div class="product-actions">
-                                <a href="{{ route('products.show', $product->slug) }}" class="add-to-cart">
-                                    <i class="bi bi-cart-plus"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <!-- محتوای اصلی -->
+            <main class="products-main-content">
+                <!-- فیلترهای مرتب‌سازی -->
+                <div class="sorting-filters">
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}"
+                        class="sort-btn {{ $sort == 'newest' ? 'active' : '' }}">
+                        <i class="bi bi-clock-history sort-icon"></i>جدیدترین
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'bestselling']) }}"
+                        class="sort-btn {{ $sort == 'bestselling' ? 'active' : '' }}">
+                        <i class="bi bi-trophy sort-icon"></i>پرفروش‌ترین
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_low_high']) }}"
+                        class="sort-btn {{ $sort == 'price_low_high' ? 'active' : '' }}">
+                        <i class="bi bi-arrow-up sort-icon"></i>قیمت (کم به زیاد)
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_high_low']) }}"
+                        class="sort-btn {{ $sort == 'price_high_low' ? 'active' : '' }}">
+                        <i class="bi bi-arrow-down sort-icon"></i>قیمت (زیاد به کم)
+                    </a>
                 </div>
-            @endforeach
-        </div>
 
-        <!-- Pagination -->
-        {{-- <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav> --}}
+                <!-- Products Grid -->
+                <div class="product-grid">
+                    @foreach ($products as $product)
+                        <div class="product-card animate__animated animate__fadeInUp">
+                            <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
+                            @if($product->is_bestseller)
+                                <div class="product-badge">پرفروش</div>
+                            @endif
+                            <div class="product-img-container">
+                                <img src="{{ $product->firstMedia('main_image') ? asset($product->firstMedia('main_image')->full_url) : asset('images/default-product.jpg') }}" 
+                                     class="product-img" alt="{{ $product->name }}">
+                            </div>
+                            <div class="product-content">
+                                <span class="product-category">{{ $product->category->name ?? 'دسته‌بندی نشده' }}</span>
+                                <h3 class="product-title">{{ $product->name }}</h3>
+                                <p class="product-description">{{ $product->short_description ?? 'توضیحات محصول' }}</p>
+                                <div class="product-rating">
+                                    <div class="rating-stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </div>
+                                    <span class="rating-count">({{ $product->reviews_count ?? 0 }})</span>
+                                </div>
+                                <div class="product-price-container">
+                                    <div class="product-price">
+                                        <span class="current-price">{{ number_format($product->price) }} تومان</span>
+                                        @if($product->old_price)
+                                            <span class="old-price">{{ number_format($product->old_price) }} تومان</span>
+                                        @endif
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="add-to-cart" data-product-id="{{ $product->id }}">
+                                            <i class="bi bi-cart-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Pagination -->
+               
+                    {{-- <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                        {{ $products->links() }}
+                    </nav> --}}
+                
+            </main>
+        </div>
     </div>
 @endsection
 
@@ -718,7 +837,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const productCards = document.querySelectorAll('.product-card');
             const categoryTabs = document.querySelector('.category-tabs');
-            const categoryTabsContainer = document.querySelector('.category-tabs-container');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
             // افکت کلیک برای محصولات
             productCards.forEach(card => {
@@ -748,24 +867,45 @@
                 });
             });
 
-            // اسکرول بهبود یافته برای دسته‌بندی‌ها
+            // افزودن به سبد خرید
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const productId = this.getAttribute('data-product-id');
+                    
+                    // افزودن انیمیشن به دکمه
+                    this.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1.1) rotate(5deg)';
+                    }, 150);
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 300);
+
+                    // اینجا می‌توانید درخواست AJAX برای افزودن به سبد خرید اضافه کنید
+                    console.log('افزودن محصول به سبد خرید:', productId);
+                    
+                    // نمایش پیام موفقیت
+                    // this.innerHTML = '<i class="bi bi-check"></i>';
+                    // setTimeout(() => {
+                    //     this.innerHTML = '<i class="bi bi-cart-plus"></i>';
+                    // }, 1000);
+                });
+            });
+
+            // اسکرول برای دسته‌بندی‌های موبایل
             if (categoryTabs) {
                 let startX, scrollLeft, isDown = false;
 
-                // اسکرول با ماوس برای دسکتاپ و موبایل
                 categoryTabs.addEventListener('wheel', function(e) {
                     e.preventDefault();
-
-                    // تشخیص جهت اسکرول و تنظیم سرعت
                     const scrollAmount = e.deltaY * (window.innerWidth <= 768 ? 0.5 : 1);
                     this.scrollLeft += scrollAmount;
-
                     updateScrollIndicator();
-                }, {
-                    passive: false
-                });
+                }, { passive: false });
 
-                // اسکرول تاچ برای موبایل
                 categoryTabs.addEventListener('touchstart', function(e) {
                     isDown = true;
                     startX = e.touches[0].pageX - this.offsetLeft;
@@ -785,34 +925,6 @@
                     isDown = false;
                 });
 
-                // اسکرول با drag ماوس برای دسکتاپ
-                categoryTabs.addEventListener('mousedown', function(e) {
-                    isDown = true;
-                    startX = e.pageX - this.offsetLeft;
-                    scrollLeft = this.scrollLeft;
-                    this.style.cursor = 'grabbing';
-                });
-
-                categoryTabs.addEventListener('mouseleave', function() {
-                    isDown = false;
-                    this.style.cursor = 'grab';
-                });
-
-                categoryTabs.addEventListener('mouseup', function() {
-                    isDown = false;
-                    this.style.cursor = 'grab';
-                });
-
-                categoryTabs.addEventListener('mousemove', function(e) {
-                    if (!isDown) return;
-                    e.preventDefault();
-                    const x = e.pageX - this.offsetLeft;
-                    const walk = (x - startX) * 2;
-                    this.scrollLeft = scrollLeft - walk;
-                    updateScrollIndicator();
-                });
-
-                // نشانگر وضعیت اسکرول
                 function updateScrollIndicator() {
                     const maxScroll = categoryTabs.scrollWidth - categoryTabs.clientWidth;
                     const currentScroll = categoryTabs.scrollLeft;
@@ -824,7 +936,6 @@
                     }
                 }
 
-                // اسکرول خودکار به مرکز برای دکمه فعال
                 function scrollActiveToCenter() {
                     const activeBtn = categoryTabs.querySelector('.category-btn.active');
                     if (activeBtn) {
@@ -841,10 +952,7 @@
                     }
                 }
 
-                // اجرا پس از لود کامل صفحه
                 setTimeout(scrollActiveToCenter, 100);
-
-                // آپدیت نشانگر اسکرول
                 categoryTabs.addEventListener('scroll', updateScrollIndicator);
                 updateScrollIndicator();
             }
