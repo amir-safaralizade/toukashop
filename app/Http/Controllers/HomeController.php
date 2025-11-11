@@ -82,13 +82,18 @@ class HomeController extends Controller
         // فیلتر بر اساس جستجو
         if ($request->filled('search')) {
             $search = $request->input('search');
+
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhereHas('category', function ($q2) use ($search) {
                         $q2->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('tags', function ($q3) use ($search) {
+                        $q3->where('name', 'like', "%{$search}%");
                     });
             });
         }
+
 
         // اضافه کردن تعداد فروش واقعی از order_items
         $query->withCount(['orderItems as total_sold' => function ($q) {
@@ -120,6 +125,6 @@ class HomeController extends Controller
 
         $products = $query->get();
         $categories = Category::all();
-        return view('site.pages.search_page', compact('products', 'categories' , 'sort'));
+        return view('site.pages.search_page', compact('products', 'categories', 'sort'));
     }
 }

@@ -718,21 +718,6 @@
     </div>
 
     <div class="container">
-        <!-- دسته‌بندی‌های افقی برای موبایل -->
-        <div class="category-tabs-container">
-            <div class="category-tabs">
-                <a class="btn category-btn {{ request()->routeIs('products.index') ? 'active' : '' }}" href="{{ route('products.index') }}">
-                    <i class="bi bi-grid category-icon"></i>همه محصولات
-                </a>
-                @foreach ($categories as $category)
-                    <a href="{{ route('products.categories', $category->slug) }}" class="btn category-btn {{ request()->is('products/categories/' . $category->slug) ? 'active' : '' }}">
-                        <i class="bi bi-bag category-icon"></i>
-                        {{ $category->name }}
-                    </a>
-                @endforeach
-            </div>
-        </div>
-
         <div class="main-content-container">
             <!-- سایدبار دسته‌بندی‌ها برای دسکتاپ -->
             <aside class="category-sidebar">
