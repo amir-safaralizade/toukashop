@@ -517,22 +517,11 @@
                                     <!-- نمایش مشخصات محصول -->
                                     <div class="cart-item-attributes mt-2">
                                         @foreach ($item->attributeValues as $val)
-                                            @if (in_array(strtolower($val->attribute->name), ['color', 'colour', 'رنگ']))
-                                                @php
-                                                    $colorValue = $val->value;
-                                                    if ($colorValue[0] !== '#') {
-                                                        $colorValue = '#' . $colorValue;
-                                                    }
-                                                @endphp
-                                                <div style="display:inline-flex;align-items:center;margin-left:8px;">
-                                                    <span
-                                                        style="display:inline-block;width:18px;height:18px;border:1px solid #ccc;border-radius:4px;background-color: {{ $colorValue }};margin-left:5px;"></span>
-                                                </div>
-                                            @else
+                                            
                                                 <div class="attribute-item">
                                                     <small>{{ $val->attribute->title }}: {{ $val->value }}</small>
                                                 </div>
-                                            @endif
+                
                                         @endforeach
                                     </div>
                                 </div>

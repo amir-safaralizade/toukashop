@@ -542,13 +542,13 @@
             .main-content-container {
                 flex-direction: column;
             }
-            
+
             .category-sidebar {
                 width: 100%;
                 position: static;
                 margin-bottom: 30px;
             }
-            
+
             /* نمایش دسته‌بندی‌های افقی در موبایل */
             .category-tabs-container {
                 display: block;
@@ -561,12 +561,12 @@
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             .sort-btn {
                 width: 100%;
                 justify-content: center;
             }
-            
+
             .category-sidebar {
                 padding: 20px;
             }
@@ -698,6 +698,114 @@
             animation: float 3s ease-in-out infinite;
         }
     </style>
+
+
+  <style>
+       
+        .stock-filter {
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stock-filter-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        .stock-filter-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--dark-color);
+            text-decoration: none;
+        }
+
+        .stock-filter-toggle:hover {
+            border-color: var(--primary-color);
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stock-filter-toggle.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .stock-filter-toggle .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .stock-filter-toggle.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .stock-filter-badge {
+            background: white;
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .stock-filter-toggle.active .stock-filter-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* استایل برای نمایش تعداد محصولات فیلتر شده */
+        .products-count {
+            margin: 15px 0;
+            padding: 10px 15px;
+            background: rgba(78, 205, 196, 0.1);
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            text-align: center;
+            border-right: 3px solid var(--secondary-color);
+        }
+
+        /* نشانگر وضعیت موجودی محصولات */
+        .product-stock-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .stock-available {
+            background: rgba(40, 167, 69, 0.9);
+            color: white;
+        }
+
+        .stock-low {
+            background: rgba(255, 193, 7, 0.9);
+            color: var(--dark-color);
+        }
+
+        .stock-unavailable {
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -724,20 +832,47 @@
                 <h3 class="category-sidebar-title">دسته‌بندی‌ها</h3>
                 <ul class="category-sidebar-list">
                     <li class="category-sidebar-item">
-                        <a href="{{ route('products.index') }}" class="category-sidebar-link {{ request()->routeIs('products.index') ? 'active' : '' }}">
+                        <a href="{{ route('products.index') }}"
+                            class="category-sidebar-link {{ request()->routeIs('products.index') ? 'active' : '' }}">
                             <span>همه محصولات</span>
                             <i class="bi bi-grid category-sidebar-icon"></i>
                         </a>
                     </li>
                     @foreach ($categories as $category)
                         <li class="category-sidebar-item">
-                            <a href="{{ route('products.categories', $category->slug) }}" class="category-sidebar-link {{ request()->is('products/categories/' . $category->slug) ? 'active' : '' }}">
+                            <a href="{{ route('products.categories', $category->slug) }}"
+                                class="category-sidebar-link {{ request()->is('products/categories/' . $category->slug) ? 'active' : '' }}">
                                 <span>{{ $category->name }}</span>
                                 <i class="bi bi-bag category-sidebar-icon"></i>
                             </a>
                         </li>
                     @endforeach
                 </ul>
+
+                <!-- فیلتر موجودی -->
+                <div class="stock-filter">
+                    <h5 class="stock-filter-title">فیلتر موجودی</h5>
+                    @php
+                        $inStockCount = $products->where('stock', '>', 0)->count();
+                        $isInStockFilter = request()->has('in_stock') && request()->get('in_stock') == '1';
+                    @endphp
+                    <a href="{{ request()->fullUrlWithQuery(['in_stock' => $isInStockFilter ? '0' : '1']) }}"
+                        class="stock-filter-toggle {{ $isInStockFilter ? 'active' : '' }}">
+                        <span>
+                            فقط محصولات موجود
+                        </span>
+                    </a>
+                </div>
+
+                <!-- نمایش تعداد محصولات -->
+                <div class="products-count">
+                    <i class="bi bi-grid me-2"></i>
+                    @if ($isInStockFilter)
+                        {{ $inStockCount }} محصول موجود
+                    @else
+                        {{ $products->count() }} محصول
+                    @endif
+                </div>
             </aside>
 
             <!-- محتوای اصلی -->
@@ -767,12 +902,12 @@
                     @foreach ($products as $product)
                         <div class="product-card animate__animated animate__fadeInUp">
                             <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
-                            @if($product->is_bestseller)
+                            @if ($product->is_bestseller)
                                 <div class="product-badge">پرفروش</div>
                             @endif
                             <div class="product-img-container">
-                                <img src="{{ $product->firstMedia('main_image') ? asset($product->firstMedia('main_image')->full_url) : asset('images/default-product.jpg') }}" 
-                                     class="product-img" alt="{{ $product->name }}">
+                                <img src="{{ $product->firstMedia('main_image') ? asset($product->firstMedia('main_image')->full_url) : asset('images/default-product.jpg') }}"
+                                    class="product-img" alt="{{ $product->name }}">
                             </div>
                             <div class="product-content">
                                 <span class="product-category">{{ $product->category->name ?? 'دسته‌بندی نشده' }}</span>
@@ -791,7 +926,7 @@
                                 <div class="product-price-container">
                                     <div class="product-price">
                                         <span class="current-price">{{ number_format($product->price) }} تومان</span>
-                                        @if($product->old_price)
+                                        @if ($product->old_price)
                                             <span class="old-price">{{ number_format($product->old_price) }} تومان</span>
                                         @endif
                                     </div>
@@ -807,11 +942,11 @@
                 </div>
 
                 <!-- Pagination -->
-               
-                    {{-- <nav aria-label="Page navigation" class="d-flex justify-content-center">
+
+                {{-- <nav aria-label="Page navigation" class="d-flex justify-content-center">
                         {{ $products->links() }}
                     </nav> --}}
-                
+
             </main>
         </div>
     </div>
@@ -857,9 +992,9 @@
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     const productId = this.getAttribute('data-product-id');
-                    
+
                     // افزودن انیمیشن به دکمه
                     this.style.transform = 'scale(0.9)';
                     setTimeout(() => {
@@ -871,7 +1006,7 @@
 
                     // اینجا می‌توانید درخواست AJAX برای افزودن به سبد خرید اضافه کنید
                     console.log('افزودن محصول به سبد خرید:', productId);
-                    
+
                     // نمایش پیام موفقیت
                     // this.innerHTML = '<i class="bi bi-check"></i>';
                     // setTimeout(() => {
@@ -889,7 +1024,9 @@
                     const scrollAmount = e.deltaY * (window.innerWidth <= 768 ? 0.5 : 1);
                     this.scrollLeft += scrollAmount;
                     updateScrollIndicator();
-                }, { passive: false });
+                }, {
+                    passive: false
+                });
 
                 categoryTabs.addEventListener('touchstart', function(e) {
                     isDown = true;

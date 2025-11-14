@@ -489,35 +489,32 @@
             color: var(--primary-color);
         }
 
-        .color-option {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        /* استایل جدید برای گزینه‌های رنگ به صورت متن */
+        .color-option-text {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             cursor: pointer;
-            border: 3px solid transparent;
             transition: all 0.3s ease;
-            position: relative;
+            font-weight: 600;
+            background-color: white;
+            min-width: 80px;
         }
 
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-
-        .color-option.active {
+        .color-option-text:hover {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .color-option.active::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        .color-option-text.active {
+            border-color: var(--primary-color);
+            background-color: rgba(233, 69, 96, 0.1);
+            color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
         }
 
         .attribute-select {
@@ -565,16 +562,6 @@
             color: var(--dark-color);
         }
 
-        .color-preview {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            margin-left: 8px;
-            vertical-align: middle;
-            border: 1px solid #ddd;
-        }
-
         /* استایل‌های جدید برای برچسب‌ها */
         .product-tags {
             margin: 20px 0;
@@ -611,6 +598,32 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
         }
+
+        /* استایل برای وضعیت موجودی */
+        .stock-info {
+            margin: 15px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .stock-available {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #155724;
+            border-right: 3px solid #28a745;
+        }
+
+        .stock-low {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #856404;
+            border-right: 3px solid #ffc107;
+        }
+
+        .stock-unavailable {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #721c24;
+            border-right: 3px solid #dc3545;
+        }
     </style>
 @endsection
 
@@ -646,14 +659,16 @@
                         @endphp
                         <img src="{{ $mainImage?->full_url }}" alt="{{ $mainImage?->alt ?? $product->name }}"
                             class="main-image" id="mainImage" onclick="zoomImage(this)" />
+                        <!-- Thumbnailها -->
                         <div class="thumbnail-container mt-3">
                             @if ($mainImage)
                                 <img src="{{ $mainImage->full_url }}" alt="{{ $mainImage->alt ?? $product->name }}"
-                                    class="thumbnail active" onclick="changeImage(this, '{{ $mainImage->full_url }}')" />
+                                    class="thumbnail active"
+                                    onclick="changeMainImage('{{ $mainImage->full_url }}', this)" />
                             @endif
                             @foreach ($galleryImages as $image)
                                 <img src="{{ $image->full_url }}" alt="{{ $image->alt ?? $product->name }}"
-                                    class="thumbnail" onclick="changeImage(this, '{{ $image->full_url }}')" />
+                                    class="thumbnail" onclick="changeMainImage('{{ $image->full_url }}', this)" />
                             @endforeach
                         </div>
                     </div>
@@ -697,12 +712,17 @@
                             <div class="selection-item">
                                 <span class="selection-label">رنگ:</span>
                                 <span class="selection-value" id="selectedColorValue">-</span>
-                                <span class="color-preview" id="selectedColorPreview"></span>
                             </div>
                             <div class="selection-item" id="selectedAttributeItem" style="display: none;">
                                 <span class="selection-label" id="selectedAttributeLabel">ویژگی:</span>
                                 <span class="selection-value" id="selectedAttributeValue">-</span>
                             </div>
+                        </div>
+
+                        <!-- نمایش وضعیت موجودی -->
+                        <div class="stock-info" id="stockInfo" style="display: none;">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <span id="stockMessage"></span>
                         </div>
 
                         @if ($product->attributeValues->where('attribute.name', 'size')->count())
@@ -731,31 +751,40 @@
                                         <input type="radio" id="color-{{ $val->id }}" name="product-color"
                                             value="{{ $val->id }}" {{ $loop->first ? 'checked' : '' }} hidden>
                                         <label for="color-{{ $val->id }}"
-                                            class="color-option {{ $loop->first ? 'active' : '' }}"
-                                            style="background-color: {{ $val->value }};"
-                                            data-color-name="{{ $val->value }}" title="{{ $val->value }}">
+                                            class="color-option-text {{ $loop->first ? 'active' : '' }}"
+                                            data-color-name="{{ $val->value }}">
+                                            {{ $val->value }}
                                         </label>
                                     @endforeach
                                 </div>
                             </div>
                         @endif
 
-                        <!-- سایر ویژگی‌های محصول (به صورت داینامیک) -->
                         @php
                             $otherAttributes = $product->attributeValues
                                 ->filter(function ($value) {
                                     return !in_array($value->attribute->name, ['size', 'color']);
                                 })
-                                ->groupBy('attribute.name');
+                                ->groupBy(function ($value) {
+                                    return $value->attribute->id;
+                                });
                         @endphp
 
                         @if ($otherAttributes->count())
-                            @foreach ($otherAttributes as $attributeName => $values)
+                            @foreach ($otherAttributes as $attributeId => $values)
+                                @php
+                                    $attribute = $values->first()->attribute;
+                                @endphp
+
                                 <div class="product-attribute-options">
-                                    <h5>{{ $attributeName }}:</h5>
+                                    <h5>
+                                        {{ $attribute->title ?? $attribute->name }}
+                                    </h5>
+
                                     <div class="attribute-options-container">
-                                        <select class="attribute-select" name="attribute-{{ $attributeName }}"
-                                            data-attribute-name="{{ $attributeName }}">
+                                        <select class="attribute-select" name="attributes[{{ $attribute->id }}]"
+                                            data-attribute-id="{{ $attribute->id }}">
+                                            <option value="">انتخاب کنید</option>
                                             @foreach ($values as $value)
                                                 <option value="{{ $value->id }}">{{ $value->value }}</option>
                                             @endforeach
@@ -765,12 +794,13 @@
                             @endforeach
                         @endif
 
+
                         <!-- برچسب‌های محصول -->
-                        @if($product->tags && $product->tags->count())
+                        @if ($product->tags && $product->tags->count())
                             <div class="product-tags">
                                 <h5>برچسب‌ها:</h5>
                                 <div class="tags-container">
-                                    @foreach($product->tags as $tag)
+                                    @foreach ($product->tags as $tag)
                                         <a href="{{ route('products.tag', $tag->slug) }}" class="tag">
                                             {{ $tag->name }}
                                         </a>
@@ -782,18 +812,20 @@
                         <div class="quantity-selector mt-4">
                             <label for="quantity" class="me-3">تعداد:</label>
                             <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input" id="quantity" />
+                            <input type="number" value="1" min="1" class="quantity-input"
+                                id="quantity" />
                             <button class="quantity-btn" onclick="increaseQuantity()">+</button>
                         </div>
 
                         <div class="action-btns">
                             @if ($product->stock > 0)
-                                <button class="s-p-add-to-cart pulse-animation" data-product-id="{{ $product->id }}">
+                                <button class="s-p-add-to-cart pulse-animation" data-product-id="{{ $product->id }}"
+                                    id="addToCartBtn">
                                     <i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید
                                 </button>
                             @else
-                                <button class="btn btn-danger pulse-animation">
-                                    <i class="bi bi-cart-plus me-2"></i> ناموجود (تماس بگیرید)
+                                <button class="btn btn-danger pulse-animation" disabled>
+                                    <i class="bi bi-cart-x me-2"></i> ناموجود
                                 </button>
                             @endif
                         </div>
@@ -897,12 +929,13 @@
             console.log('Variant Stock Data:', variantStockData);
 
             // ========== IMAGE GALLERY ==========
-            function changeImage(thumb, newSrc) {
+            function changeMainImage(src, thumb) {
                 const mainImage = document.getElementById('mainImage');
-                mainImage.src = newSrc;
-                document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
+                if (!mainImage) return;
+
+                mainImage.src = src;
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
                 thumb.classList.add('active');
-                mainImage.style.transform = 'scale(1)';
             }
 
             function zoomImage(img) {
@@ -934,51 +967,60 @@
             function updateSelectionSummary() {
                 const sizeInput = document.querySelector('input[name="product-size"]:checked');
                 const colorInput = document.querySelector('input[name="product-color"]:checked');
-                const attributeSelects = document.querySelectorAll('.attribute-select');
+                const summary = document.getElementById('selectionSummary');
+                const sizeValueEl = document.getElementById('selectedSizeValue');
+                const colorValueEl = document.getElementById('selectedColorValue');
 
-                const summaryElement = document.getElementById('selectionSummary');
                 let hasSelection = false;
 
                 // Size
                 if (sizeInput) {
-                    const sizeLabel = document.querySelector(`label[for="size-${sizeInput.value}"]`);
-                    if (sizeLabel) {
-                        document.getElementById('selectedSizeValue').textContent = sizeLabel.textContent;
-                        hasSelection = true;
-                    }
+                    const label = document.querySelector(`label[for="size-${sizeInput.value}"]`);
+                    sizeValueEl.textContent = label ? label.textContent.trim() : '-';
+                    hasSelection = true;
+                } else {
+                    sizeValueEl.textContent = '-';
                 }
 
                 // Color
                 if (colorInput) {
-                    const colorLabel = document.querySelector(`label[for="color-${colorInput.value}"]`);
-                    if (colorLabel) {
-                        const colorName = colorLabel.getAttribute('data-color-name');
-                        document.getElementById('selectedColorValue').textContent = colorName;
-                        document.getElementById('selectedColorPreview').style.backgroundColor = colorName;
-                        hasSelection = true;
-                    }
+                    const label = document.querySelector(`label[for="color-${colorInput.value}"]`);
+                    colorValueEl.textContent = label ? label.getAttribute('data-color-name') || label.textContent
+                        .trim() : '-';
+                    hasSelection = true;
+                } else {
+                    colorValueEl.textContent = '-';
                 }
 
-                // Other attributes
-                let attributeSelected = false;
-                attributeSelects.forEach(select => {
+                // Other Attributes - نمایش پویا
+                const attributeItemsContainer = document.getElementById('selectedAttributesContainer');
+                if (!attributeItemsContainer) {
+                    // اگر وجود نداشت، بساز
+                    const container = document.createElement('div');
+                    container.id = 'selectedAttributesContainer';
+                    summary.appendChild(container);
+                }
+
+                let attributeHtml = '';
+                document.querySelectorAll('.attribute-select').forEach(select => {
                     if (select.value && select.selectedIndex > 0) {
-                        const attributeName = select.getAttribute('data-attribute-name');
-                        const selectedOption = select.options[select.selectedIndex];
-                        document.getElementById('selectedAttributeLabel').textContent = attributeName + ':';
-                        document.getElementById('selectedAttributeValue').textContent = selectedOption
-                            .textContent;
-                        document.getElementById('selectedAttributeItem').style.display = 'flex';
-                        attributeSelected = true;
+                        const attributeName = select.options[0].parentNode.closest(
+                                '.product-attribute-options')?.querySelector('h5')?.textContent ||
+                            select.getAttribute('data-attribute-name') ||
+                            'ویژگی';
+                        const selectedText = select.options[select.selectedIndex].textContent;
+                        attributeHtml += `
+                <div class="selection-item">
+                    <span class="selection-label">${attributeName}:</span>
+                    <span class="selection-value">${selectedText}</span>
+                </div>`;
                         hasSelection = true;
                     }
                 });
 
-                if (!attributeSelected) {
-                    document.getElementById('selectedAttributeItem').style.display = 'none';
-                }
+                document.getElementById('selectedAttributesContainer').innerHTML = attributeHtml;
+                summary.style.display = hasSelection ? 'block' : 'none';
 
-                summaryElement.style.display = hasSelection ? 'block' : 'none';
                 updateAvailabilityStatus();
             }
 
@@ -996,13 +1038,15 @@
 
                 // Other attributes
                 document.querySelectorAll('.attribute-select').forEach(select => {
-                    if (select.value && select.selectedIndex > 0) {
-                        const attributeName = select.getAttribute('data-attribute-name');
-                        attributes[attributeName] = select.value;
+                    if (select.value) {
+                        const attributeId = select.getAttribute('data-attribute-id');
+                        attributes[`attribute_${attributeId}`] = select.value;
+                        // یا اگر بک‌اند فقط id می‌خواد: attributes[attributeId] = select.value;
                     }
                 });
 
                 return attributes;
+
             }
 
             function findMatchingVariant(attributes) {
@@ -1026,22 +1070,28 @@
             function updateAvailabilityStatus() {
                 const attributes = getCurrentAttributes();
                 const variant = findMatchingVariant(attributes);
-                const addToCartBtn = document.querySelector('.s-p-add-to-cart');
+                const addToCartBtn = document.getElementById('addToCartBtn');
                 const quantityInput = document.getElementById('quantity');
+                const stockInfo = document.getElementById('stockInfo');
+                const stockMessage = document.getElementById('stockMessage');
 
                 if (variant && variant.stock > 0) {
                     // Available
                     addToCartBtn.innerHTML = `<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید`;
-                    addToCartBtn.className = 's-p-add-to-cart pulse-animation btn-success';
+                    addToCartBtn.className = 's-p-add-to-cart pulse-animation';
                     addToCartBtn.disabled = false;
                     quantityInput.max = variant.stock;
 
                     // Show stock info
-                    const stockBadge = document.querySelector('.stock-badge');
-                    if (stockBadge) {
-                        stockBadge.textContent = `موجودی: ${variant.stock}`;
-                        stockBadge.className = 'badge bg-success stock-badge';
+                    if (variant.stock > 10) {
+                        stockInfo.className = 'stock-info stock-available';
+                        stockMessage.textContent = `موجودی: ${variant.stock} عدد`;
+                    } else {
+                        stockInfo.className = 'stock-info stock-low';
+                        stockMessage.textContent = `موجودی محدود: ${variant.stock} عدد`;
                     }
+                    stockInfo.style.display = 'block';
+
                 } else {
                     // Unavailable
                     let btnText = 'ترکیب ناموجود';
@@ -1055,20 +1105,17 @@
                     quantityInput.max = 0;
 
                     // Show stock info
-                    const stockBadge = document.querySelector('.stock-badge');
-                    if (stockBadge) {
-                        stockBadge.textContent = 'ناموجود';
-                        stockBadge.className = 'badge bg-danger stock-badge';
-                    }
+                    stockInfo.className = 'stock-info stock-unavailable';
+                    stockMessage.textContent = 'این ترکیب در حال حاضر موجود نمی‌باشد';
+                    stockInfo.style.display = 'block';
                 }
             }
 
             // ========== ADD TO CART ==========
             document.addEventListener('click', function(e) {
-                if (e.target.closest('.s-p-add-to-cart') && !e.target.closest('.s-p-add-to-cart')
-                    .disabled) {
+                if (e.target.closest('#addToCartBtn') && !e.target.closest('#addToCartBtn').disabled) {
                     e.preventDefault();
-                    const addToCartBtn = e.target.closest('.s-p-add-to-cart');
+                    const addToCartBtn = e.target.closest('#addToCartBtn');
                     handleAddToCart(addToCartBtn);
                 }
             });
@@ -1094,14 +1141,7 @@
                         body: JSON.stringify({
                             product_id: parseInt(productId),
                             quantity: quantity,
-                            size: attributes.size || null,
-                            color: attributes.color || null,
-                            attributes: Object.keys(attributes).filter(key => !['size', 'color']
-                                    .includes(key))
-                                .reduce((obj, key) => {
-                                    obj[key] = attributes[key];
-                                    return obj;
-                                }, {})
+                            attributes: attributes // ارسال تمام attributeها در یک آبجکت
                         })
                     })
                     .then(response => {
@@ -1224,7 +1264,7 @@
             // Color
             document.querySelectorAll('input[name="product-color"]').forEach(input => {
                 input.addEventListener('change', () => {
-                    document.querySelectorAll('.color-option').forEach(l => l.classList.remove(
+                    document.querySelectorAll('.color-option-text').forEach(l => l.classList.remove(
                         'active'));
                     const label = document.querySelector(`label[for="color-${input.value}"]`);
                     if (label) label.classList.add('active');
@@ -1270,7 +1310,6 @@
             style.textContent = `
         .spinner { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .stock-badge { margin-left: 10px; }
         .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
     `;
             document.head.appendChild(style);

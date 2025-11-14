@@ -18,6 +18,7 @@ class ProductController extends Controller
         recordVisit($page);
 
         $sort = $request->query('sort', 'newest'); // default sort
+        $inStock = $request->query('in_stock', false); // فیلتر موجودی
 
         $query = Product::query();
 
@@ -42,6 +43,9 @@ class ProductController extends Controller
             $q->select(DB::raw("COALESCE(SUM(quantity),0)"));
         }]);
 
+        if ($inStock) {
+            $query->where('stock', '>', 0);
+        }
         // اعمال مرتب‌سازی
         switch ($sort) {
             case 'bestselling':
