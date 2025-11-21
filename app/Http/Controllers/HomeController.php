@@ -7,6 +7,7 @@ use App\Models\Page;
 use App\Models\Post;
 use App\Models\Product;
 use App\Models\Slider;
+use App\Models\Tag;
 use stdClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,9 @@ class HomeController extends Controller
                 $data->{$bannerKeys[$index]} = $banner;
             }
         }
+
+        $animal_tags =  Tag::where('type', 'animal')->get();
+        $data->animal_tags = $animal_tags;
         return view('site.pages.home', compact('data'));
     }
 

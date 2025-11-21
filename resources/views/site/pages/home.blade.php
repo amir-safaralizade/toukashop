@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('seo')
-    <x-seo::seo-meta-display :model="$data->page" />
+    <x-seo::seo-meta-display :model="$data->page"/>
 @endsection
 
 @section('styles')
@@ -543,9 +543,6 @@
         }
 
 
-
-
-
         .articles-section {
             padding: 80px 0;
             background: linear-gradient(to bottom, #ffffff, #f8f9fa);
@@ -1013,8 +1010,6 @@
         }
 
 
-
-
         .creative-banner-section {
             padding: 80px 0;
             margin: 60px 0;
@@ -1095,14 +1090,14 @@
 
         .small-banner:first-child {
             background: linear-gradient(rgba(142, 68, 173, 0.5),
-                    rgba(255, 230, 109, 0.5)),
-                url("https://toukashop.ir/site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp") no-repeat center center / cover;
+            rgba(255, 230, 109, 0.5)),
+            url("https://toukashop.ir/site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp") no-repeat center center / cover;
         }
 
         .small-banner:last-child {
             background: linear-gradient(rgba(78, 205, 196, 0.5),
-                    rgba(255, 158, 183, 0.5)),
-                url("https://toukashop.ir/site/images/categoryBackgroud.jpg") no-repeat center center / cover;
+            rgba(255, 158, 183, 0.5)),
+            url("https://toukashop.ir/site/images/categoryBackgroud.jpg") no-repeat center center / cover;
         }
 
         .small-banner-content {
@@ -1201,13 +1196,367 @@
             }
         }
     </style>
+
+    <style>
+        .animal-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* استایل بخش دسته‌بندی حیوانات */
+        .animal-categories-section {
+            padding: 80px 0;
+        }
+
+        .animal-section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .animal-section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--animal-dark-color);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .animal-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 120px;
+            height: 6px;
+            background: linear-gradient(90deg, var(--animal-primary-color), var(--animal-secondary-color));
+            border-radius: 3px;
+        }
+
+        .animal-section-subtitle {
+            font-size: 1.3rem;
+            color: var(--animal-gray-color);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .animal-categories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .animal-category-card {
+            background: white;
+            border-radius: var(--animal-border-radius);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--animal-box-shadow);
+            transition: var(--animal-transition);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .animal-category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--animal-primary-color), var(--animal-secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .animal-category-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .animal-category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .animal-category-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--animal-dark-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        .animal-category-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--animal-primary-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .animal-category-card:hover .animal-category-title::after {
+            width: 100%;
+        }
+
+        .animal-category-description {
+            color: var(--animal-gray-color);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .animal-category-count {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--animal-primary-color), var(--animal-secondary-color));
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--animal-transition);
+        }
+
+        .animal-category-card:hover .animal-category-count {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* استایل برای حالت کلیک */
+        .animal-category-card.active {
+            border: 2px solid var(--animal-primary-color);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fdff 100%);
+        }
+
+        /* استایل برای نمایش زیردسته‌ها */
+        .animal-subcategories {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animal-category-card.active .animal-subcategories {
+            display: block;
+        }
+
+        .animal-subcategory-list {
+            list-style: none;
+            text-align: right;
+        }
+
+        .animal-subcategory-item {
+            padding: 12px 0;
+            border-bottom: 1px dashed #eee;
+            transition: var(--animal-transition);
+        }
+
+        .animal-subcategory-item:hover {
+            background: rgba(78, 205, 196, 0.05);
+            padding-right: 10px;
+            border-radius: 8px;
+        }
+
+        .animal-subcategory-item:last-child {
+            border-bottom: none;
+        }
+
+        .animal-subcategory-link {
+            color: var(--animal-gray-color);
+            text-decoration: none;
+            transition: var(--animal-transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .animal-subcategory-link:hover {
+            color: var(--animal-primary-color);
+        }
+
+        .animal-subcategory-count {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--animal-secondary-color);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* استایل برای نمایش شبکه‌ای */
+        .animal-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 60px;
+        }
+
+        .animal-grid-category {
+            background: white;
+            border-radius: var(--animal-border-radius);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--animal-box-shadow);
+            transition: var(--animal-transition);
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .animal-grid-category:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .animal-grid-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--animal-dark-color);
+            margin-bottom: 15px;
+        }
+
+        .animal-grid-count {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--animal-primary-color), var(--animal-secondary-color));
+            color: white;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* دکمه مشاهده همه */
+        .animal-view-all {
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .animal-btn-primary {
+            background: linear-gradient(135deg, var(--animal-primary-color), var(--animal-secondary-color));
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--animal-transition);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animal-btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .animal-btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .animal-btn-primary:hover::before {
+            left: 100%;
+        }
+
+        /* رسپانسیو */
+        @media (max-width: 1200px) {
+            .animal-categories-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .animal-categories-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .animal-section-title {
+                font-size: 2.5rem;
+            }
+
+            .animal-category-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .animal-categories-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .animal-section-title {
+                font-size: 2.2rem;
+            }
+
+            .animal-categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .animal-categories-section {
+                padding: 60px 0;
+            }
+
+            .animal-section-title {
+                font-size: 2rem;
+            }
+
+            .animal-categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .animal-category-card {
+                padding: 30px 20px;
+            }
+
+            .animal-category-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+
 @endsection
 
 @section('content')
     <div class="hero-slider">
         @forelse ($data->sliders as $index => $slider)
             <div class="slide {{ $index == 0 ? 'active' : '' }}"
-                style="background-image: url('{{ get_full_url($slider->image) }}');">
+                 style="background-image: url('{{ get_full_url($slider->image) }}');">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <span class="slide-subtitle">{{ $slider->title }}</span>
@@ -1284,10 +1633,32 @@
         </div>
     </div>
 
+    <!-- Creative Section 1 - Pet Categories -->
+
+    <section class="animal-categories-section">
+        <div class="animal-container">
+            <div class="animal-section-header">
+                <h2 class="animal-section-title">محصولات برای انواع حیوانات</h2>
+                <p class="animal-section-subtitle">محصولات و خدمات تخصصی برای انواع حیوانات خانگی </p>
+            </div>
+
+            <div class="animal-categories-container">
+                @foreach($data->animal_tags as $animal_tag)
+                    <a href="{{route('products.tag' , $animal_tag->slug)}}" class="animal-category-card">
+                        <h3 class="animal-category-title">{{$animal_tag->name}}</h3>
+                        <p class="animal-category-description"></p>
+                        <span class="animal-category-count">{{sizeof($animal_tag->products)}} محصول</span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+
     <section class="creative-banner-section">
         <div class="banner-container">
             <a href="{{ $data->main_banner->link }}" class="main-banner"
-                style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+               style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
             url('{{ get_full_url($data->main_banner->image) ?? '' }}') no-repeat center center / cover;">
                 <div class="main-banner-content">
                     <h2>{{ $data->main_banner->title }}</h2>
@@ -1301,7 +1672,7 @@
             <div class="side-banners">
                 {{-- Second Banner --}}
                 <a class="small-banner" href="{{ $data->second_banner->link }}"
-                    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                   style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
                     url('{{ get_full_url($data->second_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
                         <h3>{{ $data->second_banner->title }}</h3>
@@ -1313,7 +1684,7 @@
 
                 {{-- Third Banner --}}
                 <a class="small-banner" href="{{ $data->third_banner->link }}"
-                    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                   style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
                     url('{{ get_full_url($data->third_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
                         <h3>{{ $data->third_banner->title }}</h3>
@@ -1324,78 +1695,6 @@
                 </a>
             </div>
 
-        </div>
-    </section>
-    <!-- Hero Section -->
-    {{-- <section class="hero">
-        <div class="hero-content animate__animated animate__fadeIn">
-            <h1>توکا پت شاپ , انتخابی مطمئن برای سلامت و شادی حیوانات</h1>
-            <p>
-                با خیال راحت خرید کنید! تمام لوازم حیوانات خانگی در پت‌شاپ ما توسط تیم تخصصی و دامپزشکان بررسی و انتخاب
-                شده‌اند
-            </p>
-            <div class="mt-4">
-                <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg">محصولات ویژه</a>
-                <a href="#" class="btn btn-outline-light btn-lg">درباره ما</a>
-            </div>
-        </div>
-
-        <!-- Floating pet icons -->
-        <i class="bi bi-egg-fried pet-icon floating" style="top: 20%; left: 10%; animation-delay: 0.2s;"></i>
-        <i class="bi bi-bone pet-icon floating" style="top: 70%; right: 15%; animation-delay: 0.5s;"></i>
-        <i class="bi bi-balloon-heart pet-icon floating" style="top: 30%; right: 20%; animation-delay: 0.7s;"></i>
-        <i class="bi bi-gem pet-icon floating" style="bottom: 10%; left: 20%; animation-delay: 0.3s;"></i>
-    </section> --}}
-
-
-    <!-- Creative Section 1 - Pet Categories -->
-    <section class="creative-section">
-        <div class="creative-bg" style="background-image: url('{{ asset('site/images/categoryBackgroud.jpg') }}');"></div>
-        <div class="container">
-            <div class="creative-content animate__animated animate__fadeIn">
-                <div class="text-center mb-5">
-                    <h2 class="section-title">دسته‌بندی حیوانات</h2>
-                    <p class="lead">محصولات اختصاصی برای هر نوع حیوان خانگی</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-md-3 col-6">
-                        <div class="text-center">
-                            <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{ asset('site/images/animals/dog-solid-full.svg') }}" width="40px"
-                                    alt="">
-                            </div>
-                            <h5>سگ‌ها</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="text-center">
-                            <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{ asset('site/images/animals/cat-solid-full.svg') }}" width="40px"
-                                    alt="">
-                            </div>
-                            <h5>گربه‌ها</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="text-center">
-                            <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{ asset('site/images/animals/crow-solid-full.svg') }}" width="40px"
-                                    alt="">
-                            </div>
-                            <h5>پرندگان</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="text-center">
-                            <div class="bg-light p-4 rounded-circle d-inline-block mb-3">
-                                <img src="{{ asset('site/images/animals/fish-solid-full.svg') }}" width="40px"
-                                    alt="">
-                            </div>
-                            <h5>آبزیان</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -1415,7 +1714,7 @@
                     </button> --}}
                     <div class="product-img-container">
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
-                            alt="{{ $product->name }}">
+                             alt="{{ $product->name }}">
                     </div>
                     <div class="product-content">
                         <span class="product-category">{{ $product->category->name }}</span>
@@ -1483,20 +1782,20 @@
                 <div class="col-lg-6">
                     <div class="product-showcase">
                         <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}" alt="ظرف غذای حیوانات"
-                            class="main-product">
+                             class="main-product">
 
                         <div class="floating-products">
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}"
-                                    alt="ظرف غذای سگ">
+                                     alt="ظرف غذای سگ">
                             </div>
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}"
-                                    alt="ظرف غذای گربه">
+                                     alt="ظرف غذای گربه">
                             </div>
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/photo-1552053831-71594a27632d.jpeg') }}"
-                                    alt="ظرف غذای پرنده">
+                                     alt="ظرف غذای پرنده">
                             </div>
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/p1.jpeg') }}" alt="ظرف غذای همستر">
@@ -1511,7 +1810,8 @@
     <!-- Popular Products -->
     <section class="container my-5 py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title animate__animated animate__fadeInUp">انواع لانه و باکس نگهداری مراقبت از حیوانات</h2>
+            <h2 class="section-title animate__animated animate__fadeInUp">انواع لانه و باکس نگهداری مراقبت از
+                حیوانات</h2>
             <p class="lead">محصولاتی که مشتریان ما عاشقشان هستند</p>
         </div>
         <div class="products-container">
@@ -1524,7 +1824,7 @@
                     </button> --}}
                     <div class="product-img-container">
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
-                            alt="{{ $product->name }}">
+                             alt="{{ $product->name }}">
                     </div>
                     <div class="product-content">
                         <span class="product-category">{{ $product->category->name }}</span>
@@ -1613,7 +1913,8 @@
             <i class="bi bi-shield-check floating-animal"></i>
 
             <div class="habitat-header">
-                <span class="section-badge animate__animated animate__pulse animate__infinite">خانه امن برای حیوانات</span>
+                <span
+                    class="section-badge animate__animated animate__pulse animate__infinite">خانه امن برای حیوانات</span>
                 <h2 class="section-title animate__animated animate__fadeInDown">لانه، قفس و باکس حیوانات</h2>
                 <p class="section-subtitle animate__animated animate__fadeInUp">
                     مکانی امن و راحت برای اعضای کوچک خانواده شما. همه محصولات با استاندارد و کیفیت و با مشاوره دامپزشکان
@@ -1625,7 +1926,8 @@
                 <div class="habitat-info">
                     <h3 class="mb-4">خانه‌ای که شایسته حیوان شماست</h3>
                     <p class="mb-4" style="font-size: 1.1rem; line-height: 1.8; color: #555;">
-                        در توکا پت شاپ، ما اهمیت یک محیط زندگی امن، راحت و stimulating برای حیوانات خانگی را درک می‌کنیم.
+                        در توکا پت شاپ، ما اهمیت یک محیط زندگی امن، راحت و stimulating برای حیوانات خانگی را درک
+                        می‌کنیم.
                         هر محصول با دقت انتخاب شده تا نیازهای خاص هر حیوان را برآورده کند.
                     </p>
 
@@ -1639,12 +1941,12 @@
                     </ul>
 
                     <a class="btn btn-primary"
-                        href="{{ route('products.categories', 'لانه-و-قفس-نگهداری-حیوانات') }}">مشاهده همه محصولات</a>
+                       href="{{ route('products.categories', 'لانه-و-قفس-نگهداری-حیوانات') }}">مشاهده همه محصولات</a>
                 </div>
 
                 <div class="habitat-image animate__animated animate__fadeInRight">
                     <img src="{{ asset('site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp') }}"
-                        alt="لانه و قفس حیوانات">
+                         alt="لانه و قفس حیوانات">
                 </div>
             </div>
 
@@ -1687,7 +1989,8 @@
 
     <!-- Creative Section 2 - Testimonials -->
     <section class="creative-section bg-light">
-        <div class="creative-bg" style="background-image: url('{{ asset('site/images/photo20788510751.jpg') }}');"></div>
+        <div class="creative-bg"
+             style="background-image: url('{{ asset('site/images/photo20788510751.jpg') }}');"></div>
         <div class="container">
             <div class="creative-content animate__animated animate__fadeIn">
                 <div class="text-center mb-5">
@@ -1717,7 +2020,8 @@
                                     <small class="text-muted">سرپرست سگ</small>
                                 </div>
                             </div>
-                            <p>قلاده چرمی که خریدم واقعا لاکچریه و دوام بالایی داره. تحویل سریع و بسته‌بندی شیک هم از مزایای
+                            <p>قلاده چرمی که خریدم واقعا لاکچریه و دوام بالایی داره. تحویل سریع و بسته‌بندی شیک هم از
+                                مزایای
                                 خرید از توکا پته.</p>
                         </div>
                     </div>
@@ -1730,7 +2034,8 @@
                                     <small class="text-muted">سرپرست پرنده</small>
                                 </div>
                             </div>
-                            <p>قفس پرنده‌ای که از توکا پت خریدم طراحی فوق‌العاده‌ای داره و واقعا برای پرنده‌ام فضای مناسبی
+                            <p>قفس پرنده‌ای که از توکا پت خریدم طراحی فوق‌العاده‌ای داره و واقعا برای پرنده‌ام فضای
+                                مناسبی
                                 ایجاد کرده. مشاوره خوبتون هم کمک بزرگی بود.</p>
                         </div>
                     </div>
@@ -1748,44 +2053,49 @@
         <div class="row g-3">
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}" class="img-fluid rounded"
-                        alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}"
+                         class="img-fluid rounded"
+                         alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
                     <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}" class="img-fluid rounded"
-                        alt="Instagram Post">
+                         alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1526336024174-e58f5cdd8e13.jpeg') }}" class="img-fluid rounded"
-                        alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1526336024174-e58f5cdd8e13.jpeg') }}"
+                         class="img-fluid rounded"
+                         alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1594149929911-78975a43d4f5.jpeg') }}" class="img-fluid rounded"
-                        alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1594149929911-78975a43d4f5.jpeg') }}"
+                         class="img-fluid rounded"
+                         alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
                     <img src="{{ asset('site/images/photo-1552053831-71594a27632d.jpeg') }}" class="img-fluid rounded"
-                        alt="Instagram Post">
+                         alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1583511655826-05700d52f4d9.jpeg') }}" class="img-fluid rounded"
-                        alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1583511655826-05700d52f4d9.jpeg') }}"
+                         class="img-fluid rounded"
+                         alt="Instagram Post">
                 </a>
             </div>
         </div>
         <div class="text-center mt-4">
-            <a href="https://www.instagram.com/touca_petshop?igsh=MWQ1c24zbnowdDFuaQ%3D%3D&utm_source=qr" target="_blank"
-                class="btn btn-outline-dark"><i class="bi bi-instagram me-2"></i>صفحه اینستاگرام ما</a>
+            <a href="https://www.instagram.com/touca_petshop?igsh=MWQ1c24zbnowdDFuaQ%3D%3D&utm_source=qr"
+               target="_blank"
+               class="btn btn-outline-dark"><i class="bi bi-instagram me-2"></i>صفحه اینستاگرام ما</a>
         </div>
     </section>
 
@@ -1818,7 +2128,8 @@
                         <i class="bi bi-shield-check"></i>
                     </div>
                     <h4>کیفیت تضمینی</h4>
-                    <p>تمام محصولات ما با بالاترین استانداردهای کیفیت انتخاب شده‌اند و سلامت حیوان شما را تضمین می‌کنند.</p>
+                    <p>تمام محصولات ما با بالاترین استانداردهای کیفیت انتخاب شده‌اند و سلامت حیوان شما را تضمین
+                        می‌کنند.</p>
                 </div>
             </div>
             <div class="col-md-4 animate__animated animate__fadeInUp" data-wow-delay="0.3s">
@@ -1845,12 +2156,12 @@
 
 @section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const productCards = document.querySelectorAll('.product-card');
 
             productCards.forEach(card => {
                 // ایجاد افکت کلیک
-                card.addEventListener('click', function(e) {
+                card.addEventListener('click', function (e) {
                     // جلوگیری از اجرا وقتی روی دکمه‌ها کلیک می‌شود
                     if (e.target.closest('.product-wishlist') || e.target.closest('.add-to-cart')) {
                         return;
@@ -1885,7 +2196,7 @@
 
     <script>
         // افزودن انیمیشن هنگام اسکرول
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const elements = document.querySelectorAll('.habitat-type');
 
             elements.forEach((element, index) => {
@@ -1897,7 +2208,7 @@
 
     <script>
         // افزودن انیمیشن هنگام اسکرول
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const cards = document.querySelectorAll('.article-card');
 
             cards.forEach((card, index) => {
@@ -1908,7 +2219,7 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Slider functionality
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.slider-dot');
@@ -1937,7 +2248,7 @@
                 nextBtn.addEventListener('click', nextSlide);
 
                 dots.forEach(dot => {
-                    dot.addEventListener('click', function() {
+                    dot.addEventListener('click', function () {
                         const slideIndex = parseInt(this.getAttribute('data-slide'));
                         goToSlide(slideIndex);
                     });
@@ -1949,7 +2260,7 @@
                 slider.addEventListener('mouseleave', startSlideInterval);
 
                 // Navbar scroll effect
-                window.addEventListener('scroll', function() {
+                window.addEventListener('scroll', function () {
                     const navbar = document.querySelector('.navbar');
                     if (window.scrollY > 100) {
                         navbar.classList.add('scrolled');
@@ -2022,4 +2333,27 @@
             initSlider();
         });
     </script>
+
+
+    <script>
+        // اسکریپت برای نمایش زیردسته‌ها با کلیک
+        document.addEventListener('DOMContentLoaded', function () {
+            const animalCategoryCards = document.querySelectorAll('.animal-category-card');
+
+            animalCategoryCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    // بستن همه دسته‌های دیگر
+                    animalCategoryCards.forEach(otherCard => {
+                        if (otherCard !== card) {
+                            otherCard.classList.remove('active');
+                        }
+                    });
+
+                    // باز یا بسته کردن دسته فعلی
+                    this.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+
 @endsection

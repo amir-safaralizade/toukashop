@@ -20,6 +20,15 @@
     --purple: #8e44ad;
     --success: #28a745;
     --danger: #dc3545;
+
+    --animal-primary-color: #4ECDC4;
+    --animal-secondary-color: #FF6B6B;
+    --animal-dark-color: #2C3E50;
+    --animal-light-color: #F8F9FA;
+    --animal-gray-color: #6C757D;
+    --animal-border-radius: 16px;
+    --animal-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    --animal-transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 body {
@@ -100,11 +109,11 @@ body {
 
 .hero {
     background: linear-gradient(
-            135deg,
-            rgba(78, 205, 196, 0.8) 0%,
-            rgba(255, 107, 107, 0.8) 100%
-        ),
-        url("images/hero.jpg") no-repeat center center;
+        135deg,
+        rgba(78, 205, 196, 0.8) 0%,
+        rgba(255, 107, 107, 0.8) 100%
+    ),
+    url("images/hero.jpg") no-repeat center center;
     background-size: cover;
     min-height: 90vh;
     position: relative;
