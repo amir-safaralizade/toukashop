@@ -517,11 +517,9 @@
                                     <!-- نمایش مشخصات محصول -->
                                     <div class="cart-item-attributes mt-2">
                                         @foreach ($item->attributeValues as $val)
-                                            
-                                                <div class="attribute-item">
-                                                    <small>{{ $val->attribute->title }}: {{ $val->value }}</small>
-                                                </div>
-                
+                                            <div class="attribute-item">
+                                                <small>{{ $val->attribute->title }}: {{ $val->value }}</small>
+                                            </div>
                                         @endforeach
                                     </div>
                                 </div>
@@ -745,17 +743,18 @@
                                 <div class="bank-card mb-3">
                                     <div class="bank-card-header">
                                         <div>
-                                            <div class="bank-name">بانک رسالت</div>
+                                            <div class="bank-name">
+                                                {{ site_setting('Bank_name_and_relevant_card_number') }}</div>
                                             <div class="card-type">کارت اعتباری</div>
                                         </div>
-                                        <img src="{{ asset('site/logos/bank-resalat-min.png') }}" alt="بانک رسالت"
+                                        <img src="{{ site_setting('Bank_logo_associated_with_the_card_number') }}"
                                             class="bank-logo">
                                     </div>
-                                    <div class="card-number">5041 7210 0900 4772</div>
+                                    <div class="card-number" dir="ltr">{{ site_setting('card_number') }}</div>
                                     <div class="card-details">
                                         <div class="card-holder">
                                             <span class="card-holder-label">صاحب حساب</span>
-                                            علیرضا صفری شمس آبادی
+                                            {{ site_setting('account_holder') }}
                                         </div>
                                     </div>
                                 </div>

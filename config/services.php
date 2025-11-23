@@ -48,5 +48,5 @@ return [
     'zarinpal' => [
         'merchant_id' => '6a875955-cd80-4f51-9494-f7508d7d33b6'
     ],
-    'manage_panel' => 'https://mg.	toukashop.ir'
+    'manage_panel' => 'https://mg.toukashop.ir'
 ];

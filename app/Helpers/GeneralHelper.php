@@ -14,7 +14,7 @@ use App\Services\Payment\PaymentGatewayInterface;
 use App\Services\Payment\Providers\ZarinpalGateway;
 use Jenssegers\Agent\Agent;
 use Modules\Visit\Services\VisitService;
-
+use App\Models\Property;
 
 function slug_generator($text)
 {
@@ -144,4 +144,13 @@ function get_product_categoris()
 function get_full_url($image)
 {
     return rtrim(config('services.manage_panel'), '/') . '/' . ltrim($image, '/');
+}
+
+function site_setting(string $title, $default = null)
+{
+    $property = Property::where('title', $title)->first();
+    if ($property && $property->type == 'file') {
+        return config('services.manage_panel') . '/' . $property->value;
+    }
+    return $property ? $property->value : $default;
 }

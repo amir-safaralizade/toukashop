@@ -32,7 +32,7 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('page.home') }}">
-                <img src="{{ asset('images/logo.PNG') }}" alt="toukashop Logo" width="80px">
+                <img src="{{ site_setting('logo', 'site/logos/black-logo-min.png') }}" alt="toukashop Logo" width="80px">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -75,7 +75,7 @@
             <div class="row">
                 <div class="col-lg-4 mb-5 mb-lg-0">
                     <a href="#" class="footer-logo">
-                        <img src="{{ asset('images/logo.PNG') }}" alt="toukashop Logo" width="80px">
+                        <img src="{{ site_setting('logo', 'site/logos/black-logo-min.png') }}" alt="toukashop Logo" width="80px">
                         <a referrerpolicy='origin' target='_blank'
                             href='https://trustseal.enamad.ir/?id=647409&Code=rQChuLlTGm7dyB07eVp7fZ6W6RBSsHqn'><img
                                 referrerpolicy='origin'
@@ -116,8 +116,8 @@
                     <div class="footer-links">
                         <h5>تماس با ما</h5>
                         <ul>
-                            <li><i class="bi bi-geo-alt-fill me-2"></i>استان فارس , شهر شیراز</li>
-                            <li><i class="bi bi-telephone-fill me-2"></i> ۰۹۳۸۵۳۶۰۷۵۰</li>
+                            <li><i class="bi bi-geo-alt-fill me-2"></i>{{ site_setting('address') }}</li>
+                            <li><i class="bi bi-telephone-fill me-2"></i>  {{ site_setting('contact-number-one') }}</li>
                             <li><i class="bi bi-instagram me-2"></i>touca_petshop</li>
                             <li><i class="bi bi-clock-fill me-2"></i> هر روز از ۹ صبح تا ۹ شب</li>
                         </ul>
