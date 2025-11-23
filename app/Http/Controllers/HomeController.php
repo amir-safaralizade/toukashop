@@ -12,6 +12,7 @@ use stdClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Category;
+use Exception;
 
 class HomeController extends Controller
 {
@@ -19,7 +20,17 @@ class HomeController extends Controller
     {
         $page = Page::where('name', 'home')->firstOrfail();
         recordVisit($page);
-        $products = Product::orderBy('id', 'desc')->take(4)->get();
+
+        try {
+            $products_ids = array_map('intval', explode('+', site_setting('best-selling-products-home-page')));
+        } catch (Exception $e) {
+            $products_ids = [];
+        }
+
+        $products = Product::whereIn('id', $products_ids)
+            ->orderByRaw('FIELD(id, ' . implode(',', $products_ids) . ')')
+            ->get();
+
         $special_products = Product::orderBy('id', 'desc')->where('category_id', 2)->take(6)->get();
         $sliders = Slider::orderBy('sort_order', 'asc')->get();
         $banners = Banner::orderBy('id', 'asc')->take(3)->get();

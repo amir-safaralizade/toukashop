@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('seo')
-    <x-seo::seo-meta-display :model="$data->page"/>
+    <x-seo::seo-meta-display :model="$data->page" />
 @endsection
 
 @section('styles')
@@ -1090,14 +1090,14 @@
 
         .small-banner:first-child {
             background: linear-gradient(rgba(142, 68, 173, 0.5),
-            rgba(255, 230, 109, 0.5)),
-            url("https://toukashop.ir/site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp") no-repeat center center / cover;
+                    rgba(255, 230, 109, 0.5)),
+                url("https://toukashop.ir/site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp") no-repeat center center / cover;
         }
 
         .small-banner:last-child {
             background: linear-gradient(rgba(78, 205, 196, 0.5),
-            rgba(255, 158, 183, 0.5)),
-            url("https://toukashop.ir/site/images/categoryBackgroud.jpg") no-repeat center center / cover;
+                    rgba(255, 158, 183, 0.5)),
+                url("https://toukashop.ir/site/images/categoryBackgroud.jpg") no-repeat center center / cover;
         }
 
         .small-banner-content {
@@ -1353,6 +1353,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1549,14 +1550,13 @@
             }
         }
     </style>
-
 @endsection
 
 @section('content')
     <div class="hero-slider">
         @forelse ($data->sliders as $index => $slider)
             <div class="slide {{ $index == 0 ? 'active' : '' }}"
-                 style="background-image: url('{{ get_full_url($slider->image) }}');">
+                style="background-image: url('{{ get_full_url($slider->image) }}');">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <span class="slide-subtitle">{{ $slider->title }}</span>
@@ -1643,11 +1643,11 @@
             </div>
 
             <div class="animal-categories-container">
-                @foreach($data->animal_tags as $animal_tag)
-                    <a href="{{route('products.tag' , $animal_tag->slug)}}" class="animal-category-card">
-                        <h3 class="animal-category-title">{{$animal_tag->name}}</h3>
+                @foreach ($data->animal_tags as $animal_tag)
+                    <a href="{{ route('products.tag', $animal_tag->slug) }}" class="animal-category-card">
+                        <h3 class="animal-category-title">{{ $animal_tag->name }}</h3>
                         <p class="animal-category-description"></p>
-                        <span class="animal-category-count">{{sizeof($animal_tag->products)}} محصول</span>
+                        <span class="animal-category-count">{{ sizeof($animal_tag->products) }} محصول</span>
                     </a>
                 @endforeach
             </div>
@@ -1658,7 +1658,7 @@
     <section class="creative-banner-section">
         <div class="banner-container">
             <a href="{{ $data->main_banner->link }}" class="main-banner"
-               style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
             url('{{ get_full_url($data->main_banner->image) ?? '' }}') no-repeat center center / cover;">
                 <div class="main-banner-content">
                     <h2>{{ $data->main_banner->title }}</h2>
@@ -1672,7 +1672,7 @@
             <div class="side-banners">
                 {{-- Second Banner --}}
                 <a class="small-banner" href="{{ $data->second_banner->link }}"
-                   style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
                     url('{{ get_full_url($data->second_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
                         <h3>{{ $data->second_banner->title }}</h3>
@@ -1684,7 +1684,7 @@
 
                 {{-- Third Banner --}}
                 <a class="small-banner" href="{{ $data->third_banner->link }}"
-                   style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
                     url('{{ get_full_url($data->third_banner->image) ?? '' }}') no-repeat center center / cover;">
                     <div class="small-banner-content">
                         <h3>{{ $data->third_banner->title }}</h3>
@@ -1701,8 +1701,9 @@
     <!-- Popular Products -->
     <section class="container my-5 py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title animate__animated animate__fadeInUp">محصولات پرفروش</h2>
-            <p class="lead">محصولاتی که مشتریان ما عاشقشان هستند</p>
+            <h2 class="section-title animate__animated animate__fadeInUp">
+                {{ site_setting('title_of_the_first_list_of_products_on_the_home_page') }}</h2>
+            <p class="lead">{{ site_setting('slogan_of_the_first_list_of_products_on_the_home_page') }}</p>
         </div>
         <div class="products-container">
             @foreach ($data->products as $product)
@@ -1714,7 +1715,7 @@
                     </button> --}}
                     <div class="product-img-container">
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
-                             alt="{{ $product->name }}">
+                            alt="{{ $product->name }}">
                     </div>
                     <div class="product-content">
                         <span class="product-category">{{ $product->category->name }}</span>
@@ -1782,20 +1783,20 @@
                 <div class="col-lg-6">
                     <div class="product-showcase">
                         <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}" alt="ظرف غذای حیوانات"
-                             class="main-product">
+                            class="main-product">
 
                         <div class="floating-products">
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}"
-                                     alt="ظرف غذای سگ">
+                                    alt="ظرف غذای سگ">
                             </div>
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}"
-                                     alt="ظرف غذای گربه">
+                                    alt="ظرف غذای گربه">
                             </div>
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/photo-1552053831-71594a27632d.jpeg') }}"
-                                     alt="ظرف غذای پرنده">
+                                    alt="ظرف غذای پرنده">
                             </div>
                             <div class="floating-item">
                                 <img src="{{ asset('site/images/p1.jpeg') }}" alt="ظرف غذای همستر">
@@ -1824,7 +1825,7 @@
                     </button> --}}
                     <div class="product-img-container">
                         <img src="{{ asset($product->firstMedia('main_image')->full_url) }}" class="product-img"
-                             alt="{{ $product->name }}">
+                            alt="{{ $product->name }}">
                     </div>
                     <div class="product-content">
                         <span class="product-category">{{ $product->category->name }}</span>
@@ -1913,8 +1914,7 @@
             <i class="bi bi-shield-check floating-animal"></i>
 
             <div class="habitat-header">
-                <span
-                    class="section-badge animate__animated animate__pulse animate__infinite">خانه امن برای حیوانات</span>
+                <span class="section-badge animate__animated animate__pulse animate__infinite">خانه امن برای حیوانات</span>
                 <h2 class="section-title animate__animated animate__fadeInDown">لانه، قفس و باکس حیوانات</h2>
                 <p class="section-subtitle animate__animated animate__fadeInUp">
                     مکانی امن و راحت برای اعضای کوچک خانواده شما. همه محصولات با استاندارد و کیفیت و با مشاوره دامپزشکان
@@ -1941,12 +1941,12 @@
                     </ul>
 
                     <a class="btn btn-primary"
-                       href="{{ route('products.categories', 'لانه-و-قفس-نگهداری-حیوانات') }}">مشاهده همه محصولات</a>
+                        href="{{ route('products.categories', 'لانه-و-قفس-نگهداری-حیوانات') }}">مشاهده همه محصولات</a>
                 </div>
 
                 <div class="habitat-image animate__animated animate__fadeInRight">
                     <img src="{{ asset('site/images/image_tqvGenghp7vLzedr54DMgZgIemTRBn0TpE3S.webp') }}"
-                         alt="لانه و قفس حیوانات">
+                        alt="لانه و قفس حیوانات">
                 </div>
             </div>
 
@@ -1989,8 +1989,7 @@
 
     <!-- Creative Section 2 - Testimonials -->
     <section class="creative-section bg-light">
-        <div class="creative-bg"
-             style="background-image: url('{{ asset('site/images/photo20788510751.jpg') }}');"></div>
+        <div class="creative-bg" style="background-image: url('{{ asset('site/images/photo20788510751.jpg') }}');"></div>
         <div class="container">
             <div class="creative-content animate__animated animate__fadeIn">
                 <div class="text-center mb-5">
@@ -2053,49 +2052,44 @@
         <div class="row g-3">
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}"
-                         class="img-fluid rounded"
-                         alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1514888286974-6c03e2ca1dba.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
                     <img src="{{ asset('site/images/photo-1533738363-b7f9aef128ce.jpeg') }}" class="img-fluid rounded"
-                         alt="Instagram Post">
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1526336024174-e58f5cdd8e13.jpeg') }}"
-                         class="img-fluid rounded"
-                         alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1526336024174-e58f5cdd8e13.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1594149929911-78975a43d4f5.jpeg') }}"
-                         class="img-fluid rounded"
-                         alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1594149929911-78975a43d4f5.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
                     <img src="{{ asset('site/images/photo-1552053831-71594a27632d.jpeg') }}" class="img-fluid rounded"
-                         alt="Instagram Post">
+                        alt="Instagram Post">
                 </a>
             </div>
             <div class="col-md-2 col-4">
                 <a href="#" class="d-block instagram-item">
-                    <img src="{{ asset('site/images/photo-1583511655826-05700d52f4d9.jpeg') }}"
-                         class="img-fluid rounded"
-                         alt="Instagram Post">
+                    <img src="{{ asset('site/images/photo-1583511655826-05700d52f4d9.jpeg') }}" class="img-fluid rounded"
+                        alt="Instagram Post">
                 </a>
             </div>
         </div>
         <div class="text-center mt-4">
-            <a href="https://www.instagram.com/touca_petshop?igsh=MWQ1c24zbnowdDFuaQ%3D%3D&utm_source=qr"
-               target="_blank"
-               class="btn btn-outline-dark"><i class="bi bi-instagram me-2"></i>صفحه اینستاگرام ما</a>
+            <a href="https://www.instagram.com/touca_petshop?igsh=MWQ1c24zbnowdDFuaQ%3D%3D&utm_source=qr" target="_blank"
+                class="btn btn-outline-dark"><i class="bi bi-instagram me-2"></i>صفحه اینستاگرام ما</a>
         </div>
     </section>
 
@@ -2156,12 +2150,12 @@
 
 @section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const productCards = document.querySelectorAll('.product-card');
 
             productCards.forEach(card => {
                 // ایجاد افکت کلیک
-                card.addEventListener('click', function (e) {
+                card.addEventListener('click', function(e) {
                     // جلوگیری از اجرا وقتی روی دکمه‌ها کلیک می‌شود
                     if (e.target.closest('.product-wishlist') || e.target.closest('.add-to-cart')) {
                         return;
@@ -2196,7 +2190,7 @@
 
     <script>
         // افزودن انیمیشن هنگام اسکرول
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const elements = document.querySelectorAll('.habitat-type');
 
             elements.forEach((element, index) => {
@@ -2208,7 +2202,7 @@
 
     <script>
         // افزودن انیمیشن هنگام اسکرول
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.article-card');
 
             cards.forEach((card, index) => {
@@ -2219,7 +2213,7 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Slider functionality
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.slider-dot');
@@ -2248,7 +2242,7 @@
                 nextBtn.addEventListener('click', nextSlide);
 
                 dots.forEach(dot => {
-                    dot.addEventListener('click', function () {
+                    dot.addEventListener('click', function() {
                         const slideIndex = parseInt(this.getAttribute('data-slide'));
                         goToSlide(slideIndex);
                     });
@@ -2260,7 +2254,7 @@
                 slider.addEventListener('mouseleave', startSlideInterval);
 
                 // Navbar scroll effect
-                window.addEventListener('scroll', function () {
+                window.addEventListener('scroll', function() {
                     const navbar = document.querySelector('.navbar');
                     if (window.scrollY > 100) {
                         navbar.classList.add('scrolled');
@@ -2337,11 +2331,11 @@
 
     <script>
         // اسکریپت برای نمایش زیردسته‌ها با کلیک
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const animalCategoryCards = document.querySelectorAll('.animal-category-card');
 
             animalCategoryCards.forEach(card => {
-                card.addEventListener('click', function () {
+                card.addEventListener('click', function() {
                     // بستن همه دسته‌های دیگر
                     animalCategoryCards.forEach(otherCard => {
                         if (otherCard !== card) {
@@ -2355,5 +2349,4 @@
             });
         });
     </script>
-
 @endsection
