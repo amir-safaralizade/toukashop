@@ -27,7 +27,18 @@ class HomeController extends Controller
             $products_ids = [];
         }
 
+        try {
+            $second_products_ids = array_map('intval', explode('+', site_setting('second-product-list-of-the-homepage	')));
+        } catch (Exception $e) {
+            $second_products_ids = [];
+        }
+
+
         $products = Product::whereIn('id', $products_ids)
+            ->orderByRaw('FIELD(id, ' . implode(',', $products_ids) . ')')
+            ->get();
+
+        $second_products = Product::whereIn('id', $products_ids)
             ->orderByRaw('FIELD(id, ' . implode(',', $products_ids) . ')')
             ->get();
 
@@ -40,7 +51,7 @@ class HomeController extends Controller
         $data->products = $products;
         $data->special_products = $special_products;
         $data->posts = Post::orderby('id', 'desc')->take(4)->get();
-        $data->cage_products = Product::where('category_id', 4)->OrderBy('id', 'desc')->where('stock', '>', 0)->take(4)->get();
+        $data->second_products = $second_products;
         $data->sliders = $sliders;
         $data->page = $page;
         foreach ($banners as $index => $banner) {

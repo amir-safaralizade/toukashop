@@ -1811,12 +1811,12 @@
     <!-- Popular Products -->
     <section class="container my-5 py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title animate__animated animate__fadeInUp">انواع لانه و باکس نگهداری مراقبت از
-                حیوانات</h2>
-            <p class="lead">محصولاتی که مشتریان ما عاشقشان هستند</p>
+            <h2 class="section-title animate__animated animate__fadeInUp">
+                {{ site_setting('title-of-the-second-product-list-on-the-homepage') }}</h2>
+            <p class="lead">{{ site_setting('slogan-of-the-second-product-list-on-the-homepage') }}</p>
         </div>
         <div class="products-container">
-            @foreach ($data->cage_products as $product)
+            @foreach ($data->second_products as $product)
                 <div class="product-card animate__animated animate__fadeInUp">
                     <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
                     <div class="product-badge">پیشنهادی توکاشاپ</div>
