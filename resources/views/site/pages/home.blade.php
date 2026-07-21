@@ -776,7 +776,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgb(0 0 0 / 58%);
+            background: rgb(0 0 0 / 10%);
         }
 
         .slide-content {
@@ -786,6 +786,7 @@
             text-align: center;
             padding: 0 20px;
             max-width: 800px;
+            margin-top: 10%;
         }
 
         .slide-subtitle {
@@ -1549,6 +1550,149 @@
                 font-size: 1.6rem;
             }
         }
+
+
+        /* استایل کارت‌های حیوانات با تصویر بند انگشتی */
+        .animal-categories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .animal-category-card {
+            background: white;
+            border-radius: var(--animal-border-radius);
+            overflow: hidden;
+            box-shadow: var(--animal-box-shadow);
+            transition: var(--animal-transition);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .animal-category-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+
+        /* بخش تصویر */
+        .animal-card-image {
+            position: relative;
+            width: 100%;
+            padding-bottom: 75%;
+            /* نسبت 4:3 */
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .animal-thumb {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .animal-category-card:hover .animal-thumb {
+            transform: scale(1.1);
+        }
+
+        /* اوورلای روی تصویر با آیکون */
+        .animal-card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                    rgba(0, 0, 0, 0.2) 0%,
+                    rgba(0, 0, 0, 0.5) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .animal-category-card:hover .animal-card-overlay {
+            opacity: 1;
+        }
+
+        .animal-card-icon {
+            font-size: 3rem;
+            opacity: 0.8;
+            transform: scale(0.5);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .animal-category-card:hover .animal-card-icon {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* بخش اطلاعات */
+        .animal-card-info {
+            padding: 18px 20px 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .animal-category-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--animal-dark-color);
+            margin-bottom: 6px;
+        }
+
+        .animal-category-count {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--animal-primary-color), var(--animal-secondary-color));
+            color: white;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: var(--animal-transition);
+        }
+
+        .animal-category-card:hover .animal-category-count {
+            transform: scale(1.1);
+        }
+
+        /* رسپانسیو */
+        @media (max-width: 768px) {
+            .animal-categories-container {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
+            }
+
+            .animal-card-info {
+                padding: 12px 15px 15px;
+            }
+
+            .animal-category-title {
+                font-size: 1rem;
+            }
+
+            .animal-card-icon {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .animal-categories-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
     </style>
 @endsection
 
@@ -1559,9 +1703,9 @@
                 style="background-image: url('{{ get_full_url($slider->image) }}');">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
-                    <span class="slide-subtitle">{{ $slider->title }}</span>
+                    {{-- <span class="slide-subtitle">{{ $slider->title }}</span>
                     <h1 class="slide-title">{{ $slider->title }}</h1>
-                    <p class="slide-description">{{ $slider->title }}</p>
+                    <p class="slide-description">{{ $slider->title }}</p> --}}
                     @if ($slider->link)
                         <a href="{{ $slider->link }}" class="slide-btn">مشاهده</a>
                     @else
@@ -1639,15 +1783,25 @@
         <div class="animal-container">
             <div class="animal-section-header">
                 <h2 class="animal-section-title">محصولات برای انواع حیوانات</h2>
-                <p class="animal-section-subtitle">محصولات و خدمات تخصصی برای انواع حیوانات خانگی </p>
+                <p class="animal-section-subtitle">محصولات و خدمات تخصصی برای انواع حیوانات خانگی</p>
             </div>
 
             <div class="animal-categories-container">
                 @foreach ($data->animal_tags as $animal_tag)
                     <a href="{{ route('products.tag', $animal_tag->slug) }}" class="animal-category-card">
-                        <h3 class="animal-category-title">{{ $animal_tag->name }}</h3>
-                        <p class="animal-category-description"></p>
-                        <span class="animal-category-count">{{ sizeof($animal_tag->products) }} محصول</span>
+                        <div class="animal-card-image">
+                            @php
+                                $imageUrl =
+                                    $animal_tag->firstMedia('tags_main_image')?->full_url ??
+                                    ($defaultImages[$animal_tag->name] ?? 'site/images/default-animal-tag.jpg');
+                            @endphp
+                            <img src="{{ $imageUrl }}" alt="{{ $animal_tag->name }}" class="animal-thumb">
+
+                        </div>
+                        <div class="animal-card-info">
+                            <h3 class="animal-category-title">{{ $animal_tag->name }}</h3>
+                            <span class="animal-category-count">{{ sizeof($animal_tag->products) }} محصول</span>
+                        </div>
                     </a>
                 @endforeach
             </div>
@@ -1811,12 +1965,12 @@
     <!-- Popular Products -->
     <section class="container my-5 py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title animate__animated animate__fadeInUp">
-                {{ site_setting('title-of-the-second-product-list-on-the-homepage') }}</h2>
-            <p class="lead">{{ site_setting('slogan-of-the-second-product-list-on-the-homepage') }}</p>
+            <h2 class="section-title animate__animated animate__fadeInUp">انواع لانه و باکس نگهداری مراقبت از
+                حیوانات</h2>
+            <p class="lead">محصولاتی که مشتریان ما عاشقشان هستند</p>
         </div>
         <div class="products-container">
-            @foreach ($data->second_products as $product)
+            @foreach ($data->cage_products as $product)
                 <div class="product-card animate__animated animate__fadeInUp">
                     <a href="{{ route('products.show', $product->slug) }}" class="product-link"></a>
                     <div class="product-badge">پیشنهادی توکاشاپ</div>

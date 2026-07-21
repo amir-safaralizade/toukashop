@@ -4,45 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Modules\Visit\Traits\Visitable;
+use App\Traits\HasMediaFiles;
 
 class Tag extends Model
 {
-    use  Visitable;
+    use HasMediaFiles;
+
     protected $fillable = [
         'type',
+        'object',
         'name',
         'slug'
     ];
 
     public function products()
     {
-        return $this->belongsToMany(
-            Product::class,    // Target model
-            'tag_objects',     // Pivot table
-            'tag_id',          // Foreign key on pivot table for Tag
-            'object_id'        // Foreign key on pivot table for Product
-        );
+        return $this->morphedByMany(Product::class, 'object', 'tag_objects');
     }
 
-    /**
-     * Get all posts assigned to this tag without considering object_type
-     */
+    // Relation with posts
     public function posts()
     {
-        return $this->belongsToMany(
-            \App\Models\Post::class,
-            'tag_objects',
-            'tag_id',
-            'object_id'
-        );
+        return $this->morphedByMany(Post::class, 'object', 'tag_objects');
     }
-
 
     public function objectsCount()
     {
         return DB::table('tag_objects')
-            ->where('tag_id', $this->id)
-            ->count();
+        ->where('tag_id', $this->id)
+        ->count();
     }
 }
