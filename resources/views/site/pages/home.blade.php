@@ -1793,7 +1793,7 @@
                             @php
                                 $imageUrl =
                                     $animal_tag->firstMedia('tags_main_image')?->full_url ??
-                                    ($defaultImages[$animal_tag->name] ?? 'site/images/default-animal-tag.jpg');
+                                    asset('images/default_logo.png');
                             @endphp
                             <img src="{{ $imageUrl }}" alt="{{ $animal_tag->name }}" class="animal-thumb">
 
