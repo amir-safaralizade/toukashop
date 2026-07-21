@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap.rtl.min.css') }}">
     <!-- Font Awesome -->
     <script src="{{ asset('site/js/all.min.js') }}"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ asset('site/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('site/css/swiper-bundle.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
