@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HasMediaFiles;
+use Modules\Visit\Traits\Visitable;
 
 class Tag extends Model
 {
-    use HasMediaFiles;
+    use HasMediaFiles , Visitable;
 
     protected $fillable = [
         'type',

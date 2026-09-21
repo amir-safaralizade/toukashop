@@ -45,7 +45,8 @@ class CartController extends Controller
             $order = $this->orderService->getCurrentCart(true);
         }
 
-        $post_cost = 100000;
+        $post_cost = intval(site_setting('shipping-cost'));
+       
         if ($order) {
             foreach ($order->items as $item) {
                 $post_cost += $item->product->transportation_unit * 10000;

@@ -171,13 +171,27 @@ class OrderService
         }
 
         DB::transaction(function () use ($order) {
+
+            $productsToUpdate = [];
+
             foreach ($order->items as $item) {
                 $variant = $item->variant;
+
+                if (!$variant) {
+                    continue;
+                }
+
                 $variant->increment('stock', $item->quantity);
+
+                $productsToUpdate[$variant->product_id] = $variant->product;
             }
 
             $order->status = 'canceled';
             $order->save();
+
+            foreach ($productsToUpdate as $product) {
+                $product->updateTotalStock();
+            }
 
             logger()->info("سفارش #{$order->id} لغو شد.");
         });
