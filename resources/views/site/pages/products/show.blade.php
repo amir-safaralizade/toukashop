@@ -412,36 +412,6 @@
             animation: pulse 2s infinite;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-image {
-                height: 350px;
-            }
-
-            .action-btns {
-                flex-direction: column;
-            }
-
-            .s-p-add-to-cart {
-                margin-left: 0;
-                margin-bottom: 15px;
-                width: 100%;
-            }
-
-            .wishlist-btn {
-                width: 100%;
-                border-radius: 50px;
-                height: auto;
-                padding: 12px;
-            }
-
-            .tab-content {
-                padding: 20px;
-            }
-        }
-    </style>
-
-    <style>
         /* استایل‌های جدید برای بخش‌های رنگ، سایز و سایر ویژگی‌ها */
         .size-options,
         .product-color-options,
@@ -489,33 +459,56 @@
             color: var(--primary-color);
         }
 
-        /* استایل جدید برای گزینه‌های رنگ به صورت متن */
-        .color-option-text {
-            display: inline-flex;
+        /* ============================================ */
+        /* استایل‌های باکس‌های رنگی - بدون متن زیر باکس */
+        /* ============================================ */
+        
+        .color-options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .color-option-box {
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 6px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 600;
-            background-color: white;
-            min-width: 80px;
+            background: white;
+            width: 48px;
+            height: 48px;
         }
 
-        .color-option-text:hover {
+        .color-option-box:hover {
             border-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .color-option-text.active {
+        .color-option-box.active {
             border-color: var(--primary-color);
-            background-color: rgba(233, 69, 96, 0.1);
-            color: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.25);
+            transform: scale(1.05);
         }
+
+        .color-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .color-option-box:hover .color-box {
+            transform: scale(1.05);
+        }
+
+        /* ============================================ */
 
         .attribute-select {
             width: 100%;
@@ -624,6 +617,45 @@
             color: #721c24;
             border-right: 3px solid #dc3545;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-image {
+                height: 350px;
+            }
+
+            .action-btns {
+                flex-direction: column;
+            }
+
+            .s-p-add-to-cart {
+                margin-left: 0;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+
+            .wishlist-btn {
+                width: 100%;
+                border-radius: 50px;
+                height: auto;
+                padding: 12px;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+
+            .color-option-box {
+                width: 42px;
+                height: 42px;
+                padding: 5px;
+            }
+
+            .color-box {
+                width: 28px;
+                height: 28px;
+            }
+        }
     </style>
 @endsection
 
@@ -717,6 +749,7 @@
                                 <span class="selection-label" id="selectedAttributeLabel">ویژگی:</span>
                                 <span class="selection-value" id="selectedAttributeValue">-</span>
                             </div>
+                            <div id="selectedAttributesContainer"></div>
                         </div>
 
                         <!-- نمایش وضعیت موجودی -->
@@ -743,22 +776,85 @@
                             </div>
                         @endif
 
+                        <!-- ============================================ -->
+                        <!-- بخش رنگ‌ها - باکس‌های رنگی بدون متن - شروع -->
+                        <!-- ============================================ -->
                         @if ($product->attributeValues->where('attribute.name', 'color')->count())
                             <div class="product-color-options">
                                 <h5>رنگ:</h5>
                                 <div class="color-options-container">
+                                    @php
+                                        // مپ رنگ‌ها برای تبدیل نام رنگ به کد HEX
+                                        $colorMap = [
+                                            'قرمز' => '#FF0000',
+                                            'قرمز تیره' => '#8B0000',
+                                            'آبی' => '#0000FF',
+                                            'آبی تیره' => '#00008B',
+                                            'آبی آسمانی' => '#87CEEB',
+                                            'سبز' => '#00FF00',
+                                            'سبز تیره' => '#006400',
+                                            'زیتونی' => '#808000',
+                                            'مشکی' => '#000000',
+                                            'سفید' => '#FFFFFF',
+                                            'نارنجی' => '#FFA500',
+                                            'بنفش' => '#800080',
+                                            'بنفش روشن' => '#9370DB',
+                                            'صورتی' => '#FF69B4',
+                                            'صورتی تیره' => '#FF1493',
+                                            'طلایی' => '#FFD700',
+                                            'نقره‌ای' => '#C0C0C0',
+                                            'قهوه‌ای' => '#A52A2A',
+                                            'خاکستری' => '#808080',
+                                            'زرد' => '#FFFF00',
+                                            'لاجوردی' => '#2F4F4F',
+                                            'فیروزه‌ای' => '#00CED1',
+                                            'نیلی' => '#4B0082',
+                                            'ارغوانی' => '#800080',
+                                            'کرم' => '#FFFDD0',
+                                            'مسی' => '#B87333',
+                                            'برنزی' => '#CD7F32',
+                                            'نخودی' => '#F5DEB3',
+                                            'طوسی' => '#A9A9A9',
+                                            'سبز روشن' => '#90EE90',
+                                            'آبی روشن' => '#ADD8E6',
+                                            'قرمز روشن' => '#FF6B6B',
+                                            'شرابی' => '#800020',
+                                            'سورمه‌ای' => '#1A1A4E',
+                                            'بنفش تیره' => '#4B0082',
+                                            'سبز زیتونی' => '#556B2F',
+                                            'زرد کهربایی' => '#FFBF00',
+                                            'مرواریدی' => '#EAE0C8',
+                                        ];
+                                        // برای کدهای HEX که مستقیماً ذخیره شده‌اند
+                                        $isHex = function($value) {
+                                            return preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $value);
+                                        };
+                                    @endphp
                                     @foreach ($product->attributeValues->where('attribute.name', 'color') as $val)
+                                        @php
+                                            // تعیین کد رنگ: اگر مقدار HEX باشد، مستقیماً استفاده می‌شود
+                                            if ($isHex($val->value)) {
+                                                $colorCode = $val->value;
+                                            } else {
+                                                $colorCode = $colorMap[$val->value] ?? '#CCCCCC';
+                                            }
+                                        @endphp
                                         <input type="radio" id="color-{{ $val->id }}" name="product-color"
                                             value="{{ $val->id }}" {{ $loop->first ? 'checked' : '' }} hidden>
                                         <label for="color-{{ $val->id }}"
-                                            class="color-option-text {{ $loop->first ? 'active' : '' }}"
-                                            data-color-name="{{ $val->value }}">
-                                            {{ $val->value }}
+                                            class="color-option-box {{ $loop->first ? 'active' : '' }}"
+                                            data-color-code="{{ $colorCode }}"
+                                            data-color-name="{{ $val->value }}"
+                                            title="{{ $val->value }}">
+                                            <span class="color-box" style="background-color: {{ $colorCode }};"></span>
                                         </label>
                                     @endforeach
                                 </div>
                             </div>
                         @endif
+                        <!-- ============================================ -->
+                        <!-- بخش رنگ‌ها - باکس‌های رنگی بدون متن - پایان -->
+                        <!-- ============================================ -->
 
                         @php
                             $otherAttributes = $product->attributeValues
@@ -985,17 +1081,20 @@
                 // Color
                 if (colorInput) {
                     const label = document.querySelector(`label[for="color-${colorInput.value}"]`);
-                    colorValueEl.textContent = label ? label.getAttribute('data-color-name') || label.textContent
-                        .trim() : '-';
+                    if (label) {
+                        const colorName = label.getAttribute('data-color-name') || label.textContent.trim();
+                        colorValueEl.textContent = colorName;
+                    } else {
+                        colorValueEl.textContent = '-';
+                    }
                     hasSelection = true;
                 } else {
                     colorValueEl.textContent = '-';
                 }
 
-                // Other Attributes - نمایش پویا
+                // Other Attributes
                 const attributeItemsContainer = document.getElementById('selectedAttributesContainer');
                 if (!attributeItemsContainer) {
-                    // اگر وجود نداشت، بساز
                     const container = document.createElement('div');
                     container.id = 'selectedAttributesContainer';
                     summary.appendChild(container);
@@ -1010,10 +1109,10 @@
                             'ویژگی';
                         const selectedText = select.options[select.selectedIndex].textContent;
                         attributeHtml += `
-                <div class="selection-item">
-                    <span class="selection-label">${attributeName}:</span>
-                    <span class="selection-value">${selectedText}</span>
-                </div>`;
+                    <div class="selection-item">
+                        <span class="selection-label">${attributeName}:</span>
+                        <span class="selection-value">${selectedText}</span>
+                    </div>`;
                         hasSelection = true;
                     }
                 });
@@ -1028,25 +1127,20 @@
             function getCurrentAttributes() {
                 const attributes = {};
 
-                // Size
                 const sizeInput = document.querySelector('input[name="product-size"]:checked');
                 if (sizeInput) attributes.size = sizeInput.value;
 
-                // Color
                 const colorInput = document.querySelector('input[name="product-color"]:checked');
                 if (colorInput) attributes.color = colorInput.value;
 
-                // Other attributes
                 document.querySelectorAll('.attribute-select').forEach(select => {
                     if (select.value) {
                         const attributeId = select.getAttribute('data-attribute-id');
                         attributes[`attribute_${attributeId}`] = select.value;
-                        // یا اگر بک‌اند فقط id می‌خواد: attributes[attributeId] = select.value;
                     }
                 });
 
                 return attributes;
-
             }
 
             function findMatchingVariant(attributes) {
@@ -1076,13 +1170,11 @@
                 const stockMessage = document.getElementById('stockMessage');
 
                 if (variant && variant.stock > 0) {
-                    // Available
                     addToCartBtn.innerHTML = `<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید`;
                     addToCartBtn.className = 's-p-add-to-cart pulse-animation';
                     addToCartBtn.disabled = false;
                     quantityInput.max = variant.stock;
 
-                    // Show stock info
                     if (variant.stock > 10) {
                         stockInfo.className = 'stock-info stock-available';
                         stockMessage.textContent = `موجودی: ${variant.stock} عدد`;
@@ -1093,7 +1185,6 @@
                     stockInfo.style.display = 'block';
 
                 } else {
-                    // Unavailable
                     let btnText = 'ترکیب ناموجود';
                     if (Object.keys(attributes).length === 0 && variantStockData.length === 0) {
                         btnText = 'ناموجود';
@@ -1104,7 +1195,6 @@
                     addToCartBtn.disabled = true;
                     quantityInput.max = 0;
 
-                    // Show stock info
                     stockInfo.className = 'stock-info stock-unavailable';
                     stockMessage.textContent = 'این ترکیب در حال حاضر موجود نمی‌باشد';
                     stockInfo.style.display = 'block';
@@ -1125,12 +1215,10 @@
                 const quantity = parseInt(document.getElementById('quantity').value);
                 const attributes = getCurrentAttributes();
 
-                // ========== LOADING ==========
                 const originalText = addToCartBtn.innerHTML;
                 addToCartBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner me-2"></i>در حال افزودن...';
                 addToCartBtn.disabled = true;
 
-                // ========== AJAX ==========
                 fetch('{{ route('cart.addToCartAjax') }}', {
                         method: 'POST',
                         headers: {
@@ -1141,7 +1229,7 @@
                         body: JSON.stringify({
                             product_id: parseInt(productId),
                             quantity: quantity,
-                            attributes: attributes // ارسال تمام attributeها در یک آبجکت
+                            attributes: attributes
                         })
                     })
                     .then(response => {
@@ -1227,6 +1315,15 @@
                         });
                     })
                     .finally(() => {
+                        if (addToCartBtn) {
+                            const hasStock = getMaxAvailableQuantity() > 0;
+                            if (hasStock) {
+                                addToCartBtn.innerHTML =
+                                '<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید';
+                                addToCartBtn.className = 's-p-add-to-cart pulse-animation';
+                                addToCartBtn.disabled = false;
+                            }
+                        }
                         updateAvailabilityStatus();
                     });
             }
@@ -1250,21 +1347,19 @@
             }
 
             // ========== EVENT LISTENERS ==========
-            // Size
             document.querySelectorAll('input[name="product-size"]').forEach(input => {
                 input.addEventListener('change', () => {
                     document.querySelectorAll('.size-option').forEach(l => l.classList.remove(
-                        'active'));
+                    'active'));
                     const label = document.querySelector(`label[for="size-${input.value}"]`);
                     if (label) label.classList.add('active');
                     updateSelectionSummary();
                 });
             });
 
-            // Color
             document.querySelectorAll('input[name="product-color"]').forEach(input => {
                 input.addEventListener('change', () => {
-                    document.querySelectorAll('.color-option-text').forEach(l => l.classList.remove(
+                    document.querySelectorAll('.color-option-box').forEach(l => l.classList.remove(
                         'active'));
                     const label = document.querySelector(`label[for="color-${input.value}"]`);
                     if (label) label.classList.add('active');
@@ -1272,12 +1367,10 @@
                 });
             });
 
-            // Attributes
             document.querySelectorAll('.attribute-select').forEach(select => {
                 select.addEventListener('change', updateSelectionSummary);
             });
 
-            // Quantity buttons
             document.addEventListener('click', e => {
                 if (e.target.classList.contains('quantity-btn')) {
                     e.preventDefault();
@@ -1285,10 +1378,6 @@
                     else decreaseQuantity();
                 }
             });
-
-            // Initial setup
-            updateSelectionSummary();
-            updateAvailabilityStatus();
 
             // ========== UTILITIES ==========
             function updateCartCount(count) {
@@ -1308,16 +1397,18 @@
             // ========== STYLES ==========
             const style = document.createElement('style');
             style.textContent = `
-        .spinner { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
-    `;
+                .spinner { animation: spin 1s linear infinite; }
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+            `;
             document.head.appendChild(style);
 
-            // Zoom
             document.getElementById('mainImage').addEventListener('click', function() {
                 zoomImage(this);
             });
+
+            updateSelectionSummary();
+            updateAvailabilityStatus();
         });
     </script>
 @endsection

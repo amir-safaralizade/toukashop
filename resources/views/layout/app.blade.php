@@ -13,18 +13,18 @@
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap.rtl.min.css') }}">
     <!-- Font Awesome -->
     <script src="{{ asset('site/js/all.min.js') }}"></script>
-    <link href="{{ asset('site/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    
     <link rel="stylesheet" href="{{ asset('site/css/swiper-bundle.min.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    
     <link rel="stylesheet" href="{{ asset('site/style.css') . '?v=' . time() }}">
     <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
     <link rel="shortcut icon" href="/favicons/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
     <link rel="manifest" href="/favicons/site.webmanifest" />
+	<link href="{{ asset('site/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+
     @yield('styles')
 </head>
 
