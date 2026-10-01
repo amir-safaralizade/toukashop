@@ -45,6 +45,7 @@ return [
         'secret_key' => env('SMSIR_SECRET_KEY'),
         'line_number' => env('SMSIR_LINE_NUMBER'),
     ],
+    'sms_fake_mode' => env('SMS_FAKE_MODE', false),
     'zarinpal' => [
         'merchant_id' => '6a875955-cd80-4f51-9494-f7508d7d33b6'
     ],

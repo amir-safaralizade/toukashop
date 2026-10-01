@@ -495,6 +495,14 @@
             transform: scale(1.05);
         }
 
+        .variant-option-unavailable {
+            display: none !important;
+        }
+
+        .attribute-select option:disabled {
+            display: none;
+        }
+
         .color-box {
             width: 32px;
             height: 32px;
@@ -737,11 +745,11 @@
 
                         <!-- نمایش خلاصه انتخاب‌ها -->
                         <div class="selection-summary" id="selectionSummary" style="display: none;">
-                            <div class="selection-item">
+                            <div class="selection-item" id="selectedSizeItem">
                                 <span class="selection-label">سایز:</span>
                                 <span class="selection-value" id="selectedSizeValue">-</span>
                             </div>
-                            <div class="selection-item">
+                            <div class="selection-item" id="selectedColorItem">
                                 <span class="selection-label">رنگ:</span>
                                 <span class="selection-value" id="selectedColorValue">-</span>
                             </div>
@@ -758,17 +766,27 @@
                             <span id="stockMessage"></span>
                         </div>
 
-                        @if ($product->attributeValues->where('attribute.name', 'size')->count())
+                        @php
+                            $sizeValues = $product->attributeValues->filter(
+                                fn ($value) => in_array(mb_strtolower($value->attribute->name), ['size', 'سایز'], true)
+                            );
+                            $colorValues = $product->attributeValues->filter(
+                                fn ($value) => in_array(mb_strtolower($value->attribute->name), ['color', 'colour', 'رنگ'], true)
+                            );
+                        @endphp
+
+                        @if ($sizeValues->count())
                             <div class="size-options">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h5>سایز:</h5>
                                 </div>
                                 <div class="size-options-container">
-                                    @foreach ($product->attributeValues->where('attribute.name', 'size') as $val)
+                                    @foreach ($sizeValues as $val)
                                         <input type="radio" id="size-{{ $val->id }}" name="product-size"
-                                            value="{{ $val->id }}" {{ $loop->first ? 'checked' : '' }} hidden>
+                                            value="{{ $val->id }}" data-attribute-id="{{ $val->attribute_id }}"
+                                            hidden>
                                         <label for="size-{{ $val->id }}"
-                                            class="size-option {{ $loop->first ? 'active' : '' }}">
+                                            class="size-option">
                                             {{ $val->value }}
                                         </label>
                                     @endforeach
@@ -779,7 +797,7 @@
                         <!-- ============================================ -->
                         <!-- بخش رنگ‌ها - باکس‌های رنگی بدون متن - شروع -->
                         <!-- ============================================ -->
-                        @if ($product->attributeValues->where('attribute.name', 'color')->count())
+                        @if ($colorValues->count())
                             <div class="product-color-options">
                                 <h5>رنگ:</h5>
                                 <div class="color-options-container">
@@ -830,22 +848,25 @@
                                             return preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $value);
                                         };
                                     @endphp
-                                    @foreach ($product->attributeValues->where('attribute.name', 'color') as $val)
+                                    @foreach ($colorValues as $val)
                                         @php
                                             // تعیین کد رنگ: اگر مقدار HEX باشد، مستقیماً استفاده می‌شود
                                             if ($isHex($val->value)) {
                                                 $colorCode = $val->value;
+                                                $colorName = $val->display_value;
                                             } else {
                                                 $colorCode = $colorMap[$val->value] ?? '#CCCCCC';
+                                                $colorName = $val->value;
                                             }
                                         @endphp
                                         <input type="radio" id="color-{{ $val->id }}" name="product-color"
-                                            value="{{ $val->id }}" {{ $loop->first ? 'checked' : '' }} hidden>
+                                            value="{{ $val->id }}" data-attribute-id="{{ $val->attribute_id }}"
+                                            hidden>
                                         <label for="color-{{ $val->id }}"
-                                            class="color-option-box {{ $loop->first ? 'active' : '' }}"
-                                            data-color-code="{{ $colorCode }}"
-                                            data-color-name="{{ $val->value }}"
-                                            title="{{ $val->value }}">
+                                            class="color-option-box"
+                                            data-color-name="{{ $colorName }}"
+                                            aria-label="{{ $colorName }}"
+                                            title="{{ $colorName }}">
                                             <span class="color-box" style="background-color: {{ $colorCode }};"></span>
                                         </label>
                                     @endforeach
@@ -857,10 +878,10 @@
                         <!-- ============================================ -->
 
                         @php
+                            $specialAttributeIds = $sizeValues->pluck('attribute_id')
+                                ->merge($colorValues->pluck('attribute_id'))->unique();
                             $otherAttributes = $product->attributeValues
-                                ->filter(function ($value) {
-                                    return !in_array($value->attribute->name, ['size', 'color']);
-                                })
+                                ->reject(fn ($value) => $specialAttributeIds->contains($value->attribute_id))
                                 ->groupBy(function ($value) {
                                     return $value->attribute->id;
                                 });
@@ -882,7 +903,8 @@
                                             data-attribute-id="{{ $attribute->id }}">
                                             <option value="">انتخاب کنید</option>
                                             @foreach ($values as $value)
-                                                <option value="{{ $value->id }}">{{ $value->value }}</option>
+                                                <option value="{{ $value->id }}"
+                                                    data-attribute-id="{{ $attribute->id }}">{{ $value->value }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -907,10 +929,10 @@
 
                         <div class="quantity-selector mt-4">
                             <label for="quantity" class="me-3">تعداد:</label>
-                            <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <button type="button" class="quantity-btn" aria-label="کاهش تعداد">−</button>
                             <input type="number" value="1" min="1" class="quantity-input"
                                 id="quantity" />
-                            <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                            <button type="button" class="quantity-btn" aria-label="افزایش تعداد">+</button>
                         </div>
 
                         <div class="action-btns">
@@ -1022,7 +1044,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // ========== GLOBAL VARIABLES ==========
             const variantStockData = @json($variantStockData);
-            console.log('Variant Stock Data:', variantStockData);
+            const availableVariants = variantStockData.filter(variant => variant.stock > 0);
 
             // ========== IMAGE GALLERY ==========
             function changeMainImage(src, thumb) {
@@ -1043,6 +1065,7 @@
                     document.body.style.overflow = 'hidden';
                 }
             }
+            window.changeMainImage = changeMainImage;
 
             // ========== QUANTITY SELECTOR ==========
             function increaseQuantity() {
@@ -1077,6 +1100,7 @@
                 } else {
                     sizeValueEl.textContent = '-';
                 }
+                document.getElementById('selectedSizeItem').style.display = sizeInput ? '' : 'none';
 
                 // Color
                 if (colorInput) {
@@ -1091,6 +1115,7 @@
                 } else {
                     colorValueEl.textContent = '-';
                 }
+                document.getElementById('selectedColorItem').style.display = colorInput ? '' : 'none';
 
                 // Other Attributes
                 const attributeItemsContainer = document.getElementById('selectedAttributesContainer');
@@ -1128,10 +1153,10 @@
                 const attributes = {};
 
                 const sizeInput = document.querySelector('input[name="product-size"]:checked');
-                if (sizeInput) attributes.size = sizeInput.value;
+                if (sizeInput) attributes[`attribute_${sizeInput.dataset.attributeId}`] = sizeInput.value;
 
                 const colorInput = document.querySelector('input[name="product-color"]:checked');
-                if (colorInput) attributes.color = colorInput.value;
+                if (colorInput) attributes[`attribute_${colorInput.dataset.attributeId}`] = colorInput.value;
 
                 document.querySelectorAll('.attribute-select').forEach(select => {
                     if (select.value) {
@@ -1143,16 +1168,91 @@
                 return attributes;
             }
 
+            function variantMatches(variant, attributes, exact = false) {
+                const selectedKeys = Object.keys(attributes);
+                if (exact && Object.keys(variant.attributes).length !== selectedKeys.length) {
+                    return false;
+                }
+
+                return selectedKeys.every(key =>
+                    variant.attributes[key] === parseInt(attributes[key], 10)
+                );
+            }
+
             function findMatchingVariant(attributes) {
-                return variantStockData.find(variant => {
-                    let match = true;
-                    Object.keys(attributes).forEach(attrKey => {
-                        if (variant.attributes[attrKey] !== parseInt(attributes[attrKey])) {
-                            match = false;
-                        }
-                    });
-                    return match && variant.stock > 0;
+                return availableVariants.find(variant => variantMatches(variant, attributes, true));
+            }
+
+            function setAttributeValue(attributeKey, valueId) {
+                const attributeId = attributeKey.replace('attribute_', '');
+                const radio = document.querySelector(
+                    `input[type="radio"][data-attribute-id="${attributeId}"][value="${valueId}"]`
+                );
+                if (radio) {
+                    radio.checked = true;
+                }
+
+                const select = document.querySelector(`.attribute-select[data-attribute-id="${attributeId}"]`);
+                if (select) {
+                    select.value = String(valueId);
+                }
+            }
+
+            function applyVariant(variant) {
+                if (!variant) return;
+                Object.entries(variant.attributes).forEach(([key, valueId]) => {
+                    setAttributeValue(key, valueId);
                 });
+                syncActiveOptionStyles();
+            }
+
+            function syncActiveOptionStyles() {
+                document.querySelectorAll('.size-option, .color-option-box').forEach(label => {
+                    const input = document.getElementById(label.getAttribute('for'));
+                    label.classList.toggle('active', Boolean(input?.checked));
+                });
+            }
+
+            function normalizeSelection(changedKey) {
+                const current = getCurrentAttributes();
+                if (findMatchingVariant(current)) return;
+
+                const preferred = changedKey && current[changedKey]
+                    ? availableVariants.find(variant =>
+                        variant.attributes[changedKey] === parseInt(current[changedKey], 10))
+                    : null;
+                applyVariant(preferred || availableVariants[0]);
+            }
+
+            function refreshAvailableOptions() {
+                const current = getCurrentAttributes();
+
+                document.querySelectorAll('input[type="radio"][data-attribute-id]').forEach(input => {
+                    const key = `attribute_${input.dataset.attributeId}`;
+                    // Color is the primary selector: keep every color that has
+                    // at least one in-stock variant visible. Choosing it will
+                    // automatically move the remaining selectors to a valid variant.
+                    const candidate = input.name === 'product-color'
+                        ? {[key]: input.value}
+                        : {...current, [key]: input.value};
+                    const isAvailable = availableVariants.some(variant => variantMatches(variant, candidate));
+                    const label = document.querySelector(`label[for="${input.id}"]`);
+                    input.disabled = !isAvailable;
+                    label?.classList.toggle('variant-option-unavailable', !isAvailable);
+                });
+
+                document.querySelectorAll('.attribute-select').forEach(select => {
+                    const key = `attribute_${select.dataset.attributeId}`;
+                    Array.from(select.options).forEach(option => {
+                        if (!option.value) return;
+                        const candidate = {...current, [key]: option.value};
+                        const isAvailable = availableVariants.some(variant => variantMatches(variant, candidate));
+                        option.disabled = !isAvailable;
+                        option.hidden = !isAvailable;
+                    });
+                });
+
+                syncActiveOptionStyles();
             }
 
             function getMaxAvailableQuantity() {
@@ -1169,11 +1269,14 @@
                 const stockInfo = document.getElementById('stockInfo');
                 const stockMessage = document.getElementById('stockMessage');
 
+                if (!addToCartBtn || !quantityInput || !stockInfo || !stockMessage) return;
+
                 if (variant && variant.stock > 0) {
                     addToCartBtn.innerHTML = `<i class="bi bi-cart-plus me-2"></i>افزودن به سبد خرید`;
                     addToCartBtn.className = 's-p-add-to-cart pulse-animation';
                     addToCartBtn.disabled = false;
                     quantityInput.max = variant.stock;
+                    quantityInput.value = Math.max(1, Math.min(parseInt(quantityInput.value, 10) || 1, variant.stock));
 
                     if (variant.stock > 10) {
                         stockInfo.className = 'stock-info stock-available';
@@ -1194,6 +1297,7 @@
                     addToCartBtn.className = 's-p-add-to-cart btn-danger';
                     addToCartBtn.disabled = true;
                     quantityInput.max = 0;
+                    quantityInput.value = 1;
 
                     stockInfo.className = 'stock-info stock-unavailable';
                     stockMessage.textContent = 'این ترکیب در حال حاضر موجود نمی‌باشد';
@@ -1349,26 +1453,34 @@
             // ========== EVENT LISTENERS ==========
             document.querySelectorAll('input[name="product-size"]').forEach(input => {
                 input.addEventListener('change', () => {
-                    document.querySelectorAll('.size-option').forEach(l => l.classList.remove(
-                    'active'));
-                    const label = document.querySelector(`label[for="size-${input.value}"]`);
-                    if (label) label.classList.add('active');
+                    const key = `attribute_${input.dataset.attributeId}`;
+                    normalizeSelection(key);
+                    refreshAvailableOptions();
                     updateSelectionSummary();
                 });
             });
 
             document.querySelectorAll('input[name="product-color"]').forEach(input => {
                 input.addEventListener('change', () => {
-                    document.querySelectorAll('.color-option-box').forEach(l => l.classList.remove(
-                        'active'));
-                    const label = document.querySelector(`label[for="color-${input.value}"]`);
-                    if (label) label.classList.add('active');
+                    const key = `attribute_${input.dataset.attributeId}`;
+                    normalizeSelection(key);
+                    refreshAvailableOptions();
                     updateSelectionSummary();
                 });
             });
 
             document.querySelectorAll('.attribute-select').forEach(select => {
-                select.addEventListener('change', updateSelectionSummary);
+                select.addEventListener('change', () => {
+                    const key = `attribute_${select.dataset.attributeId}`;
+                    normalizeSelection(key);
+                    refreshAvailableOptions();
+                    updateSelectionSummary();
+                });
+            });
+
+            document.getElementById('quantity')?.addEventListener('change', function() {
+                const max = getMaxAvailableQuantity();
+                this.value = Math.max(1, Math.min(parseInt(this.value, 10) || 1, max || 1));
             });
 
             document.addEventListener('click', e => {
@@ -1403,12 +1515,13 @@
             `;
             document.head.appendChild(style);
 
-            document.getElementById('mainImage').addEventListener('click', function() {
+            document.getElementById('mainImage')?.addEventListener('click', function() {
                 zoomImage(this);
             });
 
+            applyVariant(availableVariants[0]);
+            refreshAvailableOptions();
             updateSelectionSummary();
-            updateAvailabilityStatus();
         });
     </script>
 @endsection

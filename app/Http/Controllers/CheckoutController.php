@@ -28,7 +28,7 @@ class CheckoutController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'cart' => 'required|array|min:1',
-            'cart.*.product_id' => 'required|integer|exists:products,id',
+            'cart.*.product_variant_id' => 'required|integer|exists:product_variants,id',
             'cart.*.quantity' => 'required|integer|min:1',
             'shipping_address' => 'nullable|string|max:1000',
             'coupon_code' => 'nullable|string|max:100',
@@ -55,7 +55,10 @@ class CheckoutController extends Controller
                 'message' => 'سفارش با موفقیت ثبت شد.',
                 'order_id' => $order->id,
                 'final_price' => $order->final_price,
-                'redirect_to' => route('payment.redirect', $order->id),
+                'redirect_to' => route('payment.redirect', [
+                    'order_id' => $order->id,
+                    'provider' => config('payment.active_provider'),
+                ]),
             ]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'خطا در ثبت سفارش', 'error' => $e->getMessage()], 500);
@@ -66,6 +69,7 @@ class CheckoutController extends Controller
     public function redirectToGateway($order_id, $provider, PaymentService $paymentService)
     {
         $order = Order::where('id', $order_id)
+            ->where('user_id', auth()->id())
             ->where('status', 'ready_to_pay')
             ->firstOrFail();
 
@@ -80,8 +84,15 @@ class CheckoutController extends Controller
             provider: $provider // ✅ مستقیم از route گرفته شده
         );
 
-        $paymentUrl = $paymentService->pay($dto);
-        return redirect($paymentUrl);
+        try {
+            $paymentUrl = $paymentService->pay($dto);
+            return redirect($paymentUrl);
+        } catch (\Throwable $exception) {
+            $this->orderService->releaseReservation($order);
+
+            return redirect()->route('cart.mycart')
+                ->with('error', 'اتصال به درگاه ناموفق بود؛ موجودی رزروشده آزاد شد.');
+        }
     }
 
 
@@ -93,22 +104,35 @@ class CheckoutController extends Controller
                 transaction: $transaction,
                 requestData: $request->all()
             );
-            if (!empty($transaction->verify_ip)) {
+            if ($transaction->status === 'success') {
+                $payable = $transaction->payable;
+                if ($payable instanceof Order) {
+                    app(OrderService::class)->markAsPaid($payable);
+                }
                 return redirect(route('cart.factor-status', encrypt($transaction->id)));
             }
             $success = $paymentService->verify($dto);
 
             if ($success) {
                 $payable = $transaction->payable;
-                if (get_class($payable) == Order::class) {
+                if ($payable instanceof Order) {
                     $order = $payable;
                     app(OrderService::class)->markAsPaid($order);
                     return redirect(route('cart.factor-status', encrypt($transaction->id)));
                 }
             } else {
+                $payable = $transaction->payable;
+                if ($payable instanceof Order) {
+                    app(OrderService::class)->releaseReservation($payable);
+                }
                 return redirect(route('cart.factor-status', encrypt($transaction->id)));
             }
         } catch (\Exception $e) {
+            $transaction->refresh();
+            $payable = $transaction->payable;
+            if ($transaction->status !== 'success' && $payable instanceof Order) {
+                app(OrderService::class)->releaseReservation($payable);
+            }
             return redirect(route('cart.factor-status', encrypt($transaction->id)));
         }
     }

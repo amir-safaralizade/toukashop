@@ -11,7 +11,9 @@ use App\Models\Tag;
 use stdClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Category;
+use App\Models\HomeProductSection;
 use Exception;
 
 class HomeController extends Controller
@@ -21,36 +23,37 @@ class HomeController extends Controller
         $page = Page::where('name', 'home')->firstOrfail();
         recordVisit($page);
 
-        try {
-            $products_ids = array_map('intval', explode('+', site_setting('best-selling-products-home-page')));
-        } catch (Exception $e) {
-            $products_ids = [];
-        }
+        $productRelations = ['category', 'mediaFiles', 'variants.attributeValues.attribute'];
+        $configuredIds = collect(explode('+', (string) site_setting('best-selling-products-home-page')))
+            ->map(fn ($id) => (int) $id)->filter()->unique()->values();
 
-        $products = Product::whereIn('id', $products_ids)
-            ->orderByRaw('FIELD(id, ' . implode(',', $products_ids) . ')')
-            ->get();
-
-        $special_products = Product::orderBy('id', 'desc')->where('category_id', 2)->take(6)->get();
-        $sliders = Slider::orderBy('sort_order', 'asc')->get();
-        $banners = Banner::orderBy('id', 'asc')->take(3)->get();
-        $bannerKeys = ['main_banner', 'second_banner', 'third_banner'];
+        $products = Product::with($productRelations)
+            ->when($configuredIds->isNotEmpty(), function ($query) use ($configuredIds) {
+                $query->whereIn('id', $configuredIds)
+                    ->orderByRaw('FIELD(id, ' . $configuredIds->implode(',') . ')');
+            }, function ($query) {
+                $query->withSum('orderItems as sold_quantity', 'quantity')->orderByDesc('sold_quantity');
+            })
+            ->take(8)->get();
 
         $data = new stdClass();
         $data->products = $products;
-        $data->special_products = $special_products;
-        $data->posts = Post::orderby('id', 'desc')->take(4)->get();
-        $data->cage_products = Product::where('category_id', 4)->OrderBy('id', 'desc')->where('stock', '>', 0)->take(4)->get();
-        $data->sliders = $sliders;
+        $data->new_products = Product::with($productRelations)->latest()->take(8)->get();
+        $data->variety_products = Product::with($productRelations)
+            ->whereHas('variants.attributeValues')->where('stock', '>', 0)->latest()->take(6)->get();
+        $data->posts = Post::with('category')->latest()->take(3)->get();
+        $data->sliders = Slider::orderBy('sort_order')->get();
+        $data->banners = Banner::orderBy('id')->take(3)->get();
         $data->page = $page;
-        foreach ($banners as $index => $banner) {
-            if (isset($bannerKeys[$index])) {
-                $data->{$bannerKeys[$index]} = $banner;
-            }
-        }
+        $data->animal_tags = Tag::withCount('products')->whereHas('products')->orderByDesc('products_count')->take(6)->get();
+        $data->product_sections = Schema::hasTable('home_product_sections')
+            ? HomeProductSection::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get()
+                ->map(function ($section) {
+                    $section->display_products = $section->productsForDisplay();
+                    return $section;
+                })->filter(fn ($section) => $section->display_products->isNotEmpty())->values()
+            : collect();
 
-        $animal_tags =  Tag::where('id' , '>' , '0')->OrderBy('type', 'asc')->get();
-        $data->animal_tags = $animal_tags;
         return view('site.pages.home', compact('data'));
     }
 

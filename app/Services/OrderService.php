@@ -20,6 +20,19 @@ class OrderService
     {
         return DB::transaction(function () use ($cartItems, $shippingAddress) {
             $totalPrice = 0;
+            $requestedByVariant = [];
+
+            foreach ($cartItems as $item) {
+                $variantId = (int) $item['product_variant_id'];
+                $requestedByVariant[$variantId] = ($requestedByVariant[$variantId] ?? 0) + (int) $item['quantity'];
+            }
+
+            foreach ($requestedByVariant as $variantId => $requestedQuantity) {
+                $variant = ProductVariant::whereKey($variantId)->where('is_active', true)->firstOrFail();
+                if ($variant->stock < $requestedQuantity) {
+                    throw new \Exception("موجودی واریانت {$variant->id} کافی نیست.");
+                }
+            }
 
             $order = new Order();
             $order->user_id = Auth::id();
@@ -28,15 +41,12 @@ class OrderService
             $order->tracking_code = $this->gen_tracking_code();
 
             foreach ($cartItems as $item) {
-                $variant = ProductVariant::findOrFail($item['product_variant_id']);
+                $variant = ProductVariant::whereKey($item['product_variant_id'])->where('is_active', true)->firstOrFail();
                 $product = $variant->product;
                 $quantity = $item['quantity'];
-                $unitPrice = $product->price;
+                $unitPrice = $variant->price ?? $product->price;
                 $total = $unitPrice * $quantity;
 
-                if ($variant->stock < $quantity) {
-                    throw new \Exception("موجودی واریانت {$variant->id} کافی نیست.");
-                }
                 $totalPrice += $total;
             }
 
@@ -45,10 +55,10 @@ class OrderService
             $order->save();
 
             foreach ($cartItems as $item) {
-                $variant = ProductVariant::findOrFail($item['product_variant_id']);
+                $variant = ProductVariant::whereKey($item['product_variant_id'])->where('is_active', true)->firstOrFail();
                 $product = $variant->product;
                 $quantity = $item['quantity'];
-                $unitPrice = $product->price;
+                $unitPrice = $variant->price ?? $product->price;
                 $total = $unitPrice * $quantity;
 
                 $orderItem = $order->items()->create([
@@ -59,12 +69,10 @@ class OrderService
                     'total_price' => $total,
                 ]);
 
-                if (!empty($item['attributes']) && is_array($item['attributes'])) {
-                    foreach ($item['attributes'] as $attributeId => $attributeValueId) {
-                        $orderItem->attributeValues()->attach($attributeValueId, [
-                            'attribute_id' => $attributeId,
-                        ]);
-                    }
+                foreach ($variant->attributeValues as $attributeValue) {
+                    $orderItem->attributeValues()->attach($attributeValue->id, [
+                        'attribute_id' => $attributeValue->pivot->attribute_id,
+                    ]);
                 }
             }
 
@@ -79,32 +87,41 @@ class OrderService
 
     public function finalizeOrder(Order $order): void
     {
-        if ($order->status !== 'pending') {
-            throw new \Exception("فقط سفارش‌هایی که در وضعیت در انتظار هستند قابل نهایی‌سازی‌اند.");
-        }
+        DB::transaction(function () use ($order) {
+            $order = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+            $order->load('items', 'shipment');
 
-        if ($order->items()->count() === 0) {
-            throw new \Exception("نمی‌توان سفارشی بدون آیتم را نهایی کرد.");
-        }
-
-        if ($order->final_price <= 0) {
-            throw new \Exception("مبلغ سفارش نامعتبر است.");
-        }
-
-        if (!$order->shipment) {
-            throw new \Exception("اطلاعات ارسال برای این سفارش ثبت نشده است.");
-        }
-
-        foreach ($order->items as $item) {
-            $variant = $item->variant;
-            if ($variant->stock < $item->quantity) {
-                throw new \Exception("موجودی واریانت {$variant->id} کافی نیست.");
+            if ($order->status !== 'pending') {
+                throw new \Exception("فقط سفارش‌هایی که در وضعیت در انتظار هستند قابل نهایی‌سازی‌اند.");
             }
-        }
+            if ($order->items->isEmpty()) {
+                throw new \Exception("نمی‌توان سفارشی بدون آیتم را نهایی کرد.");
+            }
+            if ($order->final_price <= 0) {
+                throw new \Exception("مبلغ سفارش نامعتبر است.");
+            }
+            if (!$order->shipment) {
+                throw new \Exception("اطلاعات ارسال برای این سفارش ثبت نشده است.");
+            }
 
+            $productsToUpdate = [];
+            foreach ($order->items->sortBy('product_variant_id') as $item) {
+                $variant = ProductVariant::whereKey($item->product_variant_id)
+                    ->where('is_active', true)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+                if ($variant->stock < $item->quantity) {
+                    throw new \Exception("موجودی واریانت {$variant->id} کافی نیست.");
+                }
+                $variant->decrement('stock', $item->quantity);
+                $productsToUpdate[$variant->product_id] = $variant->product;
+            }
 
-        $order->status = 'ready_to_pay';
-        $order->save();
+            $order->update(['status' => 'ready_to_pay']);
+            foreach ($productsToUpdate as $product) {
+                $product->updateTotalStock();
+            }
+        });
     }
 
     // public function markAsPaid(Order $order): void
@@ -134,53 +151,68 @@ class OrderService
     public function markAsPaid(Order $order): void
     {
         DB::transaction(function () use ($order) {
+            $order = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
             if ($order->status === 'paid') {
-                throw new \Exception("این سفارش قبلاً پرداخت شده است.");
+                return;
             }
-
-            $order->status = 'paid';
-            $order->save();
-
-            // نگهداری لیستی از محصولات برای به‌روزرسانی موجودی
-            $productsToUpdate = [];
-
-            foreach ($order->items as $item) {
-                $variant = $item->variant;
-
-                if ($variant->stock >= $item->quantity) {
-                    $variant->decrement('stock', $item->quantity);
-                    // اضافه کردن محصول به لیست برای به‌روزرسانی
-                    $productsToUpdate[$variant->product_id] = $variant->product;
-                } else {
-                    $variant->update(['stock' => 0]);
-                    throw new \Exception("موجودی واریانت {$variant->id} کافی نیست.");
-                }
+            if ($order->status !== 'ready_to_pay') {
+                throw new \Exception("وضعیت سفارش برای ثبت پرداخت معتبر نیست.");
             }
-
-            // به‌روزرسانی موجودی کلی محصولات
-            foreach ($productsToUpdate as $product) {
-                $product->updateTotalStock();
-            }
+            $order->update(['status' => 'paid']);
         });
     }
 
     public function cancelOrder(Order $order): void
     {
-        if (!in_array($order->status, ['pending', 'ready_to_pay', 'failed'])) {
+        if (!in_array($order->status, ['pending', 'ready_to_pay'], true)) {
             throw new \Exception("سفارش در وضعیت فعلی قابل لغو نیست.");
         }
 
         DB::transaction(function () use ($order) {
-            foreach ($order->items as $item) {
-                $variant = $item->variant;
-                $variant->increment('stock', $item->quantity);
+            $order = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+            if (!in_array($order->status, ['pending', 'ready_to_pay'], true)) {
+                throw new \Exception("سفارش در وضعیت فعلی قابل لغو نیست.");
             }
+            $shouldRestoreStock = $order->status === 'ready_to_pay';
+            $this->restoreReservedStock($order, $shouldRestoreStock);
 
-            $order->status = 'canceled';
-            $order->save();
+            $order->update(['status' => 'canceled']);
 
             logger()->info("سفارش #{$order->id} لغو شد.");
         });
+    }
+
+    public function releaseReservation(Order $order): void
+    {
+        DB::transaction(function () use ($order) {
+            $order = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+            if ($order->status !== 'ready_to_pay') {
+                return;
+            }
+
+            $this->restoreReservedStock($order, true);
+            $order->update(['status' => 'pending']);
+        });
+    }
+
+    private function restoreReservedStock(Order $order, bool $restore): void
+    {
+        if (!$restore) {
+            return;
+        }
+
+        $productsToUpdate = [];
+        foreach ($order->items->sortBy('product_variant_id') as $item) {
+            $variant = ProductVariant::whereKey($item->product_variant_id)->lockForUpdate()->first();
+            if (!$variant) {
+                continue;
+            }
+            $variant->increment('stock', $item->quantity);
+            $productsToUpdate[$variant->product_id] = $variant->product;
+        }
+        foreach ($productsToUpdate as $product) {
+            $product->updateTotalStock();
+        }
     }
 
     public function deleteOrder(Order $order): bool
@@ -219,8 +251,16 @@ class OrderService
     {
         $order = Order::where('user_id', auth()->id())
             ->where('status', 'pending')
+            ->latest()
             ->with('items.product', 'items.variant', 'items.attributeValues')
             ->first();
+
+        if ($order) {
+            Order::where('user_id', auth()->id())
+                ->where('status', 'pending')
+                ->where('id', '<>', $order->id)
+                ->update(['status' => 'expired']);
+        }
 
         if ($justSize) {
             return $order ? $order->items->count() : 0;

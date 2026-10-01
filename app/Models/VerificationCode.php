@@ -21,7 +21,7 @@ class VerificationCode extends Model
     {
         return self::create([
             'phone' => $phone,
-            'code' => str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT),
+            'code' => (string) random_int(100000, 999999),
             'channel' => $channel,
             'expires_at' => now()->addMinutes(3),
         ]);

@@ -540,16 +540,22 @@
                                 <h4 class="detail-title">آیتم‌های سفارش</h4>
                                 @foreach ($order->items as $item)
                                     <div class="order-item">
-                                        <img src="{{ $item->product->firstMedia('main_image')->full_url }}"
-                                            class="order-item-img" alt="{{ $item->product->name }}">
+                                        @if($item->product)
+                                            <a href="{{ route('products.show', $item->product->slug) }}">
+                                                <img src="{{ $item->product->firstMedia('main_image')?->full_url ?? asset('images/default-product.jpg') }}"
+                                                    class="order-item-img" alt="{{ $item->product->name }}">
+                                            </a>
+                                        @else
+                                            <img src="{{ asset('images/default-product.jpg') }}" class="order-item-img" alt="محصول حذف‌شده">
+                                        @endif
                                         <div class="order-item-info">
-                                            <h5 class="order-item-title">{{ $item->product->name }}</h5>
+                                            <h5 class="order-item-title">@if($item->product)<a class="text-reset text-decoration-none" href="{{ route('products.show', $item->product->slug) }}">{{ $item->product->name }}</a>@else محصول حذف‌شده @endif</h5>
                                             <p class="mb-1">تعداد: {{ $item->quantity }} عدد</p>
                                             @if ($item->attributeValues->count() > 0)
                                                 <p class="mb-1 small">
                                                     مشخصات:
                                                     @foreach ($item->attributeValues as $attrValue)
-                                                        {{ $attrValue->attribute->title }}: {{ $attrValue->value }}
+                                                        {{ $attrValue->attribute->title }}: {{ $attrValue->display_value }}
                                                         @if (!$loop->last)
                                                             ,
                                                         @endif

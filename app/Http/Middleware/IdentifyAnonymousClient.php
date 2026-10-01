@@ -15,6 +15,11 @@ class IdentifyAnonymousClient
     public function handle(Request $request, Closure $next)
     {
         if (auth()->check() && !auth()->user()->is_guest) {
+            auth()->user()->update([
+                'last_ip' => get_client_ip(),
+                'last_agent' => get_user_agent(),
+                'last_activity' => now(),
+            ]);
             return $next($request);
         }
 

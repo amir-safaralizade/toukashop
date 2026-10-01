@@ -10,8 +10,11 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\api\PublicController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OTPController;
+use App\Http\Controllers\AccountController;
+use App\Http\Middleware\EnsureCustomerAuthenticated;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Http\Controllers\SiteMapCpntroller;
+
 
 Route::middleware(IdentifyAnonymousClient::class)->group(function () {
 
@@ -20,7 +23,7 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::Post('login', 'login')->name('login');
         Route::get('register', 'registerView')->name('register-view');
         Route::post('register', 'register')->name('register');
-        Route::get('logout', 'logout')->name('logout');
+        Route::post('logout', 'logout')->name('logout');
     });
 
     Route::name('page.')->controller(HomeController::class)->group(function () {
@@ -29,6 +32,11 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::get('order-tracking', 'orderTracking')->name('orderTracking');
         Route::get('about-us', 'aboutUs')->name('about_us');
         Route::get('search_page', 'search_page')->name('search_page');
+    });
+
+    Route::middleware(EnsureCustomerAuthenticated::class)->prefix('account')->controller(AccountController::class)->name('account.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/orders/{order}', 'show')->name('orders.show');
     });
 
     Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
@@ -41,19 +49,15 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
 
     Route::prefix('cart')->controller(CartController::class)->name('cart.')->group(function () {
         Route::get('mycart', 'mycart')->name('mycart');
-        Route::get('add-to-cart/{product}', 'addToCart')->name('addToCart');
         Route::delete('/item/{item}/delete', 'deleteFromCart')->name('deleteFromCart');
-        Route::post('/clear', 'clear')->name('cart.clear');
+        Route::post('/clear', 'clear')->name('clear');
         Route::post('finalize', 'finalize')->name('finalize');
-        Route::get('clear', 'clear')->name('clear');
-        Route::get('coupon/apply', 'couponApply')->name('coupon.apply');
+        Route::post('coupon/apply', 'couponApply')->name('coupon.apply');
         Route::post('/update-quantity/{item}', 'updateQuantity')->name('updateQuantity');
         Route::post('/api/add', 'addToCartAjax')->name('addToCartAjax');
         Route::get('/item-count', 'getItemCount')->name('itemCount');
         Route::get('/factor-status/{transaction}', 'FactorStatus')->name('factor-status');
-        Route::get('wishlist/add', 'wishlist')->name('wishlist.add');
     });
-    Route::get('wishlist/add', [CartController::class, 'wishlist'])->name('wishlist.add');
     Route::prefix('posts')->controller(PostController::class)->name('posts.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show/{slug}', 'show')->name('show');
@@ -65,10 +69,13 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
         Route::any('/payment/callback/{our_token}', 'paymentCallback')->name('payment.callback')->withoutMiddleware([VerifyCsrfToken::class]);
     });
 });
- 
+
 Route::prefix('api')->group(function () {
     Route::get('cities', [PublicController::class, 'getCities']);
-    Route::post('/send-otp', [OTPController::class, 'send'])->name('otp.send');
+    Route::get('products/search', [PublicController::class, 'searchProducts'])
+        ->middleware('throttle:60,1')->name('api.products.search');
+    Route::post('/send-otp', [OTPController::class, 'send'])
+        ->middleware('throttle:5,1')->name('otp.send');
 });
 
 Route::get('sitemap/generation', [SiteMapCpntroller::class, 'generate'])->name('sitemap.generation');

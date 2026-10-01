@@ -17,7 +17,8 @@ class Order extends Model
         'fullname',
         'phone',
         'notes',
-        'payment_method'
+        'payment_method',
+        'shipping_cost',
     ];
 
 
@@ -44,10 +45,12 @@ class Order extends Model
 
     public const STATUSES = [
         'pending' => 'در انتظار پرداخت',
+        'ready_to_pay' => 'آماده پرداخت',
         'paid' => 'پرداخت‌شده',
         'shipped' => 'ارسال‌شده',
         'completed' => 'تکمیل‌شده',
         'canceled' => 'لغوشده',
+        'expired' => 'منقضی‌شده',
     ];
 
     public function getStatusFaAttribute()

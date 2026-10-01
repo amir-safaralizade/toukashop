@@ -1,6 +1,7 @@
 @extends('layout.app')
 
 @section('styles')
+    @include('auth.partials.styles')
     <style>
         .cart-container {
             background: white;
@@ -199,6 +200,11 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+
+        .cart-item-attributes { display: flex; flex-wrap: wrap; gap: 8px; }
+        .attribute-item { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border: 1px solid #e5e8eb; border-radius: 999px; background: #fafbfc; color: #4d5964; }
+        .attribute-item small { font-size: .8rem; font-weight: 700; }
+        .cart-color-swatch { width: 20px; height: 20px; flex: 0 0 20px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #cfd5da, 0 2px 5px rgba(0,0,0,.13); }
 
         .empty-cart {
             text-align: center;
@@ -506,10 +512,12 @@
                                 $image = $item->product->firstMedia('main_image');
                             @endphp
                             <div class="cart-item">
-                                <img src="{{ $image?->full_url }}" class="cart-item-img"
-                                    alt="{{ $image?->alt ?? $item->product->name }}" />
+                                <a href="{{ route('products.show', $item->product->slug) }}" aria-label="مشاهده {{ $item->product->name }}">
+                                    <img src="{{ $image?->full_url ?? asset('images/default-product.jpg') }}" class="cart-item-img"
+                                        alt="{{ $image?->alt ?? $item->product->name }}" />
+                                </a>
                                 <div class="cart-item-info">
-                                    <h3 class="cart-item-title">{{ $item->product->name }}</h3>
+                                    <h3 class="cart-item-title"><a class="text-reset text-decoration-none" href="{{ route('products.show', $item->product->slug) }}">{{ $item->product->name }}</a></h3>
                                     <p class="cart-item-desc">{{ $item->product->short_description ?? 'محصول با کیفیت' }}
                                     </p>
                                     <div class="cart-item-price">{{ number_format($item->unit_price) }} تومان</div>
@@ -517,8 +525,18 @@
                                     <!-- نمایش مشخصات محصول -->
                                     <div class="cart-item-attributes mt-2">
                                         @foreach ($item->attributeValues as $val)
+                                            @php
+                                                $attributeName = $val->attribute->title ?? $val->attribute->name;
+                                                $isColor = in_array(mb_strtolower($val->attribute->name), ['color', 'colour', 'رنگ'], true)
+                                                    || mb_strtolower($attributeName) === 'رنگ';
+                                                $isHexColor = $isColor && preg_match('/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $val->value);
+                                                $displayValue = $val->display_value === 'رنگ انتخابی' ? 'رنگ محصول' : $val->display_value;
+                                            @endphp
                                             <div class="attribute-item">
-                                                <small>{{ $val->attribute->title }}: {{ $val->value }}</small>
+                                                @if ($isHexColor)
+                                                    <span class="cart-color-swatch" style="background-color: {{ $val->value }}" aria-hidden="true"></span>
+                                                @endif
+                                                <small>{{ $attributeName }}: {{ $displayValue }}</small>
                                             </div>
                                         @endforeach
                                     </div>
@@ -534,12 +552,12 @@
                                         </button>
                                     </form>
                                     <div class="quantity-selector">
-                                        <button class="quantity-btn"
-                                            onclick="decreaseQuantity({{ $item->id }})">-</button>
+                                        <button type="button" class="quantity-btn" data-action="decrease"
+                                            data-item-id="{{ $item->id }}" aria-label="کاهش تعداد">−</button>
                                         <input type="number" class="quantity-input" value="{{ $item->quantity }}"
-                                            min="1" readonly />
-                                        <button class="quantity-btn"
-                                            onclick="increaseQuantity({{ $item->id }})">+</button>
+                                            min="1" data-item-id="{{ $item->id }}" readonly />
+                                        <button type="button" class="quantity-btn" data-action="increase"
+                                            data-item-id="{{ $item->id }}" aria-label="افزایش تعداد">+</button>
                                     </div>
                                 </div>
                             </div>
@@ -580,6 +598,14 @@
                 </div>
 
                 @if ($order->items->count() > 0)
+                    @if (!auth()->check() || auth()->user()->is_guest)
+                        <div class="checkout-form mt-5 text-center">
+                            <div class="auth-mark mx-auto mb-3" style="width:56px;height:56px;display:grid;place-items:center;border-radius:18px;background:#fff0f3;color:#e94560;font-size:1.6rem"><i class="bi bi-phone"></i></div>
+                            <h3 class="form-title mb-2">یک قدم تا تکمیل سفارش</h3>
+                            <p class="text-muted mb-4">برای حفظ سبد و پیگیری سفارش، فقط شماره همراهت را تأیید کن.</p>
+                            <button class="btn checkout-btn" type="button" data-bs-toggle="modal" data-bs-target="#cartAuthModal">ورود یا ثبت‌نام</button>
+                        </div>
+                    @else
                     <!-- فرم تکمیل سفارش -->
                     <div class="checkout-form mt-5">
                         <h3 class="form-title"><i class="bi bi-credit-card me-2"></i>تکمیل سفارش</h3>
@@ -787,6 +813,7 @@
                             </button>
                         </form>
                     </div>
+                    @endif
                 @endif
             </div>
 
@@ -807,14 +834,14 @@
 
                         <div class="summary-item">
                             <span>هزینه ارسال</span>
-                            <span id="shipping-cost">{{ number_format($order->shipment->shipping_cost ?? 0) }}
+                            <span id="shipping-cost">{{ number_format($post_cost) }}
                                 تومان</span>
                         </div>
 
                         <div class="summary-total">
                             <span>مبلغ قابل پرداخت</span>
                             <span
-                                id="final-amount">{{ number_format($order->final_price + ($order->shipment->shipping_cost ?? 0)) }}
+                                id="final-amount">{{ number_format($order->total_price - $order->discount_amount + $post_cost) }}
                                 تومان</span>
                         </div>
 
@@ -832,13 +859,30 @@
             </div>
         </div>
     </div>
+
+    @if (!auth()->check() || auth()->user()->is_guest)
+        <div class="modal fade" id="cartAuthModal" tabindex="-1" aria-labelledby="cartAuthModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content border-0 rounded-4 shadow-lg">
+                    <div class="modal-header border-0 pb-0">
+                        <h2 class="modal-title fs-5 fw-bold" id="cartAuthModalLabel">ورود یا ثبت‌نام</h2>
+                        <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    </div>
+                    <div class="modal-body px-4 pb-4">
+                        <p class="text-muted small mb-4">شماره همراهت را تأیید کن تا سفارش را ادامه بدهی.</p>
+                        @include('auth.partials.phone-form', ['authId' => 'cartAuth', 'redirectAfterAuth' => 'cart'])
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
 
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // بارگذاری شهرها بر اساس استان
-            document.getElementById('shipping_province_id').addEventListener('change', function() {
+            document.getElementById('shipping_province_id')?.addEventListener('change', function() {
                 let provinceId = this.value;
                 let citySelect = document.getElementById('shipping_city_id');
                 citySelect.innerHTML = '<option value="">لطفاً منتظر بمانید...</option>';
@@ -897,7 +941,7 @@
             @endif
 
             // اعمال کد تخفیف
-            document.getElementById('applyDiscount').addEventListener('click', function() {
+            document.getElementById('applyDiscount')?.addEventListener('click', function() {
                 const code = document.getElementById('discountCode').value.trim();
                 const messageDiv = document.getElementById('discountMessage');
 
@@ -912,7 +956,7 @@
                     '<i class="bi bi-arrow-repeat spinner-border spinner-border-sm me-2"></i>در حال بررسی...';
                 this.disabled = true;
 
-                fetch('{{ route('page.home') }}', {
+                fetch('{{ route('cart.coupon.apply') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -946,7 +990,7 @@
             });
 
             // پاک کردن سبد خرید
-            document.getElementById('clear-cart-form').addEventListener('submit', function(e) {
+            document.getElementById('clear-cart-form')?.addEventListener('submit', function(e) {
                 e.preventDefault();
                 Swal.fire({
                     title: 'آیا مطمئن هستید؟',
@@ -969,26 +1013,27 @@
             }
 
             // مدیریت تعداد اقلام
-            function increaseQuantity(itemId) {
-                const input = document.querySelector(`button[onclick="increaseQuantity(${itemId})"]`).parentElement
-                    .querySelector('.quantity-input');
-                let currentValue = parseInt(input.value);
-                input.value = currentValue + 1;
-                updateQuantity(itemId, currentValue + 1);
-            }
+            document.querySelectorAll('.quantity-btn[data-action]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = this.dataset.itemId;
+                    const input = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+                    const currentValue = parseInt(input.value, 10);
+                    const nextValue = this.dataset.action === 'increase'
+                        ? currentValue + 1
+                        : Math.max(1, currentValue - 1);
 
-            function decreaseQuantity(itemId) {
-                const input = document.querySelector(`button[onclick="decreaseQuantity(${itemId})"]`).parentElement
-                    .querySelector('.quantity-input');
-                let currentValue = parseInt(input.value);
-                if (currentValue > 1) {
-                    input.value = currentValue - 1;
-                    updateQuantity(itemId, currentValue - 1);
-                }
-            }
+                    if (nextValue === currentValue) return;
+                    updateQuantity(itemId, nextValue, currentValue, input);
+                });
+            });
 
-            function updateQuantity(itemId, quantity) {
-                fetch('{{ route('page.home') }}', {
+            function updateQuantity(itemId, quantity, previousQuantity, input) {
+                const url = @json(route('cart.updateQuantity', ['item' => '__ITEM__'])).replace('__ITEM__', itemId);
+                const buttons = document.querySelectorAll(`.quantity-btn[data-item-id="${itemId}"]`);
+                buttons.forEach(button => button.disabled = true);
+                input.value = quantity;
+
+                fetch(url, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -999,11 +1044,16 @@
                             quantity: quantity
                         })
                     })
-                    .then(response => response.json())
+                    .then(async response => {
+                        const data = await response.json();
+                        if (!response.ok) throw data;
+                        return data;
+                    })
                     .then(data => {
                         if (data.success) {
                             location.reload();
                         } else {
+                            input.value = previousQuantity;
                             Swal.fire({
                                 icon: 'error',
                                 title: 'خطا',
@@ -1014,14 +1064,28 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
+                        input.value = previousQuantity;
                         Swal.fire({
                             icon: 'error',
                             title: 'خطا',
-                            text: 'خطا در ارتباط با سرور',
+                            text: error.message || 'خطا در ارتباط با سرور',
                             confirmButtonColor: '#8e44ad'
                         });
+                    })
+                    .finally(() => {
+                        buttons.forEach(button => button.disabled = false);
                     });
             }
         });
     </script>
+    @if (!auth()->check() || auth()->user()->is_guest)
+        @include('auth.partials.otp-script')
+        @if ($errors->has('phone') || $errors->has('code') || $errors->has('auth'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    bootstrap.Modal.getOrCreateInstance(document.getElementById('cartAuthModal')).show();
+                });
+            </script>
+        @endif
+    @endif
 @endsection

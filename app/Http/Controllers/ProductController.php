@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\Page;
 use App\Models\ProductVariant;
 use App\Models\Tag;
+use App\Models\Attribute;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductController extends Controller
 {
@@ -17,62 +19,12 @@ class ProductController extends Controller
         $page = Page::where('name', 'products')->firstOrFail();
         recordVisit($page);
 
-        $sort = $request->query('sort', 'newest'); // default sort
-        $inStock = $request->query('in_stock', false); // فیلتر موجودی
+        $catalog = $this->buildCatalog($request);
 
-        $query = Product::query();
-
-        // فیلتر بر اساس دسته‌بندی
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        // فیلتر بر اساس جستجو
-        if ($request->filled('query')) {
-            $search = $request->input('query');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhereHas('category', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        // اضافه کردن تعداد فروش واقعی از order_items
-        $query->withCount(['orderItems as total_sold' => function ($q) {
-            $q->select(DB::raw("COALESCE(SUM(quantity),0)"));
-        }]);
-
-        if ($inStock) {
-            $query->where('stock', '>', 0);
-        }
-        // اعمال مرتب‌سازی
-        switch ($sort) {
-            case 'bestselling':
-                $query->orderBy('total_sold', 'desc');
-                break;
-
-            case 'price_low_high':
-                $query->orderBy('price', 'asc');
-                break;
-
-            case 'price_high_low':
-                $query->orderBy('price', 'desc');
-                break;
-
-            case 'newest':
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
-        }
-
-        // مرتب‌سازی ثانویه: موجودی و ID
-        $query->orderBy('stock', 'desc')->orderBy('id', 'desc');
-
-        $products = $query->get();
-        $categories = Category::all();
-
-        return view('site.pages.products.index', compact('products', 'categories', 'sort'));
+        return view('site.pages.products.index', $catalog + [
+            'catalogTitle' => 'همه محصولات',
+            'currentCategory' => null,
+        ]);
     }
 
     public function product($slug)
@@ -102,7 +54,7 @@ class ProductController extends Controller
                 if ($variant->stock > 0) {
                     $attributes = [];
                     foreach ($variant->attributeValues as $attrValue) {
-                        $attributes[$attrValue->attribute->name] = $attrValue->id;
+                        $attributes['attribute_' . $attrValue->attribute_id] = $attrValue->id;
                     }
 
                     $variantStockData[] = [
@@ -183,43 +135,14 @@ class ProductController extends Controller
         $category = Category::where('type', 'product')->where('slug', $slug)->firstOrFail();
         recordVisit($category);
 
-        $sort = request()->query('sort', 'newest');
+        $catalog = $this->buildCatalog($request, $category);
 
-        $productsQuery = Product::where('category_id', $category->id);
-
-        // اضافه کردن تعداد فروش واقعی از جدول order_items
-        $productsQuery->withCount(['orderItems as total_sold' => function ($query) {
-            $query->select(DB::raw("COALESCE(SUM(quantity),0)"));
-        }]);
-
-        // اعمال مرتب‌سازی
-        switch ($sort) {
-            case 'bestselling':
-                $productsQuery->orderBy('total_sold', 'desc');
-                break;
-
-            case 'price_low_high':
-                $productsQuery->orderBy('price', 'asc');
-                break;
-
-            case 'price_high_low':
-                $productsQuery->orderBy('price', 'desc');
-                break;
-
-            case 'newest':
-            default:
-                $productsQuery->orderBy('created_at', 'desc');
-                break;
-        }
-
-        // مرتب‌سازی ثانویه: موجودی و ID
-        $productsQuery->orderBy('stock', 'desc')->orderBy('id', 'desc');
-
-        $products = $productsQuery->get();
-
-        $categories = Category::where('type', 'product')->get();
-
-        return view('site.pages.products.category', compact('products', 'categories', 'category', 'slug', 'sort'));
+        return view('site.pages.products.category', $catalog + [
+            'category' => $category,
+            'slug' => $slug,
+            'catalogTitle' => $category->name,
+            'currentCategory' => $category,
+        ]);
     }
 
     public function tag(Request $request, $slug)
@@ -283,5 +206,76 @@ class ProductController extends Controller
         $products = $query->get();
 
         return view('site.pages.tag', compact('products', 'sort', 'tag'));
+    }
+
+    private function buildCatalog(Request $request, ?Category $fixedCategory = null): array
+    {
+        $validated = $request->validate([
+            'query' => ['nullable', 'string', 'max:100'],
+            'category' => ['nullable', 'integer', 'exists:categories,id'],
+            'min_price' => ['nullable', 'numeric', 'min:0'],
+            'max_price' => ['nullable', 'numeric', 'min:0', 'gte:min_price'],
+            'in_stock' => ['nullable', 'boolean'],
+            'sort' => ['nullable', 'in:newest,bestselling,price_low_high,price_high_low,name_az'],
+            'attributes' => ['nullable', 'array'],
+            'attributes.*' => ['nullable', 'array'],
+            'attributes.*.*' => ['integer', 'exists:attribute_values,id'],
+        ]);
+
+        $sort = $validated['sort'] ?? 'newest';
+        $query = Product::query()
+            ->with(['category', 'mediaFiles'])
+            ->withCount(['orderItems as total_sold' => fn ($orders) =>
+                $orders->select(DB::raw('COALESCE(SUM(quantity),0)'))
+            ]);
+
+        if ($fixedCategory) {
+            $query->where('category_id', $fixedCategory->id);
+        } elseif (!empty($validated['category'])) {
+            $query->where('category_id', $validated['category']);
+        }
+
+        if (!empty($validated['query'])) {
+            $term = trim($validated['query']);
+            $query->where(function (Builder $products) use ($term) {
+                $products->where('name', 'like', '%' . $term . '%')
+                    ->orWhere('description', 'like', '%' . $term . '%')
+                    ->orWhereHas('category', fn ($category) => $category->where('name', 'like', '%' . $term . '%'));
+            });
+        }
+
+        if (isset($validated['min_price'])) {
+            $query->where('price', '>=', $validated['min_price']);
+        }
+        if (isset($validated['max_price'])) {
+            $query->where('price', '<=', $validated['max_price']);
+        }
+        if (!empty($validated['in_stock'])) {
+            $query->where('stock', '>', 0);
+        }
+
+        foreach (array_filter($validated['attributes'] ?? []) as $attributeId => $valueIds) {
+            if (!$valueIds) continue;
+            $query->whereHas('attributeValues', function (Builder $values) use ($attributeId, $valueIds) {
+                $values->where('attribute_values.attribute_id', (int) $attributeId)
+                    ->whereIn('attribute_values.id', array_map('intval', $valueIds));
+            });
+        }
+
+        match ($sort) {
+            'bestselling' => $query->orderByDesc('total_sold'),
+            'price_low_high' => $query->orderBy('price'),
+            'price_high_low' => $query->orderByDesc('price'),
+            'name_az' => $query->orderBy('name'),
+            default => $query->latest('created_at'),
+        };
+        $query->orderByDesc('stock')->orderByDesc('id');
+
+        return [
+            'products' => $query->paginate(12)->withQueryString(),
+            'categories' => Category::where('type', 'product')->withCount('products')->orderBy('name')->get(),
+            'filterAttributes' => Attribute::with(['values' => fn ($values) => $values->orderBy('value')])->orderBy('name')->get(),
+            'sort' => $sort,
+        ];
     }
 }
