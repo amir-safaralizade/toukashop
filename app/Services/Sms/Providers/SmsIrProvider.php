@@ -7,6 +7,7 @@ use App\Services\Sms\SmsProviderInterface;
 use App\Enums\SmsTemplate;
 use Carbon\Carbon;
 use Ipe\Sdk\Facades\SmsIr;
+use Illuminate\Support\Facades\Http;
 
 class SmsIrProvider implements SmsProviderInterface
 {
@@ -54,7 +55,26 @@ class SmsIrProvider implements SmsProviderInterface
             ];
         }
 
-        $response = SmsIr::verifySend($to, $templateId, $verifyParams);
+        $apiKey = config('services.smsir.api_key');
+        if (!$apiKey) {
+            throw new \RuntimeException('SMS.ir API key is not configured.');
+        }
+
+        $httpResponse = Http::withHeaders(['x-api-key' => $apiKey])
+            ->acceptJson()
+            ->connectTimeout(5)
+            ->timeout(15)
+            ->post('https://api.sms.ir/v1/send/verify', [
+                'mobile' => $to,
+                'templateId' => $templateId,
+                'parameters' => $verifyParams,
+            ]);
+
+        $response = (object) [
+            'status' => $httpResponse->successful() ? $httpResponse->json('status') : 0,
+            'message' => $httpResponse->json('message'),
+            'data' => $httpResponse->json('data'),
+        ];
 
         SmsLog::create([
             'to'          => $to,

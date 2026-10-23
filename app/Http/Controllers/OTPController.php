@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SmsTemplate;
 use App\Models\VerificationCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -29,7 +30,7 @@ class OTPController extends Controller
         VerificationCode::where('phone', $phone)->where('verified', false)->delete();
         $otp = VerificationCode::generate($phone);
 
-        if (app()->environment(['local', 'testing']) || config('services.sms_fake_mode')) {
+        if (app()->environment(['local', 'testing']) && config('services.sms_fake_mode')) {
             RateLimiter::hit($key, 600);
 
             return response()->json([
@@ -40,7 +41,7 @@ class OTPController extends Controller
         }
 
         try {
-            $sent = sms()->sendText($phone, "کد ورود توکا: {$otp->code}\nاین کد تا ۳ دقیقه معتبر است.");
+            $sent = sms()->sendTemplate($phone, SmsTemplate::OTP_CODE, ['CODE' => (string) $otp->code]);
             if (!$sent) {
                 throw new \RuntimeException('SMS provider returned an unsuccessful response.');
             }

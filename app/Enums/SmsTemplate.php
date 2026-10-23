@@ -11,7 +11,7 @@ enum SmsTemplate: string
     {
         return match ($this) {
             SmsTemplate::ORDER_CONFIRMED => 868508,
-            SmsTemplate::OTP_CODE => 654321,
+            SmsTemplate::OTP_CODE => (int) config('services.smsir.otp_template_id', 296347),
         };
     }
 
