@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\SmsTemplate;
 use App\Models\Order;
 use App\Models\Shipment;
 use App\Models\OrderItem;
@@ -159,6 +160,18 @@ class OrderService
                 throw new \Exception("وضعیت سفارش برای ثبت پرداخت معتبر نیست.");
             }
             $order->update(['status' => 'paid']);
+            DB::afterCommit(function () use ($order) {
+                try {
+                    $sent = sms()->sendTemplate($order->phone, SmsTemplate::COMPLETE_ORDER, [
+                        'ORDER_NUMBER' => (string) ($order->tracking_code ?: $order->id),
+                    ]);
+                    if (!$sent) {
+                        logger()->warning('Order completion SMS failed', ['order_id' => $order->id]);
+                    }
+                } catch (\Throwable $exception) {
+                    logger()->warning('Order completion SMS failed', ['order_id' => $order->id]);
+                }
+            });
         });
     }
 
