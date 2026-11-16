@@ -18,6 +18,10 @@
         </div>
         <input class="auth-input" id="{{ $authId }}Code" name="code" type="text" inputmode="numeric" dir="ltr" maxlength="6" autocomplete="one-time-code" placeholder="کد ۶ رقمی" required>
         @error('code') <span class="field-error">{{ $message }}</span> @enderror
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="small text-muted" data-otp-countdown role="timer" aria-label="زمان باقی‌مانده تا ارسال دوباره"></span>
+            <button class="btn btn-link btn-sm text-decoration-none" type="button" data-resend-otp disabled>ارسال دوباره کد</button>
+        </div>
     </div>
     <div class="auth-message" data-auth-message role="status"></div>
     <label class="remember-row"><input type="checkbox" name="remember" value="1"> ورود من حفظ شود</label>

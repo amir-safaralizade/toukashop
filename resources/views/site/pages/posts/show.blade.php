@@ -328,7 +328,7 @@
                 </div>
                 <div class="meta-item">
                     <i class="bi bi-person"></i>
-                    <span>نویسنده: دکتر سید عبدالعلی هاشمی نصب</span>
+                    <span>نویسنده: {{ $post->author_name ?: \App\Models\Post::DEFAULT_AUTHOR }}</span>
                 </div>
                 <div class="meta-item">
                     <i class="bi bi-eye"></i>

@@ -19,6 +19,15 @@ class OTPController extends Controller
             'purpose' => ['required', 'in:authenticate'],
         ], ['phone.regex' => 'شماره همراه باید با 09 شروع شود و 11 رقم باشد.']);
 
+        $cooldownKey = 'otp-resend:' . $phone;
+        if (RateLimiter::tooManyAttempts($cooldownKey, 1)) {
+            return response()->json([
+                'message' => 'برای ارسال دوباره کد، منتظر پایان زمان باقی‌مانده بمانید.',
+                'retry_after' => RateLimiter::availableIn($cooldownKey),
+                'code_sent' => true,
+            ], 429);
+        }
+
         $key = 'otp:' . $phone . '|' . $request->ip();
         if (RateLimiter::tooManyAttempts($key, 3)) {
             return response()->json([
@@ -32,10 +41,12 @@ class OTPController extends Controller
 
         if (app()->environment(['local', 'testing']) && config('services.sms_fake_mode')) {
             RateLimiter::hit($key, 600);
+            RateLimiter::hit($cooldownKey, 120);
 
             return response()->json([
                 'message' => 'حالت تست فعال است؛ پیامک واقعی ارسال نشد.',
                 'expires_in' => 180,
+                'retry_after' => 120,
                 'debug_code' => $otp->code,
             ]);
         }
@@ -46,8 +57,9 @@ class OTPController extends Controller
                 throw new \RuntimeException('SMS provider returned an unsuccessful response.');
             }
             RateLimiter::hit($key, 600);
+            RateLimiter::hit($cooldownKey, 120);
 
-            return response()->json(['message' => 'کد تأیید برای شما پیامک شد.', 'expires_in' => 180]);
+            return response()->json(['message' => 'کد تأیید برای شما پیامک شد.', 'expires_in' => 180, 'retry_after' => 120]);
         } catch (\Throwable $exception) {
             $otp->delete();
             Log::error('OTP SMS delivery failed', ['phone' => $phone, 'error' => $exception->getMessage()]);

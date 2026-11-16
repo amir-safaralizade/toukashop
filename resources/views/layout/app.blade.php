@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('site/css/swiper-bundle.min.css') }}">
     
     
-    <link rel="stylesheet" href="{{ asset('site/style.css') . '?v=' . filemtime(public_path('site/style.css')) }}">
+    <link rel="stylesheet" href="{{ asset('site/style.css') . '?v=20261116' }}">
     <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
     <link rel="shortcut icon" href="/favicons/favicon.ico" />

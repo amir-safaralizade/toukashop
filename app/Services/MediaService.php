@@ -85,7 +85,7 @@ class MediaService
         try {
             // Delete file from disk
             if ($media->disk === 'public') {
-                $fullPath = public_path($media->path);
+                $fullPath = $media->path;
                 if (file_exists($fullPath)) {
                     unlink($fullPath);
                     $directory = dirname($fullPath);

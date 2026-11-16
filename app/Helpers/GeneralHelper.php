@@ -149,8 +149,9 @@ function get_full_url($image)
 function site_setting(string $title, $default = null)
 {
     $property = Property::where('title', $title)->first();
-    if ($property && $property->type == 'file') {
-        return config('services.manage_panel') . '/' . $property->value;
+    if (!$property || $property->value === null || $property->value === '') return $default;
+    if ($property->type == 'file') {
+        return rtrim(config('services.manage_panel'), '/') . '/' . ltrim($property->value, '/');
     }
     return $property ? $property->value : $default;
 }

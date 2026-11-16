@@ -12,9 +12,11 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
+    public const DEFAULT_AUTHOR = 'دکتر سید عبدالعلی هاشمی نصب';
+
     use HasMediaFiles, Visitable, LogsActivity;
 
-    protected $fillable = ['title', 'content', 'slug', 'user_id', 'category_id'];
+    protected $fillable = ['author_name', 'title', 'content', 'slug', 'user_id', 'category_id'];
 
     // تنظیمات لاگ‌گیری
     public function getActivitylogOptions(): LogOptions

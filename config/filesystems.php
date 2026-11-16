@@ -74,7 +74,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        getcwd() . DIRECTORY_SEPARATOR . 'storage' => storage_path('app/public'),
     ],
 
 ];
