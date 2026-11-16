@@ -479,8 +479,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
-            width: 48px;
-            height: 48px;
+            width: auto;
+            min-height: 48px;
+            gap: 8px;
+            border-radius: 12px;
+            padding: 6px 12px;
         }
 
         .color-option-box:hover {
@@ -654,8 +657,8 @@
             }
 
             .color-option-box {
-                width: 42px;
-                height: 42px;
+                width: auto;
+                min-height: 42px;
                 padding: 5px;
             }
 
@@ -856,7 +859,7 @@
                                                 $colorName = $val->display_value;
                                             } else {
                                                 $colorCode = $colorMap[$val->value] ?? '#CCCCCC';
-                                                $colorName = $val->value;
+                                                $colorName = $val->display_value;
                                             }
                                         @endphp
                                         <input type="radio" id="color-{{ $val->id }}" name="product-color"
@@ -868,6 +871,7 @@
                                             aria-label="{{ $colorName }}"
                                             title="{{ $colorName }}">
                                             <span class="color-box" style="background-color: {{ $colorCode }};"></span>
+                                            <span class="color-name">{{ $colorName }}</span>
                                         </label>
                                     @endforeach
                                 </div>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AttributeValue extends Model
 {
-    protected $fillable = ['attribute_id', 'value'];
+    protected $fillable = ['attribute_id', 'value', 'color_name'];
 
     public function attribute()
     {
@@ -15,6 +15,7 @@ class AttributeValue extends Model
 
     public function getDisplayValueAttribute(): string
     {
+        if ($this->color_name) return $this->color_name;
         if (!preg_match('/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $this->value)) {
             return $this->value;
         }

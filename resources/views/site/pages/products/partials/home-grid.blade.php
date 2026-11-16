@@ -20,7 +20,7 @@
                 <div class="variant-preview" aria-label="تنوع محصول">
                     @foreach($colorValues->take(5) as $value)
                         @if(preg_match('/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $value->value))
-                            <span class="variant-dot" style="background-color:{{ $value->value }}" title="{{ $value->display_value }}"></span>
+                            <span class="variant-text d-inline-flex align-items-center gap-1"><span class="variant-dot" style="background-color:{{ $value->value }}" aria-hidden="true"></span><span>{{ $value->display_value }}</span></span>
                         @else
                             <span class="variant-text">{{ $value->display_value }}</span>
                         @endif
