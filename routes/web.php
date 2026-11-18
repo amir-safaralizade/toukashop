@@ -13,7 +13,7 @@ use App\Http\Controllers\OTPController;
 use App\Http\Controllers\AccountController;
 use App\Http\Middleware\EnsureCustomerAuthenticated;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use App\Http\Controllers\SiteMapCpntroller;
+use App\Http\Controllers\SitemapController;
 
 
 Route::middleware(IdentifyAnonymousClient::class)->group(function () {
@@ -78,4 +78,5 @@ Route::prefix('api')->group(function () {
         ->middleware('throttle:5,1')->name('otp.send');
 });
 
-Route::get('sitemap/generation', [SiteMapCpntroller::class, 'generate'])->name('sitemap.generation');
+Route::get('sitemap/generation', [SitemapController::class, 'generate'])->middleware('throttle:5,1')->name('sitemap.generation');
+Route::get('sitemap.xml', [SitemapController::class, 'show'])->name('sitemap.show');
