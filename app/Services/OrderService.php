@@ -269,6 +269,8 @@ class OrderService
             ->first();
 
         if ($order) {
+            app(CartCleanupService::class)->clean($order);
+            $order->refresh()->load('items.product', 'items.variant', 'items.attributeValues');
             Order::where('user_id', auth()->id())
                 ->where('status', 'pending')
                 ->where('id', '<>', $order->id)

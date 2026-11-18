@@ -970,7 +970,7 @@
                 <div class="tab-content" id="productTabsContent">
                     <div class="tab-pane fade show active" id="description" role="tabpanel">
                         <h4>{{ $product->name }}</h4>
-                        <p>{{ $product->description }}</p>
+                        <div class="product-description-content">{!! $product->description !!}</div>
                     </div>
                     <div class="tab-pane fade" id="specs" role="tabpanel">
                         <h4>مشخصات فنی</h4>

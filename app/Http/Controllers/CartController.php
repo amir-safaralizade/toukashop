@@ -28,6 +28,16 @@ class CartController extends Controller
         $this->orderService = $orderService;
     }
 
+    private function calculateShippingCost(Order $order): int
+    {
+        $baseCost = (int) site_setting('shipping-cost', 0);
+        $unitCost = (int) site_setting('shipping-unit-cost', 10000);
+        $order->loadMissing('items.product');
+        $units = $order->items->sum(fn ($item) => $item->product?->transportation_unit ?? 0);
+
+        return (int) ($baseCost + $units * $unitCost);
+    }
+
     public function mycart(Request $request)
     {
         $page = Page::where('name', 'mycart')->firstOrfail();
@@ -39,13 +49,7 @@ class CartController extends Controller
             'items.attributeValues.attribute'
         ]);
 
-        $post_cost = intval(site_setting('shipping-cost'));
-       
-        if ($order) {
-            foreach ($order->items as $item) {
-                $post_cost += $item->product->transportation_unit * 10000;
-            }
-        }
+        $post_cost = $this->calculateShippingCost($order);
 
         $provinces = Province::all();
         return view('site.pages.cart', compact('order', 'provinces', 'is_online_pay_active' , 'post_cost'));
@@ -258,10 +262,7 @@ class CartController extends Controller
                 ]);
             }
 
-            $shippingCost = intval(site_setting('shipping-cost'));
-            foreach ($order->items as $item) {
-                $shippingCost += $item->product->transportation_unit * 10000;
-            }
+            $shippingCost = $this->calculateShippingCost($order);
 
             Shipment::updateOrCreate(
                 ['order_id' => $order->id],
@@ -308,10 +309,7 @@ class CartController extends Controller
 
         try {
             $couponService->applyToOrder($order, $validated['code']);
-            $shippingCost = intval(site_setting('shipping-cost'));
-            foreach ($order->items()->with('product')->get() as $item) {
-                $shippingCost += $item->product->transportation_unit * 10000;
-            }
+            $shippingCost = $this->calculateShippingCost($order);
 
             return response()->json([
                 'success' => true,
