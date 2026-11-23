@@ -1,0 +1,84 @@
+name: Deploy Toukashop
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Preview file changes without uploading
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: toukashop-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) || (github.event_name == 'push' && vars.DEPLOY_ON_PUSH != 'true') }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.DEPLOY_PHP_VERSION || '8.2' }}
+          extensions: bcmath, curl, dom, fileinfo, gd, intl, mbstring, simplexml, xmlreader, xmlwriter, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Install production dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
+
+      - name: Prepare upload directories
+        shell: bash
+        run: |
+          staging="$RUNNER_TEMP/toukashop"
+          mkdir -p "$staging/laravel/bootstrap/cache" "$staging/public_html"
+          rsync -a --exclude='.env*' --exclude='*.sqlite*' \
+            app artisan bootstrap composer.json composer.lock config database lang Modules resources routes vendor \
+            "$staging/laravel/"
+          rsync -a \
+            --exclude='/index.php' \
+            --exclude='/uploads' \
+            --exclude='/storage' \
+            --exclude='/sitemap.xml' \
+            --exclude='/tkp.zip' \
+            public/ "$staging/public_html/"
+          test -f "$staging/laravel/vendor/autoload.php"
+
+      - name: Upload Laravel application
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: toukashop.ir_cicd_user
+          password: C1bl305jB0WcNpIr
+          protocol: ftps
+          port: ${{ vars.FTP_PORT || '21' }}
+          security: strict
+          local-dir: ${{ runner.temp }}/toukashop/laravel/
+          server-dir: ./laravel/
+          state-name: .toukashop-laravel-deploy.json
+          dry-run: ${{ env.DRY_RUN }}
+
+      - name: Upload public assets
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: toukashop.ir_cicd_user
+          password: C1bl305jB0WcNpIr
+          protocol: ftps
+          port: ${{ vars.FTP_PORT || '21' }}
+          security: strict
+          local-dir: ${{ runner.temp }}/toukashop/public_html/
+          server-dir: ./public_html/
+          state-name: .toukashop-public-deploy.json
+          dry-run: ${{ env.DRY_RUN }}
