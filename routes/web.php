@@ -48,6 +48,7 @@ Route::middleware(IdentifyAnonymousClient::class)->group(function () {
     });
 
     Route::prefix('cart')->controller(CartController::class)->name('cart.')->group(function () {
+
         Route::get('mycart', 'mycart')->name('mycart');
         Route::delete('/item/{item}/delete', 'deleteFromCart')->name('deleteFromCart');
         Route::post('/clear', 'clear')->name('clear');

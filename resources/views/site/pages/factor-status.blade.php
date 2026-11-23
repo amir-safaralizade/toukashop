@@ -580,7 +580,7 @@
                                 <div class="detail-item fw-bold fs-5">
                                     <span>جمع کل:</span>
                                     <span
-                                        class="text-success">{{ number_format($order->final_price + ($order->shipment->shipping_cost ?? 0)) }}
+                                        class="text-success">{{ number_format($transaction->gateway === 'manual' ? $order->final_price : $order->final_price + ($order->shipment->shipping_cost ?? 0)) }}
                                         تومان</span>
                                 </div>
                             </div>
