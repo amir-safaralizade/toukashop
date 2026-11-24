@@ -288,6 +288,18 @@ class CartController extends Controller
 
             $this->orderService->finalizeOrder($order->fresh('shipment', 'items.variant'));
 
+            if ($request->payment_method === 'card') {
+                // Keep the order and its manual payment in the same transaction.
+                $order->transactions()->create([
+                    'gateway' => 'manual',
+                    'amount' => $order->final_price,
+                    'status' => 'pending',
+                    'our_token' => gen_transaction_id(),
+                    'request_ip' => get_client_ip(),
+                ]);
+                $order->update(['status' => 'need_admin_approval']);
+            }
+
             return $order->fresh();
         });
 
@@ -296,7 +308,8 @@ class CartController extends Controller
         }
 
         if ($request->payment_method === 'card') {
-            return redirect()->route('payment.redirect', ['order_id' => $order->id, 'provider' => 'card_to_card']);
+            return redirect()->route('account.orders.show', $order)
+                ->with('success', 'سفارش شما ثبت شد و در انتظار تأیید پرداخت کارت‌به‌کارت توسط مدیر است.');
         }
 
         return view('checkout.success', compact('order'));
@@ -453,6 +466,9 @@ class CartController extends Controller
         } catch (Exception $e) {
             return abort(404);
         }
+        $order = $transaction->payable;
+        abort_unless($order instanceof Order && auth()->check() && $order->user_id === auth()->id(), 404);
+        $order->loadMissing(['items.product.mediaFiles', 'items.attributeValues.attribute', 'shipment']);
         return view('site.pages.factor-status', compact('transaction'));
     }
 }

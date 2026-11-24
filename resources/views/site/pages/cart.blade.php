@@ -798,7 +798,7 @@
                                         </div>
                                         <div class="step-item">
                                             <i class="bi bi-3-circle"></i>
-                                            <span>تصویر فیش واریزی را از طریق پیج اینستاگرام برای ما ارسال کنید.</span>
+                                            <span>تصویر فیش واریزی را  برای ما ارسال کنید.</span>
                                         </div>
                                         <div class="step-item">
                                             <i class="bi bi-4-circle"></i>

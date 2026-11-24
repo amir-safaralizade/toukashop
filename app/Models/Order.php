@@ -44,6 +44,7 @@ class Order extends Model
     }
 
     public const STATUSES = [
+        'need_admin_approval' => 'در انتظار تأیید پرداخت',
         'pending' => 'در انتظار پرداخت',
         'ready_to_pay' => 'آماده پرداخت',
         'paid' => 'پرداخت‌شده',
